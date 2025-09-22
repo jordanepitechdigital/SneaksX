@@ -1,0 +1,188 @@
+{
+  "timestamp": "2025-09-22T22:46:25.603Z",
+  "keyType": "Free",
+  "apiLimits": {
+    "monthlyQuota": 50000,
+    "rateLimitPerMinute": 640,
+    "realtimeLimit": "1 request per second"
+  },
+  "workingEndpoints": {
+    "/v3/utils/brands?limit=5": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 266,
+      "message": null
+    },
+    "/v3/goat/products?limit=5": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 14532,
+      "message": null
+    },
+    "/v3/stockx/products?limit=5": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 38671,
+      "message": null
+    },
+    "/v3/stockx/products?search=nike&limit=3": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 16649,
+      "message": null
+    },
+    "/v3/goat/products?search=jordan&limit=3": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 8195,
+      "message": null
+    },
+    "/v3/stockx/products/nike-dunk-low-retro-white-black-2021": {
+      "success": true,
+      "statusCode": 200,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 9245,
+      "message": null
+    },
+    "/v3/stockx/products/air-jordan-1-retro-high-og-bred-toe": {
+      "success": false,
+      "statusCode": 404,
+      "quota": "43",
+      "keyType": "Free",
+      "hasData": true,
+      "dataSize": 122,
+      "message": "Product not found"
+    }
+  },
+  "sampleData": {
+    "/v3/utils/brands?limit=5": {
+      "structure": {
+        "type": "object",
+        "itemCount": 5,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ],
+          "hasItems": true,
+          "itemsKey": "data",
+          "hasPagination": true
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespListBrandBody.json\",\"data\":[{\"brand\":\"Nike\",\"count\":52728},{\"brand\":\"adidas\",\"count\":36758},{\"brand\":\"Supreme\",\"count\":29071},{\"brand\":\"BAPE\",\"count\":20976},{\"brand\":\"Palace\",\"count\":17056}],\"meta\":{\"limit\":5,\"page\":1}}...",
+      "itemCount": 5
+    },
+    "/v3/goat/products?limit=5": {
+      "structure": {
+        "type": "object",
+        "itemCount": 5,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ],
+          "hasItems": true,
+          "itemsKey": "data",
+          "hasPagination": true
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespListGoatProductBody.json\",\"data\":[{\"id\":121,\"sku\":\"698902 006\",\"slug\":\"nike-air-max-2015-698902-006\",\"name\":\"Air Max 2015 'Black Bright Crimson'\",\"brand\":\"Nike\",\"model\":\"Air Max 2015\",\"description\":\"The Air Max 2015 debuted almost thirty years after the release of the original Air Max 1. The innovative runner features an engineered mesh upper in which the laces are secured with a flexible Dynamic Flywire system. The midsole is equipped with a full-length Air Max unit, while internal heel counter cups and an inner bootie construction are designed for a snug fit. The runner is also lightweight, yet offers stability and a smooth ride.\",\"colorway\":\"Black/Bright Crimson/Blue Lagoon/White\",\"season\":\"2015\",\"category\":\"shoes\",\"product_type\":\"sneakers\",\"image_url\":\"https://image.goat.com/1000/attachments/product_template_pictures/images/000/020/153/original/698902_006.png.png\",\"images\":null,\"release_date\":\"\",\"release_date_year\":\"1\",\"retail_prices\":{...",
+      "itemCount": 5
+    },
+    "/v3/stockx/products?limit=5": {
+      "structure": {
+        "type": "object",
+        "itemCount": 5,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ],
+          "hasItems": true,
+          "itemsKey": "data",
+          "hasPagination": true
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespListProductBody.json\",\"data\":[{\"id\":\"58e89eba-0f7b-4c13-981e-150aa07738fb\",\"title\":\"Pop Mart Labubu The Monsters Big into Energy Series Vinyl Plush Pendant Sealed Case (6 Blind Boxes)\",\"brand\":\"Pop Mart\",\"model\":\"Sealed Case (6 Blind Box)\",\"gender\":\"unisex\",\"description\":\"This item is eligible for a Pop Mart 100% off seller fee promo. If you pull a figure you don’t want you can resell that opened box on the corresponding opened box listing with no seller fees. More information on promo eligibility can be found <a href=\\\"https://stockx.com/lp/pop-mart-seller-fee-promo/\\\"><b>here</b></a>. <br> <br> Please note: the outer shrink wrap will be removed during the verification process. Individual blind boxes will remain sealed at all times. <br><br> <a href=\\\"https://stockx.com/news/blind-box-guide/\\\"><b><u>What’s a blind box?</u></b></a><br><br>The Pop Mart Labubu The Monsters Big into Energy Series Vinyl Plush Pendant Sealed Case was released on...",
+      "itemCount": 5
+    },
+    "/v3/stockx/products?search=nike&limit=3": {
+      "structure": {
+        "type": "object",
+        "itemCount": 3,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ],
+          "hasItems": true,
+          "itemsKey": "data",
+          "hasPagination": true
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespListProductBody.json\",\"data\":[{\"id\":\"58e89eba-0f7b-4c13-981e-150aa07738fb\",\"title\":\"Pop Mart Labubu The Monsters Big into Energy Series Vinyl Plush Pendant Sealed Case (6 Blind Boxes)\",\"brand\":\"Pop Mart\",\"model\":\"Sealed Case (6 Blind Box)\",\"gender\":\"unisex\",\"description\":\"This item is eligible for a Pop Mart 100% off seller fee promo. If you pull a figure you don’t want you can resell that opened box on the corresponding opened box listing with no seller fees. More information on promo eligibility can be found <a href=\\\"https://stockx.com/lp/pop-mart-seller-fee-promo/\\\"><b>here</b></a>. <br> <br> Please note: the outer shrink wrap will be removed during the verification process. Individual blind boxes will remain sealed at all times. <br><br> <a href=\\\"https://stockx.com/news/blind-box-guide/\\\"><b><u>What’s a blind box?</u></b></a><br><br>The Pop Mart Labubu The Monsters Big into Energy Series Vinyl Plush Pendant Sealed Case was released on...",
+      "itemCount": 3
+    },
+    "/v3/goat/products?search=jordan&limit=3": {
+      "structure": {
+        "type": "object",
+        "itemCount": 3,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ],
+          "hasItems": true,
+          "itemsKey": "data",
+          "hasPagination": true
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespListGoatProductBody.json\",\"data\":[{\"id\":121,\"sku\":\"698902 006\",\"slug\":\"nike-air-max-2015-698902-006\",\"name\":\"Air Max 2015 'Black Bright Crimson'\",\"brand\":\"Nike\",\"model\":\"Air Max 2015\",\"description\":\"The Air Max 2015 debuted almost thirty years after the release of the original Air Max 1. The innovative runner features an engineered mesh upper in which the laces are secured with a flexible Dynamic Flywire system. The midsole is equipped with a full-length Air Max unit, while internal heel counter cups and an inner bootie construction are designed for a snug fit. The runner is also lightweight, yet offers stability and a smooth ride.\",\"colorway\":\"Black/Bright Crimson/Blue Lagoon/White\",\"season\":\"2015\",\"category\":\"shoes\",\"product_type\":\"sneakers\",\"image_url\":\"https://image.goat.com/1000/attachments/product_template_pictures/images/000/020/153/original/698902_006.png.png\",\"images\":null,\"release_date\":\"\",\"release_date_year\":\"1\",\"retail_prices\":{...",
+      "itemCount": 3
+    },
+    "/v3/stockx/products/nike-dunk-low-retro-white-black-2021": {
+      "structure": {
+        "type": "object",
+        "itemCount": 0,
+        "summary": {
+          "type": "object",
+          "keys": [
+            "$schema",
+            "data",
+            "meta"
+          ]
+        }
+      },
+      "sample": "{\"$schema\":\"https://api.kicks.dev/schemas/RespProductBody.json\",\"data\":{\"id\":\"5e6a1e57-1c7d-435a-82bd-5666a13560fe\",\"title\":\"Nike Dunk Low Retro White Black Panda\",\"brand\":\"Nike\",\"model\":\"Nike Dunk Low Retro\",\"gender\":\"men\",\"description\":\"From the school-spirited College Colors Program to the vibrant Nike CO.JP collection, Nike Dunks have seen many colorways since the design’s inception in 1985. But with each new colorway, the Dunk’s classic color-blocking has remained in some capacity. Nike put its timeless color-blocking to work with the Nike Dunk Low Retro White Black.\\n<br>\\n<br>\\nThe upper Nike Dunk Low Retro White Black is constructed of white leather with black leather overlays and Swooshes. Classic Nike branding is featured on the nylon tongue, nodding to traditional Dunk design elements. A white midsole and black outsole complete the design.\\n<br>\\n<br>\\nThe Nike Dunk Low Retro White Black released in January of 2021 and retailed for $100.\\n<br>\\n<br>\\nTo shop all Nike Dunks, ...",
+      "itemCount": 0
+    }
+  },
+  "errors": []
+}

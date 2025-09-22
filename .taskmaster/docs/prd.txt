@@ -1,0 +1,556 @@
+## 📋 Contexte du projet
+Créer une application web e-commerce moderne et épurée appelée **"SneakX"** - une boutique de sneakers premium avec une interface utilisateur fluide et des animations subtiles. L'application doit être construite en React/Next.js avec Supabase comme backend.
+
+## 🎯 PLAN DE DÉVELOPPEMENT EN 3 ÉTAPES OBLIGATOIRES
+
+### **🔧 ÉTAPE 1 : BACKEND & DATA PIPELINE (PRIORITÉ ABSOLUE)**
+**Objectif** : Construire une base solide avec données réelles
+**Livrable** : Backend fonctionnel avec données synchronisées
+
+**Actions prioritaires :**
+- ✅ Rechercher et analyser complètement l'API Kicks.dev
+- ✅ Créer le schéma Supabase optimisé (tables, relations, RLS)
+- ✅ Développer le pipeline de scraping : Kicks.dev → Supabase
+- ✅ Implémenter l'authentification et gestion des rôles
+- ✅ Synchroniser 100+ produits avec max 2 images par produit
+- ✅ Créer les fonctions/triggers Supabase pour la logique métier
+- ✅ Tester la robustesse du pipeline (gestion d'erreurs, retry, cache)
+
+**Critères de validation :**
+- Base de données peuplée avec vraies données produits
+- Authentification fonctionnelle (User/Vendor/Admin)
+- Pipeline de synchronisation stable et documenté
+
+---
+
+### **🔄 ÉTAPE 2 : API ROUTES & INTÉGRATION FRONTEND-BACKEND**
+**Objectif** : Connecter le frontend aux données backend
+**Livrable** : Application fonctionnelle avec données réelles
+
+**Actions prioritaires :**
+- ✅ Créer les services API côté frontend (TypeScript)
+- ✅ Implémenter les hooks React Query pour le cache et state management
+- ✅ Développer les routes principales : catalogue, détail produit, panier, commandes
+- ✅ Gérer l'authentification côté client (login/logout/sessions)
+- ✅ Implémenter la logique e-commerce (panier, checkout, gestion stock)
+- ✅ Créer le panel administrateur avec CRUD complet
+- ✅ Tester toutes les interactions frontend ↔ backend
+
+**Critères de validation :**
+- Toutes les fonctionnalités e-commerce opérationnelles
+- Panel admin fonctionnel pour tous les rôles
+- Synchronisation temps réel entre frontend et Supabase
+
+---
+
+### **🎨 ÉTAPE 3 : POLISH VISUEL & UX (DERNIÈRE PRIORITÉ)**
+**Objectif** : Améliorer l'expérience utilisateur et l'esthétique
+**Livrable** : Interface premium et animations fluides
+
+**Actions prioritaires :**
+- ✅ Implémenter le design system (couleurs noir/blanc, typographie)
+- ✅ Ajouter les animations Framer Motion (transitions, hover effects)
+- ✅ Optimiser le responsive design (mobile-first)
+- ✅ Améliorer l'UX (loading states, notifications, micro-interactions)
+- ✅ Peaufiner les composants UI (boutons, formulaires, modals)
+- ✅ Tests utilisateur et ajustements finaux
+
+**Critères de validation :**
+- Interface moderne et professionnelle
+- Animations fluides et performantes
+- Expérience utilisateur optimale sur tous devices
+
+---
+
+## ⚠️ **RÈGLE D'OR : NE PAS PASSER À L'ÉTAPE SUIVANTE**
+**Chaque étape DOIT être 100% fonctionnelle avant de passer à la suivante.**
+**Le backend est la fondation - sans données réelles, le frontend ne sert à rien.**
+
+## 🔌 Source de Données - API Kicks.dev
+
+### **⚠️ ÉTAPE OBLIGATOIRE - Recherche de documentation**
+**AVANT DE COMMENCER LE DÉVELOPPEMENT, vous DEVEZ :**
+1. **Rechercher et analyser** la documentation complète de l'API Kicks.dev via web search
+2. **Identifier** tous les endpoints disponibles, leurs paramètres et formats de réponse
+3. **Comprendre** la structure des données, l'authentification et les limites de rate
+4. **Documenter** les méthodes de scraping et d'intégration avec Supabase
+
+### **Configuration API**
+- **URL de base** : `https://kicks.dev/api`
+- **Clé API** : `KICKS-97EF-725F-A605-58232DC70EED`
+- **Documentation** : https://kicks.dev/api-keys (À ANALYSER EN PREMIER)
+
+### **Gestion des Images**
+- **Limite d'images** : Maximum 1-2 images par paire de sneakers
+- **Sélection** : Prendre uniquement les 2 premières images de qualité de chaque produit
+- **Optimisation** : Ignorer les 36+ images disponibles par défaut dans l'API
+- **Format** : Privilégier les images haute résolution pour la galerie produit
+
+### **Processus de Data Pipeline obligatoire**
+```javascript
+// ÉTAPES OBLIGATOIRES À IMPLÉMENTER :
+
+// 1. RECHERCHE ET ANALYSE DE LA DOCUMENTATION API
+// - Utiliser web search pour récupérer la doc complète de Kicks.dev
+// - Identifier tous les endpoints et leurs paramètres
+// - Comprendre l'authentification et les limites
+
+// 2. SCRAPING INTELLIGENT DES DONNÉES
+const dataScrapingPipeline = {
+  // Récupérer les données depuis Kicks.dev
+  async fetchFromKicksAPI() {
+    // Implementation basée sur la doc trouvée
+  },
+  
+  // Transformer et nettoyer les données
+  async transformData(rawData) {
+    return rawData.map(product => ({
+      ...product,
+      images: product.images.slice(0, 2), // Limiter à 2 images
+      // Autres transformations nécessaires
+    }));
+  },
+  
+  // Synchroniser avec Supabase
+  async syncToSupabase(transformedData) {
+    // Upsert des produits en base
+    // Gestion des relations (marques, catégories, etc.)
+    // Mise à jour du stock
+  }
+};
+
+// 3. STRATÉGIE DE SYNCHRONISATION
+const syncStrategy = {
+  // Synchronisation initiale (100+ produits minimum)
+  initialSync: 'Import complet des données au premier démarrage',
+  // Synchronisation périodique
+  periodicSync: 'Mise à jour toutes les 6 heures',
+  // Synchronisation temps réel
+  realtimeSync: 'Webhook ou polling pour nouveaux produits'
+};
+```
+
+## 🎨 Design System
+
+### **Palette de couleurs**
+- **Couleurs principales** : Noir (#000000) et Blanc (#FFFFFF) uniquement
+- **Nuances autorisées** : Gris très foncé (#111111, #1a1a1a) et gris très clair (#f8f8f8, #f5f5f5)
+- **Accents** : Utiliser les contrastes noir/blanc pour les call-to-actions
+
+### **Typographie**
+- **Police principale** : Inter ou Poppins (moderne et lisible)
+- **Police secondaire** : Roboto Mono pour les éléments techniques (prix, références)
+- **Hiérarchie** : Utiliser les poids de police (300, 400, 500, 600, 700) pour créer la hiérarchie
+
+### **Style général**
+- Design **minimaliste et épuré**
+- Espacement généreux entre les éléments
+- Bordures fines et subtiles
+- Ombres douces pour la profondeur
+- Interface **flat design** avec des éléments géométriques simples
+
+## ✨ Animations et UX
+
+### **Animations au chargement**
+- **Fade-in progressif** pour les éléments qui apparaissent
+- **Slide-up** pour les cartes produits
+- **Skeleton loading** pendant le chargement des données API
+- **Transitions fluides** entre les pages (300-400ms)
+
+### **Interactions**
+- **Hover effects** subtils sur les boutons et cartes
+- **Smooth scrolling** sur toute l'application
+- **Loading spinners** élégants pendant les appels API
+- **Toast notifications** pour les feedbacks utilisateur
+
+### **Micro-animations**
+- **Bounce** léger sur les boutons cliqués
+- **Scale effect** sur les images produits au hover
+- **Progress bars** animées pour les étapes de commande
+
+## 📱 Pages et Fonctionnalités
+
+### **1. Pages Publiques**
+
+#### **Page d'accueil (`/`)**
+- Header avec logo SneakX et navigation
+- Hero section avec slider des dernières nouveautés (via API Kicks.dev)
+- Grid des marques partenaires
+- Section "Produits populaires" (8 produits max depuis l'API)
+- Footer avec liens utiles
+
+#### **Catalogue produits (`/products`)**
+- **Filtres latéraux** basés sur les données API :
+  - Par marque (récupérées dynamiquement via l'API)
+  - Par genre (homme, femme, unisexe)
+  - Par taille (selon disponibilité API)
+  - Par prix (basé sur les prix API)
+- **Tri** : Prix, Nouveautés, Popularité
+- **Grid responsive** des produits (3-4 colonnes desktop, 2 mobile)
+- **Pagination** ou infinite scroll avec chargement API
+- **Compteur** de résultats
+
+#### **Détail produit (`/products/[id]`)**
+- **Galerie d'images** limitée à 2 images maximum (via API)
+- **Informations produit** : nom, marque, description, prix (données API)
+- **Sélecteur de taille** avec disponibilité du stock
+- **Bouton "Ajouter au panier"** avec animation
+- **Suggestions** de produits similaires (API)
+
+#### **Panier (`/cart`)**
+- Liste des articles avec quantités
+- **Calcul en temps réel** du total
+- **Boutons** : modifier quantité, supprimer article
+- **Résumé** avec sous-total, livraison, total
+- **Bouton** vers checkout
+
+#### **Commande (`/checkout`)**
+- **Étapes** : Adresse → Paiement → Confirmation
+- **Progress bar** des étapes
+- **Formulaires** d'adresse de livraison/facturation
+- **Récapitulatif** de commande
+- **Page de confirmation** après paiement
+
+### **2. Pages Utilisateur Connecté**
+
+#### **Connexion/Inscription (`/auth`)**
+- **Formulaires** login/register avec validation
+- **Authentification sociale** (Google, optionnel)
+- **Reset password** avec email
+
+#### **Profil utilisateur (`/profile`)**
+- **Informations personnelles** modifiables
+- **Historique des commandes** avec statuts
+- **Adresses** sauvegardées
+- **Gestion mot de passe**
+
+### **3. Panel Administrateur (`/admin`)**
+
+#### **Dashboard admin (`/admin/dashboard`)**
+- **Métriques** : ventes, commandes, utilisateurs
+- **Graphiques** de performance
+- **Dernières commandes**
+- **Alertes** stock faible
+- **Synchronisation** avec l'API Kicks.dev
+
+#### **Gestion utilisateurs (`/admin/users`)** *(Admin uniquement)*
+- **Liste** de tous les utilisateurs
+- **Filtres** par rôle (User, Vendor, Admin)
+- **Actions** : Créer, Modifier, Supprimer, Changer rôle
+- **Recherche** par nom/email
+
+#### **Gestion vendeurs (`/admin/vendors`)** *(Admin uniquement)*
+- **Liste** des vendeurs
+- **Créer** nouveau compte vendeur
+- **Statistiques** par vendeur
+
+#### **Gestion produits (`/admin/products`)** *(Admin + Vendor)*
+- **Synchronisation** avec l'API Kicks.dev
+- **Import automatique** des nouveaux produits
+- **Gestion du stock** par taille
+- **Limitation automatique** des images (max 2 par produit)
+- **Preview** et validation des données API
+
+#### **Gestion commandes (`/admin/orders`)** *(Admin + Vendor)*
+- **Liste** de toutes les commandes avec filtres
+- **Détail** de chaque commande
+- **Changement de statut** (En attente → Confirmé → Expédié → Livré)
+- **Impression** de factures/bons de livraison
+
+#### **Gestion stock (`/admin/stock`)** *(Admin + Vendor)*
+- **Vue globale** du stock par produit/taille
+- **Alertes** stock faible
+- **Ajustements** de stock
+- **Synchronisation** avec les données API
+- **Historique** des mouvements
+
+### **4. Composants Communs**
+
+#### **Navigation**
+- **Header** fixe avec logo, menu, panier, compte utilisateur
+- **Menu mobile** avec sidebar
+- **Breadcrumbs** sur les pages internes
+
+#### **Éléments UI**
+- **Cards produits** avec image (max 2 depuis API), nom, prix, marque
+- **Boutons** avec états (normal, hover, disabled, loading)
+- **Modals** pour confirmations et détails rapides
+- **Formulaires** avec validation en temps réel
+
+## 🔐 Gestion des Rôles et Permissions
+
+### **Utilisateur (User)**
+- Parcourir les produits (données API)
+- Gérer son panier et ses commandes
+- Modifier son profil
+
+### **Vendeur (Vendor)**
+- Toutes les permissions User +
+- Synchroniser les données avec l'API Kicks.dev
+- Gérer les stocks locaux
+- Voir et traiter les commandes
+
+### **Administrateur (Admin)**
+- Toutes les permissions Vendor +
+- Gérer les utilisateurs et vendeurs
+- Configuration de l'API Kicks.dev
+- Accès aux statistiques globales
+- Gestion complète de la plateforme
+
+## 🛠️ Stack Technique Recommandée
+
+### **Frontend**
+- **React 18** avec hooks et Context API
+- **Next.js 14** pour le routing et SSR
+- **Tailwind CSS** pour le styling
+- **Framer Motion** pour les animations
+- **React Hook Form** pour les formulaires
+- **React Query/TanStack Query** pour le cache API et state management
+
+### **Backend & Base de données**
+- **Supabase** (PostgreSQL, Auth, Storage)
+- **Row Level Security** pour la sécurité
+- **API Kicks.dev** pour les données produits
+- **Système de cache** pour optimiser les appels API
+
+### **Outils complémentaires**
+- **TypeScript** pour le typage
+- **Zustand** ou **Context API** pour le state global
+- **React Hot Toast** pour les notifications
+- **Lucide React** pour les icônes
+- **Axios** ou **Fetch API** pour les appels HTTP
+
+## 📋 Fonctionnalités Spécifiques à Implémenter
+
+### **🔍 ÉTAPE 1 : Recherche et Documentation API (OBLIGATOIRE)**
+```javascript
+// AVANT TOUT DÉVELOPPEMENT :
+// 1. Utiliser web search pour analyser https://kicks.dev/api-keys
+// 2. Identifier TOUS les endpoints disponibles
+// 3. Comprendre la structure des réponses JSON
+// 4. Documenter les paramètres d'authentification
+// 5. Identifier les limites de rate et contraintes
+
+// Exemple de recherche à effectuer :
+// - "Kicks.dev API documentation endpoints"
+// - "Kicks.dev API authentication headers"
+// - "Kicks.dev API rate limits"
+// - "Kicks.dev API response structure sneakers"
+```
+
+### **🔄 ÉTAPE 2 : Pipeline de données Kicks.dev → Supabase**
+```javascript
+// Service complet de synchronisation des données
+class KicksDataPipeline {
+  static apiKey = 'KICKS-97EF-725F-A605-58232DC70EED';
+  static baseURL = 'https://kicks.dev/api'; // À vérifier avec la doc
+  static maxImages = 2;
+
+  // 1. Récupération depuis Kicks.dev (basé sur la doc trouvée)
+  static async fetchAllSneakers() {
+    // Implementation à adapter selon la vraie documentation
+    const response = await fetch(`${this.baseURL}/sneakers`, {
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return await response.json();
+  }
+
+  // 2. Transformation des données
+  static transformKicksDataForSupabase(kicksData) {
+    return kicksData.map(sneaker => ({
+      // Mapping des champs selon la structure Supabase
+      external_id: sneaker.id,
+      name: sneaker.title || sneaker.name,
+      brand: sneaker.brand,
+      price: sneaker.retail_price || sneaker.price,
+      description: sneaker.description,
+      images: sneaker.images ? sneaker.images.slice(0, 2) : [],
+      sizes: this.extractSizes(sneaker),
+      category: this.determineCategory(sneaker),
+      // Autres mappings selon la structure réelle
+    }));
+  }
+
+  // 3. Synchronisation avec Supabase
+  static async syncToSupabase(transformedData) {
+    const supabase = createClient();
+    
+    for (const product of transformedData) {
+      // Upsert du produit
+      const { data, error } = await supabase
+        .from('products')
+        .upsert({
+          external_id: product.external_id,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          description: product.description,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'external_id'
+        });
+
+      // Gérer les images séparément
+      if (product.images.length > 0) {
+        await this.syncProductImages(data.id, product.images);
+      }
+
+      // Gérer les tailles et stocks
+      if (product.sizes.length > 0) {
+        await this.syncProductStock(data.id, product.sizes);
+      }
+    }
+  }
+
+  // 4. Gestion des images (max 2)
+  static async syncProductImages(productId, images) {
+    const supabase = createClient();
+    const limitedImages = images.slice(0, 2);
+    
+    for (const [index, imageUrl] of limitedImages.entries()) {
+      await supabase.from('product_images').upsert({
+        product_id: productId,
+        image_url: imageUrl,
+        is_primary: index === 0,
+        order_index: index
+      });
+    }
+  }
+
+  // 5. Gestion du stock par taille
+  static async syncProductStock(productId, sizes) {
+    const supabase = createClient();
+    
+    for (const size of sizes) {
+      await supabase.from('product_stock').upsert({
+        product_id: productId,
+        size: size.value,
+        quantity: size.stock || Math.floor(Math.random() * 20), // Stock simulé
+        available: size.available !== false
+      });
+    }
+  }
+}
+
+### **Système de filtres avancé**
+```javascript
+// Filtres basés sur les données API
+const filters = {
+  brands: [], // Récupérées dynamiquement via API
+  genders: ['homme', 'femme', 'unisex'],
+  sizes: [], // Selon disponibilité API
+  priceRange: [0, 1000] // Ajusté selon les prix API
+}
+```
+
+### **Gestion du panier**
+- **Persistance** dans localStorage et base de données
+- **Synchronisation** entre onglets
+- **Calcul automatique** des totaux
+
+### **Cache et Performance**
+- **Cache API** avec React Query pour éviter les appels répétés
+- **Optimisation images** avec lazy loading
+- **Pagination intelligente** pour les gros catalogues
+
+### **Système de notifications**
+- **Toast** pour les actions (ajout panier, erreurs, succès)
+- **Badges** de notification sur le panier
+- **Alertes** de synchronisation API dans l'admin
+
+### **Responsive Design**
+- **Mobile-first** approach
+- **Breakpoints** : mobile (< 768px), tablet (768-1024px), desktop (> 1024px)
+- **Navigation mobile** avec menu hamburger
+
+## 🎯 Objectifs UX Prioritaires
+
+1. **Performance** : Chargement rapide des données API et images optimisées
+2. **Accessibilité** : Navigation clavier, contraste, lecteurs d'écran
+3. **Intuitivité** : Interface simple et logique
+4. **Fluidité** : Transitions douces et chargements API transparents
+5. **Modernité** : Design contemporain et épuré
+
+## 🔄 Synchronisation et Données
+
+### **Stratégie de synchronisation**
+- **Synchronisation automatique** des nouveaux produits toutes les 6h
+- **Cache intelligent** pour réduire les appels API
+- **Fallback** en cas d'indisponibilité de l'API
+- **Logs de synchronisation** pour le debugging
+
+### **Gestion des erreurs API**
+- **Retry automatique** en cas d'échec
+- **Messages d'erreur** explicites pour les utilisateurs
+- **Mode dégradé** si API indisponible
+- **Monitoring** des performances API
+
+## 📝 Notes d'implémentation
+
+### **🔍 RECHERCHE PRÉALABLE OBLIGATOIRE**
+- **ÉTAPE 1** : Utiliser web search pour analyser complètement l'API Kicks.dev
+- **ÉTAPE 2** : Documenter TOUS les endpoints, paramètres et formats de réponse
+- **ÉTAPE 3** : Comprendre l'authentification et les contraintes techniques
+
+### **🔄 PIPELINE DE DONNÉES**
+- Implémenter le scraping complet des données Kicks.dev (100+ produits minimum)
+- Transformer et mapper les données pour Supabase
+- Limiter strictement à 2 images maximum par produit
+- Gérer la synchronisation bidirectionnelle Kicks.dev ↔ Supabase
+
+### **📊 BASE DE DONNÉES SUPABASE**
+- Créer les tables adaptées aux données Kicks.dev
+- Implémenter les relations (produits, images, stock, commandes)
+- Gérer les contraintes et index pour les performances
+- Prévoir la synchronisation en temps réel
+
+### **⚡ PERFORMANCE ET ROBUSTESSE**
+- Implémenter un système de cache robuste pour optimiser les performances
+- Prévoir les cas d'erreur et les états de chargement API
+- Optimiser les images récupérées (WebP, lazy loading, compression)
+- Tester la gestion des timeouts et erreurs réseau
+- Gérer les conflits de synchronisation et la déduplication
+
+## 🚀 Rendu Attendu
+
+Générer une application web complète et fonctionnelle avec :
+
+### **📋 PRÉREQUIS OBLIGATOIRES**
+1. **Rechercher et analyser** la documentation complète de l'API Kicks.dev
+2. **Implémenter** le pipeline de données complet : Kicks.dev → Transformation → Supabase
+3. **Scrapper** et synchroniser 100+ produits minimum avec max 2 images/produit
+
+### **🎯 LIVRABLE FINAL**
+- **Interface utilisateur moderne** en noir et blanc avec animations fluides
+- **Intégration complète** avec l'API Kicks.dev (données scrapées et synchronisées)
+- **Base de données Supabase** optimisée avec toutes les relations
+- **Système de rôles** complet (User/Vendor/Admin) avec permissions
+- **Fonctionnalités e-commerce** complètes avec vraies données produits
+- **Panel d'administration** avancé avec monitoring de synchronisation
+- **Pipeline de données** robuste avec gestion d'erreurs complète
+- **Documentation technique** détaillée du scraping et de l'intégration
+- **Code TypeScript** propre et bien structuré avec tests unitaires
+
+## 🔑 Informations API et Pipeline
+
+### **Configuration Initiale**
+- **Clé API** : `KICKS-97EF-725F-A605-58232DC70EED`
+- **Base URL** : `https://kicks.dev/api` (À VÉRIFIER avec la documentation)
+- **Documentation** : https://kicks.dev/api-keys (À ANALYSER EN PREMIER)
+
+### **Pipeline de Données Obligatoire**
+1. **Research Phase** : Web search de la documentation API complète
+2. **Scraping Phase** : Récupération de 100+ produits avec leurs données
+3. **Transform Phase** : Nettoyage et adaptation des données pour Supabase  
+4. **Load Phase** : Import et synchronisation avec la base de données
+5. **Sync Phase** : Maintien de la cohérence des données en continu
+
+### **Contraintes Techniques**
+- **Limite images** : 2 maximum par paire de sneakers
+- **Cache intelligent** : Obligatoire pour optimiser les performances
+- **Gestion d'erreurs** : Retry, fallback, monitoring des APIs
+- **Timeout recommandé** : 10 secondes pour les appels API
+- **Rate limiting** : Respecter les limites de l'API Kicks.dev

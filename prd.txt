@@ -1,0 +1,590 @@
+## 📋 Project Context
+Build a modern, clean e‑commerce web application called **"SneakX"** — a premium sneakers store with a smooth user interface and subtle animations. The application must be built in React/Next.js with Supabase as the backend.
+
+## 🎯 MANDATORY 3‑STEP DEVELOPMENT PLAN
+
+### **🔧 STEP 1: BACKEND & DATA PIPELINE (TOP PRIORITY)**
+**Goal**: Build a solid foundation with real data  
+**Deliverable**: Functional backend with synchronized data
+
+**Priority actions:**
+- ✅ Research and fully analyze the Kicks.dev API
+- ✅ Create the optimized Supabase schema (tables, relations, RLS)
+- ✅ Develop the scraping pipeline: Kicks.dev → Supabase
+- ✅ Implement authentication and role management
+- ✅ Sync 100+ products with a maximum of 2 images per product
+- ✅ Create Supabase functions/triggers for business logic
+- ✅ Test pipeline robustness (error handling, retry, cache)
+
+**Validation criteria:**
+- Database populated with real product data
+- Functional authentication (User/Vendor/Admin)
+- Stable and documented synchronization pipeline
+
+---
+
+### **🔄 STEP 2: API ROUTES & FRONTEND–BACKEND INTEGRATION**
+**Goal**: Connect the frontend to backend data  
+**Deliverable**: Functional application with real data
+
+**Priority actions:**
+- ✅ Create API services on the frontend (TypeScript)
+- ✅ Implement React Query hooks for caching and state management
+- ✅ Develop the main routes: catalog, product detail, cart, orders
+- ✅ Handle client‑side authentication (login/logout/sessions)
+- ✅ Implement e‑commerce logic (cart, checkout, inventory management)
+- ✅ Create the admin panel with full CRUD
+- ✅ Test all frontend ↔ backend interactions
+
+**Validation criteria:**
+- All e‑commerce features operational
+- Admin panel functional for all roles
+- Real‑time synchronization between frontend and Supabase
+
+---
+
+### **🎨 STEP 3: VISUAL POLISH & UX (LOWEST PRIORITY)**
+**Goal**: Improve user experience and aesthetics  
+**Deliverable**: Premium interface and smooth animations
+
+**Priority actions:**
+- ✅ Implement the design system (black/white colors, typography)
+- ✅ Add Framer Motion animations (transitions, hover effects)
+- ✅ Optimize responsive design (mobile‑first)
+- ✅ Improve UX (loading states, notifications, micro‑interactions)
+- ✅ Polish UI components (buttons, forms, modals)
+- ✅ User tests and final adjustments
+
+**Validation criteria:**
+- Modern and professional interface
+- Smooth and performant animations
+- Optimal user experience on all devices
+
+---
+
+## ⚠️ **GOLDEN RULE: DON’T MOVE TO THE NEXT STEP**
+**Each step MUST be 100% functional before moving to the next.**  
+**The backend is the foundation — without real data, the frontend is useless.**
+
+## 🔌 Data Source — Kicks.dev API
+
+### **⚠️ MANDATORY STEP — Documentation Research**
+**BEFORE STARTING DEVELOPMENT, you MUST:**
+1. **Research and analyze** the full Kicks.dev API documentation via web search
+2. **Identify** all available endpoints, their parameters, and response formats
+3. **Understand** data structure, authentication, and rate limits
+4. **Document** scraping methods and integration with Supabase
+
+### **API Configuration**
+- **Base URL**: `https://kicks.dev/api`
+- **API Key**: `KICKS-97EF-725F-A605-58232DC70EED`
+- **Documentation**: https://kicks.dev/api-keys (ANALYZE FIRST)
+
+### **Image Management**
+- **Image limit**: Maximum 1–2 images per pair of sneakers
+- **Selection**: Take only the first 2 quality images for each product
+- **Optimization**: Ignore the 36+ images available by default in the API
+- **Format**: Favor high‑resolution images for the product gallery
+
+### **Monitors KicksDB — Real‑time Updates**
+- **Goal**: Keep **prices** up to date in near real time. **Market availability** from monitors can be displayed for **informational** purposes.
+- **Product decision**: KicksDB Monitors control **PRICES only**. **SneakX stock is internal/simulated** (reservation → commit → release). **No monitor writes** to `product_stock`.
+
+- **Priority actions:**
+  - Enable and configure **KicksDB/Kicks.dev Monitors** (price changes, detection of new products).
+  - Expose a **webhook** `POST /api/kicks/monitor` (Next.js Route Handler) to receive events.
+  - Use a **queue** (retries, backoff) and **idempotency** (dedup by *event_id*).
+  - Add a **feature flag** `FEATURE_MONITOR_UPDATES_STOCK=false` to lock the behavior.
+  - Log all events (success/errors) for audit.
+
+- **Supabase integration:**
+  - Upsert **price fields only** in `products` (e.g., `price`, `price_currency`, `last_price_at`).
+  - **No modifications** to `product_stock` via the webhook.
+  - **SLA**: database updated **≤ 60s** after receiving an event.
+
+- **Acceptance criteria:**
+  - A price change simulated on KicksDB is reflected in the app in **< 60s**.
+  - Logs show: receipt → processing → upsert of `products.price`.
+  - **Zero writes** to `product_stock` by the webhook.
+
+- **Security & robustness:**
+  - Verify webhook **signature/secret**, **rate limiting**, **circuit breaker**.
+  - **Fallback** automatically to **polling (6h)** if monitors are unavailable.
+
+### **SneakX Internal Stock (simulation)**
+- **Source of truth**: `product_stock` table (stock per **size**).
+- **Rule**: **Checkout** manages stock (reservation → commit → release). Monitors **do not** modify `product_stock`.
+- **Concurrency**: block selling if `(on_hand - reserved) < quantity` (prevent oversell).
+- **Acceptance criteria:**
+  - Nominal case: `on_hand = 6` → order `1` → **`on_hand = 5`** after successful payment.
+  - Cancellation/failure: release reserved stock (return to initial state).
+  - Inventory journal updated (`inventory_moves`) at each step.
+
+### **Mandatory Data Pipeline Process**
+```javascript
+// MANDATORY STEPS TO IMPLEMENT:
+
+// 1. API DOCUMENTATION RESEARCH & ANALYSIS
+// - Use web search to retrieve the complete Kicks.dev docs
+// - Identify all endpoints and their parameters
+// - Understand authentication and limits
+
+// 2. SMART DATA SCRAPING
+const dataScrapingPipeline = {
+  // Fetch data from Kicks.dev
+  async fetchFromKicksAPI() {
+    // Implementation based on the discovered docs
+  },
+  
+  // Transform and clean data
+  async transformData(rawData) {
+    return rawData.map(product => ({
+      ...product,
+      images: product.images.slice(0, 2), // Limit to 2 images
+      // Other necessary transformations
+    }));
+  },
+  
+  // Sync with Supabase
+  async syncToSupabase(transformedData) {
+    // Upsert products into the database
+    // Manage relations (brands, categories, etc.)
+    // Update stock
+  }
+};
+
+// 3. SYNC STRATEGY
+const syncStrategy = {
+  // Initial sync (minimum 100+ products)
+  initialSync: 'Full data import on first startup',
+  // Periodic sync
+  periodicSync: 'Update every 6 hours',
+  // Real-time sync
+  realtimeSync: 'Webhook or polling for new products'
+};
+```
+
+## 🎨 Design System
+
+### **Color Palette**
+- **Primary colors**: Black (#000000) and White (#FFFFFF) only
+- **Allowed shades**: Very dark grays (#111111, #1a1a1a) and very light grays (#f8f8f8, #f5f5f5)
+- **Accents**: Use black/white contrast for call‑to‑actions
+
+### **Typography**
+- **Primary font**: Inter or Poppins (modern and readable)
+- **Secondary font**: Roboto Mono for technical elements (prices, references)
+- **Hierarchy**: Use font weights (300, 400, 500, 600, 700) to create hierarchy
+
+### **General Style**
+- **Minimalist and clean** design
+- Generous spacing between elements
+- Thin and subtle borders
+- Soft shadows for depth
+- **Flat design** interface with simple geometric elements
+
+## ✨ Animations and UX
+
+### **Loading Animations**
+- **Progressive fade‑in** for appearing elements
+- **Slide‑up** for product cards
+- **Skeleton loading** while fetching API data
+- **Smooth transitions** between pages (300–400ms)
+
+### **Interactions**
+- Subtle **hover effects** on buttons and cards
+- **Smooth scrolling** across the app
+- Elegant **loading spinners** during API calls
+- **Toast notifications** for user feedback
+
+### **Micro‑animations**
+- Light **bounce** on clicked buttons
+- **Scale effect** on product images on hover
+- Animated **progress bars** for checkout steps
+
+## 📱 Pages and Features
+
+### **1. Public Pages**
+
+#### **Home (`/`)**
+- Header with SneakX logo and navigation
+- Hero section with slider of the latest releases (via Kicks.dev API)
+- Grid of partner brands
+- “Popular products” section (max 8 products from the API)
+- Footer with useful links
+
+#### **Product catalog (`/products`)**
+- **Sidebar filters** based on API data:
+  - By brand (dynamically fetched via the API)
+  - By gender (men, women, unisex)
+  - By size (according to API availability)
+  - By price (based on API prices)
+- **Sort**: Price, Newest, Popularity
+- **Responsive grid** of products (3–4 columns desktop, 2 mobile)
+- **Pagination** or infinite scroll with API loading
+- **Counter** of results
+
+#### **Product detail (`/products/[id]`)**
+- **Image gallery** limited to 2 images maximum (via API)
+- **Product information**: name, brand, description, price (API data)
+- **Size selector** with stock availability
+- **“Add to cart” button** with animation
+- **Suggestions** of similar products (API)
+
+#### **Cart (`/cart`)**
+- List of items with quantities
+- **Real‑time** total calculation
+- **Buttons**: change quantity, remove item
+- **Summary** with subtotal, shipping, total
+- **Button** to checkout
+
+#### **Checkout (`/checkout`)**
+- **Steps**: Address → Payment → Confirmation
+- **Progress bar** for steps
+- **Forms** for shipping/billing address
+- **Order summary**
+- **Confirmation page** after payment
+
+### **2. Logged‑in User Pages**
+
+#### **Auth (`/auth`)**
+- **Login/register** forms with validation
+- **Social auth** (Google, optional)
+- **Reset password** via email
+
+#### **User profile (`/profile`)**
+- **Editable** personal information
+- **Order history** with statuses
+- **Saved addresses**
+- **Password management**
+
+### **3. Admin Panel (`/admin`)**
+
+#### **Admin dashboard (`/admin/dashboard`)**
+- **Metrics**: sales, orders, users
+- **Performance charts**
+- **Latest orders**
+- **Low stock** alerts
+- **Synchronization** with the Kicks.dev API
+
+#### **User management (`/admin/users`)** *(Admin only)*
+- **List** of all users
+- **Filters** by role (User, Vendor, Admin)
+- **Actions**: Create, Update, Delete, Change role
+- **Search** by name/email
+
+#### **Vendor management (`/admin/vendors`)** *(Admin only)*
+- **List** of vendors
+- **Create** new vendor account
+- **Statistics** per vendor
+
+#### **Product management (`/admin/products`)** *(Admin + Vendor)*
+- **Synchronization** with the Kicks.dev API
+- **Automatic import** of new products
+- **Inventory management** by size
+- **Automatic limit** of images (max 2 per product)
+- **Preview** and validation of API data
+
+#### **Order management (`/admin/orders`)** *(Admin + Vendor)*
+- **List** of all orders with filters
+- **Detail** of each order
+- **Status changes** (Pending → Confirmed → Shipped → Delivered)
+- **Print** invoices/shipping notes
+
+#### **Stock management (`/admin/stock`)** *(Admin + Vendor)*
+- **Global view** of stock by product/size
+- **Low‑stock alerts**
+- **Stock adjustments**
+- **Synchronization** with API data
+- **History** of movements
+
+### **4. Common Components**
+
+#### **Navigation**
+- **Fixed header** with logo, menu, cart, user account
+- **Mobile menu** with sidebar
+- **Breadcrumbs** on internal pages
+
+#### **UI Elements**
+- **Product cards** with image (max 2 from API), name, price, brand
+- **Buttons** with states (normal, hover, disabled, loading)
+- **Modals** for confirmations and quick details
+- **Forms** with real‑time validation
+
+## 🔐 Roles and Permissions
+
+### **User**
+- Browse products (API data)
+- Manage their cart and orders
+- Edit their profile
+
+### **Vendor**
+- All User permissions +
+- Sync data with the Kicks.dev API
+- Manage local inventory
+- View and process orders
+
+### **Admin**
+- All Vendor permissions +
+- Manage users and vendors
+- Kicks.dev API configuration
+- Access global statistics
+- Full platform management
+
+## 🛠️ Recommended Tech Stack
+
+### **Frontend**
+- **React 18** with hooks and Context API
+- **Next.js 14** for routing and SSR
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **React Hook Form** for forms
+- **React Query/TanStack Query** for API cache and state management
+
+### **Backend & Database**
+- **Supabase** (PostgreSQL, Auth, Storage)
+- **Row Level Security** for safety
+- **Kicks.dev API** for product data
+- **Caching system** to optimize API calls
+
+### **Complementary tools**
+- **TypeScript** for typing
+- **Zustand** or **Context API** for global state
+- **React Hot Toast** for notifications
+- **Lucide React** for icons
+- **Axios** or **Fetch API** for HTTP calls
+
+## 📋 Specific Features to Implement
+
+### **🔍 STEP 1: API Research & Documentation (MANDATORY)**
+```javascript
+// BEFORE ANY DEVELOPMENT:
+// 1. Use web search to analyze https://kicks.dev/api-keys
+// 2. Identify ALL available endpoints
+// 3. Understand JSON response structure
+// 4. Document authentication parameters
+// 5. Identify rate limits and constraints
+
+// Example searches to perform:
+// - "Kicks.dev API documentation endpoints"
+// - "Kicks.dev API authentication headers"
+// - "Kicks.dev API rate limits"
+// - "Kicks.dev API response structure sneakers"
+```
+
+### **🔄 STEP 2: Data pipeline Kicks.dev → Supabase**
+```javascript
+// Full data synchronization service
+class KicksDataPipeline {
+  static apiKey = 'KICKS-97EF-725F-A605-58232DC70EED';
+  static baseURL = 'https://kicks.dev/api'; // To be verified with the docs
+  static maxImages = 2;
+
+  // 1. Fetch from Kicks.dev (based on the found docs)
+  static async fetchAllSneakers() {
+    // Implementation to adapt according to the real documentation
+    const response = await fetch(`${this.baseURL}/sneakers`, {
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return await response.json();
+  }
+
+  // 2. Transform data
+  static transformKicksDataForSupabase(kicksData) {
+    return kicksData.map(sneaker => ({
+      // Field mapping according to the Supabase structure
+      external_id: sneaker.id,
+      name: sneaker.title || sneaker.name,
+      brand: sneaker.brand,
+      price: sneaker.retail_price || sneaker.price,
+      description: sneaker.description,
+      images: sneaker.images ? sneaker.images.slice(0, 2) : [],
+      sizes: this.extractSizes(sneaker),
+      category: this.determineCategory(sneaker),
+      // Other mappings according to the real structure
+    }));
+  }
+
+  // 3. Sync with Supabase
+  static async syncToSupabase(transformedData) {
+    const supabase = createClient();
+    
+    for (const product of transformedData) {
+      // Upsert the product
+      const { data, error } = await supabase
+        .from('products')
+        .upsert({
+          external_id: product.external_id,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          description: product.description,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'external_id'
+        });
+
+      // Manage images separately
+      if (product.images.length > 0) {
+        await this.syncProductImages(data.id, product.images);
+      }
+
+      // Manage sizes and inventory
+      if (product.sizes.length > 0) {
+        await this.syncProductStock(data.id, product.sizes);
+      }
+    }
+  }
+
+  // 4. Image management (max 2)
+  static async syncProductImages(productId, images) {
+    const supabase = createClient();
+    const limitedImages = images.slice(0, 2);
+    
+    for (const [index, imageUrl] of limitedImages.entries()) {
+      await supabase.from('product_images').upsert({
+        product_id: productId,
+        image_url: imageUrl,
+        is_primary: index === 0,
+        order_index: index
+      });
+    }
+  }
+
+  // 5. Size‑based inventory management
+  static async syncProductStock(productId, sizes) {
+    const supabase = createClient();
+    
+    for (const size of sizes) {
+      await supabase.from('product_stock').upsert({
+        product_id: productId,
+        size: size.value,
+        quantity: size.stock || Math.floor(Math.random() * 20), // Simulated stock
+        available: size.available !== false
+      });
+    }
+  }
+}
+
+### **Advanced filter system**
+```javascript
+// Filters based on API data
+const filters = {
+  brands: [], // Fetched dynamically via API
+  genders: ['men', 'women', 'unisex'],
+  sizes: [], // According to API availability
+  priceRange: [0, 1000] // Adjusted according to API prices
+}
+```
+
+### **Cart management**
+- **Persistence** in localStorage and database
+- **Synchronization** between tabs
+- **Automatic** totals calculation
+
+### **Cache and Performance**
+- **API cache** with React Query to avoid repeated calls
+- **Image optimization** with lazy loading
+- **Smart pagination** for large catalogs
+
+### **Notification system**
+- **Toast** for actions (add to cart, errors, success)
+- **Badges** on the cart
+- **API synchronization alerts** in admin
+
+### **Responsive Design**
+- **Mobile‑first** approach
+- **Breakpoints**: mobile (< 768px), tablet (768–1024px), desktop (> 1024px)
+- **Mobile navigation** with hamburger menu
+
+## 🎯 Priority UX Objectives
+
+1. **Performance**: Fast loading of API data and optimized images
+2. **Accessibility**: Keyboard navigation, contrast, screen readers
+3. **Intuitiveness**: Simple and logical interface
+4. **Fluidity**: Smooth transitions and transparent API loading
+5. **Modernity**: Contemporary and clean design
+
+## 🔄 Synchronization and Data
+
+### **Synchronization strategy**
+- **Automatic synchronization** of new products every 6h
+- **Smart cache** to reduce API calls
+- **Fallback** in case the API is unavailable
+- **Sync logs** for debugging
+
+### **API error handling**
+- **Automatic retry** on failure
+- **Explicit error messages** for users
+- **Degraded mode** if the API is unavailable
+- **Monitoring** of API performance
+
+## 📝 Implementation Notes
+
+### **🔍 MANDATORY PRELIMINARY RESEARCH**
+- **STEP 1**: Use web search to fully analyze the Kicks.dev API
+- **STEP 2**: Document ALL endpoints, parameters, and response formats
+- **STEP 3**: Understand authentication and technical constraints
+
+### **🔄 DATA PIPELINE**
+- Implement full scraping of Kicks.dev data (minimum 100+ products)
+- Transform and map data for Supabase
+- Strictly limit to a maximum of 2 images per product
+- Manage bidirectional synchronization Kicks.dev ↔ Supabase
+
+### **📊 SUPABASE DATABASE**
+- Create tables adapted to Kicks.dev data
+- Implement relations (products, images, stock, orders)
+- Manage constraints and indexes for performance
+- Plan for real‑time synchronization
+
+### **⚡ PERFORMANCE AND ROBUSTNESS**
+- Implement a robust caching system to optimize performance
+- Anticipate error cases and API loading states
+- Optimize retrieved images (WebP, lazy loading, compression)
+- Test handling of timeouts and network errors
+- Manage sync conflicts and deduplication
+
+## 🚀 Expected Outcome
+
+Deliver a complete and functional web application with:
+
+### **📋 MANDATORY PREREQUISITES**
+1. **Research and analyze** the full Kicks.dev API documentation
+2. **Implement** the full data pipeline: Kicks.dev → Transformation → Supabase
+3. **Scrape** and sync at least 100+ products with max 2 images/product
+
+### **🎯 FINAL DELIVERABLE**
+- **Modern user interface** in black and white with smooth animations
+- **Full integration** with the Kicks.dev API (scraped and synchronized data)
+- **Optimized Supabase database** with all relations
+- **Complete role system** (User/Vendor/Admin) with permissions
+- **Complete e‑commerce features** with real product data
+- **Advanced admin panel** with sync monitoring
+- **Robust data pipeline** with comprehensive error handling
+- **Detailed technical documentation** of scraping and integration
+- **Clean, well‑structured TypeScript code** with unit tests
+
+## 🔑 API and Pipeline Information
+
+### **Initial Configuration**
+- **API Key**: `KICKS-97EF-725F-A605-58232DC70EED`
+- **Base URL**: `https://kicks.dev/api` (TO BE VERIFIED with documentation)
+- **Documentation**: https://kicks.dev/api-keys (ANALYZE FIRST)
+
+### **Mandatory Data Pipeline**
+1. **Research Phase**: Web search for complete API documentation
+2. **Scraping Phase**: Retrieve 100+ products with their data
+3. **Transform Phase**: Clean and adapt data for Supabase  
+4. **Load Phase**: Import and sync with the database
+5. **Sync Phase**: Maintain continuous data consistency
+
+### **Technical Constraints**
+- **Image limit**: 2 maximum per pair of sneakers
+- **Smart cache**: Mandatory to optimize performance
+- **Error handling**: Retry, fallback, API monitoring
+- **Recommended timeout**: 10 seconds for API calls
+- **Rate limiting**: Respect Kicks.dev API limits

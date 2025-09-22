@@ -1,0 +1,4866 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "PHASE 1: Backend & Data Pipeline (PRIORITY)",
+        "description": "Build solid foundation with real KicksDB data and real-time monitoring",
+        "status": "in-progress",
+        "priority": "high",
+        "dependencies": [
+          "16"
+        ],
+        "details": "Complete backend infrastructure with KicksDB integration, real-time monitors, and Supabase setup",
+        "testStrategy": "Verify data synchronization, real-time updates, and authentication functionality",
+        "subtasks": [
+          {
+            "id": 2,
+            "title": "Supabase Database Schema Design",
+            "description": "Create optimized database structure for real-time updates",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1
+            ],
+            "details": "Tables, relations, indexes, RLS policies, monitor event tracking",
+            "testStrategy": "Test all CRUD operations and real-time performance",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Design products table schema",
+                "description": "Create products table with real-time update fields",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, name, description, price, brand_id, category_id, external_id, last_price_update, last_stock_update",
+                "testStrategy": "Test product CRUD operations and update tracking"
+              },
+              {
+                "id": 2,
+                "title": "Design brands table schema",
+                "description": "Create brands table structure",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, name, logo_url, description, is_active, external_id",
+                "testStrategy": "Test brand management operations"
+              },
+              {
+                "id": 3,
+                "title": "Design categories table schema",
+                "description": "Create categories table structure",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, name, description, parent_id, is_active, external_id",
+                "testStrategy": "Test category hierarchy operations"
+              },
+              {
+                "id": 4,
+                "title": "Design product_images table schema",
+                "description": "Create product images table with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "id, product_id, image_url, is_primary, order_index (max 2 per product)",
+                "testStrategy": "Test image association and ordering"
+              },
+              {
+                "id": 5,
+                "title": "Design sizes table schema",
+                "description": "Create sizes table for shoe sizes",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, size_eu, size_us, size_uk, created_at",
+                "testStrategy": "Test size management operations"
+              },
+              {
+                "id": 6,
+                "title": "Design product_stock table schema",
+                "description": "Create stock management table with real-time updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  5
+                ],
+                "details": "id, product_id, size_id, quantity, reserved_quantity, last_updated, is_available",
+                "testStrategy": "Test stock tracking, reservations, and real-time updates"
+              },
+              {
+                "id": 7,
+                "title": "Design monitor_events table schema",
+                "description": "Create table for tracking KicksDB monitor events",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, event_id, event_type, product_id, old_value, new_value, processed_at, status",
+                "testStrategy": "Test event tracking and deduplication"
+              },
+              {
+                "id": 8,
+                "title": "Design user_profiles table schema",
+                "description": "Create user profiles with role management",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "id, email, first_name, last_name, role, phone, date_of_birth",
+                "testStrategy": "Test user profile operations"
+              },
+              {
+                "id": 9,
+                "title": "Design addresses table schema",
+                "description": "Create user addresses table",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8
+                ],
+                "details": "id, user_id, type, address_line1, city, postal_code, country",
+                "testStrategy": "Test address management"
+              },
+              {
+                "id": 10,
+                "title": "Design orders table schema",
+                "description": "Create orders management table",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8
+                ],
+                "details": "id, user_id, order_number, status, payment_status, total_amount",
+                "testStrategy": "Test order lifecycle management"
+              },
+              {
+                "id": 11,
+                "title": "Design order_items table schema",
+                "description": "Create order items table",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  10,
+                  1,
+                  5
+                ],
+                "details": "id, order_id, product_id, size_id, quantity, unit_price",
+                "testStrategy": "Test order item operations"
+              },
+              {
+                "id": 12,
+                "title": "Design cart_items table schema",
+                "description": "Create shopping cart table",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8,
+                  1,
+                  5
+                ],
+                "details": "id, user_id, product_id, size_id, quantity, created_at",
+                "testStrategy": "Test cart operations"
+              },
+              {
+                "id": 13,
+                "title": "Create database relationships and constraints",
+                "description": "Set up foreign keys and constraints",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ],
+                "details": "Foreign key relationships, check constraints, unique indexes",
+                "testStrategy": "Test referential integrity"
+              },
+              {
+                "id": 14,
+                "title": "Implement Row Level Security policies",
+                "description": "Create RLS policies for all tables",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  13
+                ],
+                "details": "User/Admin/Vendor role-based access policies",
+                "testStrategy": "Test access control for different roles"
+              },
+              {
+                "id": 15,
+                "title": "Create database indexes for performance",
+                "description": "Add indexes for query optimization",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  13
+                ],
+                "details": "Product search, brand filtering, category filtering, real-time update indexes",
+                "testStrategy": "Test query performance improvements"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "KicksDB Data Pipeline Implementation",
+            "description": "Create comprehensive data synchronization system",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Fetch, transform, sync data with error handling and 2-image limit",
+            "testStrategy": "Test data integrity and sync reliability",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create KicksDB API client service",
+                "description": "Build API client with authentication",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "HTTP client, authentication headers, error handling",
+                "testStrategy": "Test API connectivity and error responses"
+              },
+              {
+                "id": 2,
+                "title": "Implement product data fetching",
+                "description": "Fetch product data from KicksDB",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Paginated fetching, bulk data retrieval",
+                "testStrategy": "Test data completeness and pagination"
+              },
+              {
+                "id": 3,
+                "title": "Implement brand data fetching",
+                "description": "Fetch brand information from KicksDB",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Brand names, logos, descriptions",
+                "testStrategy": "Test brand data accuracy"
+              },
+              {
+                "id": 4,
+                "title": "Implement category data fetching",
+                "description": "Fetch category data from KicksDB",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Category hierarchy, descriptions",
+                "testStrategy": "Test category structure integrity"
+              },
+              {
+                "id": 5,
+                "title": "Create data transformation layer",
+                "description": "Transform KicksDB data to Supabase format",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2,
+                  3,
+                  4
+                ],
+                "details": "Field mapping, data cleaning, validation",
+                "testStrategy": "Test data transformation accuracy"
+              },
+              {
+                "id": 6,
+                "title": "Implement image processing (max 2 per product)",
+                "description": "Process and limit product images strictly to 2",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Select best 2 images only, URL validation, order assignment, ignore 36+ images",
+                "testStrategy": "Verify strict 2-image limit enforcement"
+              },
+              {
+                "id": 7,
+                "title": "Create Supabase data insertion service",
+                "description": "Service to insert transformed data into Supabase",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Batch inserts, upsert logic, conflict resolution",
+                "testStrategy": "Test insertion performance and accuracy"
+              },
+              {
+                "id": 8,
+                "title": "Implement brand synchronization",
+                "description": "Sync brand data to Supabase",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  7
+                ],
+                "details": "Brand upsert, duplicate handling",
+                "testStrategy": "Test brand data consistency"
+              },
+              {
+                "id": 9,
+                "title": "Implement category synchronization",
+                "description": "Sync category data to Supabase",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  7
+                ],
+                "details": "Category hierarchy preservation",
+                "testStrategy": "Test category relationship integrity"
+              },
+              {
+                "id": 10,
+                "title": "Implement product synchronization",
+                "description": "Sync product data to Supabase",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  8,
+                  9
+                ],
+                "details": "Product upsert with brand/category relationships",
+                "testStrategy": "Test product data completeness"
+              },
+              {
+                "id": 11,
+                "title": "Implement image synchronization",
+                "description": "Sync product images to Supabase with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  10,
+                  6
+                ],
+                "details": "Image URL storage, primary image designation, enforce max 2 images",
+                "testStrategy": "Test image association accuracy and limit enforcement"
+              },
+              {
+                "id": 12,
+                "title": "Implement stock data generation",
+                "description": "Generate realistic stock data for products",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  10
+                ],
+                "details": "Size availability, stock quantities",
+                "testStrategy": "Test stock data distribution"
+              },
+              {
+                "id": 13,
+                "title": "Create sync coordination service",
+                "description": "Orchestrate the complete sync process",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ],
+                "details": "Sync order, dependency management, progress tracking",
+                "testStrategy": "Test complete sync workflow"
+              },
+              {
+                "id": 14,
+                "title": "Implement sync status tracking",
+                "description": "Track sync progress and status",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  13
+                ],
+                "details": "Progress indicators, success/failure tracking",
+                "testStrategy": "Test status accuracy and updates"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "MonitorKixDB Real-time Price Updates",
+            "description": "Implement real-time PRICE monitoring via webhooks (NO stock updates)",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "PRICE-ONLY updates via webhook, feature flag FEATURE_MONITOR_UPDATES_STOCK=false, ≤60s SLA",
+            "testStrategy": "Test price changes reflect in app within 60 seconds, verify NO stock modifications",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Configure KicksDB Price Monitors Only",
+                "description": "Set up monitors for PRICE CHANGES only (not stock)",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Activate PRICE monitors in KicksDB dashboard, configure webhook URL to /api/kicks/monitor",
+                "testStrategy": "Verify price monitors active, NO stock monitors configured"
+              },
+              {
+                "id": 2,
+                "title": "Create webhook endpoint /api/kicks/monitor",
+                "description": "Build Next.js Route Handler for receiving monitor events",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "POST /api/kicks/monitor Route Handler, event validation, signature verification",
+                "testStrategy": "Test webhook receives and processes events correctly"
+              },
+              {
+                "id": 3,
+                "title": "Implement comprehensive webhook security",
+                "description": "Secure webhook with signature verification, rate limiting, and circuit breaker",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "Webhook signature verification, rate limiting protection, circuit breaker pattern for reliability",
+                "testStrategy": "Test signature validation, rate limit enforcement, circuit breaker activation"
+              },
+              {
+                "id": 4,
+                "title": "Create event queue system",
+                "description": "Implement job queue with retries and backoff",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "Queue implementation, retry logic, exponential backoff",
+                "testStrategy": "Test queue processing and retry mechanisms"
+              },
+              {
+                "id": 5,
+                "title": "Implement event deduplication with feature flag",
+                "description": "Ensure idempotency using event_id + add FEATURE_MONITOR_UPDATES_STOCK=false",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  4
+                ],
+                "details": "Event_id deduplication, feature flag FEATURE_MONITOR_UPDATES_STOCK=false to lock behavior",
+                "testStrategy": "Test duplicate event handling and feature flag enforcement"
+              },
+              {
+                "id": 6,
+                "title": "Create price-only database update functions",
+                "description": "RPC functions for updating PRICES only (NO stock modifications)",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Supabase RPC to upsert price fields only: price, price_currency, last_price_at. ZERO writes to product_stock table",
+                "testStrategy": "Test price updates only, verify product_stock table never modified by webhook"
+              },
+              {
+                "id": 7,
+                "title": "Implement comprehensive audit logging",
+                "description": "Log all price update events with timestamps for audit trail",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  6
+                ],
+                "details": "Log all events: receipt → processing → upsert of products.price. Track success/errors with timestamps",
+                "testStrategy": "Verify complete audit trail from webhook receipt to price update"
+              },
+              {
+                "id": 8,
+                "title": "Create automatic fallback polling system",
+                "description": "Automatic fallback to 6h polling if monitors unavailable",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  6
+                ],
+                "details": "Monitor health check, automatic fallback to 6-hour polling for price updates only",
+                "testStrategy": "Test fallback activation when monitors fail, verify price-only polling"
+              },
+              {
+                "id": 9,
+                "title": "Implement ≤60s SLA monitoring for price updates",
+                "description": "Ensure price updates appear in database ≤60s after receiving event",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  6,
+                  7
+                ],
+                "details": "Track time from webhook receipt to database update completion, alert if >60s",
+                "testStrategy": "Measure and verify database updated ≤60s after event receipt"
+              },
+              {
+                "id": 10,
+                "title": "Create price monitoring dashboard",
+                "description": "Admin interface for price monitoring system status and audit logs",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Price monitor status, event audit logs, SLA metrics, feature flag status display",
+                "testStrategy": "Test dashboard shows price-only events, no stock modifications logged"
+              },
+              {
+                "id": 11,
+                "title": "Validate zero stock modifications requirement",
+                "description": "Comprehensive test to ensure webhook never modifies product_stock table",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  6,
+                  7
+                ],
+                "details": "Monitor product_stock table, verify zero writes from webhook events, audit logs confirm price-only updates",
+                "testStrategy": "Simulate price changes, verify product_stock unchanged while products.price updates"
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "title": "Authentication & Authorization System",
+            "description": "Set up Supabase Auth with role-based access",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              2
+            ],
+            "details": "User/Vendor/Admin roles with proper permissions",
+            "testStrategy": "Test authentication flows and role permissions",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Configure Supabase Auth settings",
+                "description": "Set up authentication configuration",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Email auth, password policies, session settings",
+                "testStrategy": "Test auth configuration"
+              },
+              {
+                "id": 2,
+                "title": "Create user registration flow",
+                "description": "Implement user signup process",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Email verification, profile creation",
+                "testStrategy": "Test complete registration process"
+              },
+              {
+                "id": 3,
+                "title": "Create user login flow",
+                "description": "Implement user signin process",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Email/password login, session management",
+                "testStrategy": "Test login validation and sessions"
+              },
+              {
+                "id": 4,
+                "title": "Implement password reset functionality",
+                "description": "Create password reset system",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Email-based password reset, secure tokens",
+                "testStrategy": "Test reset process security"
+              },
+              {
+                "id": 5,
+                "title": "Create role management system",
+                "description": "Implement User/Vendor/Admin roles",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "Role assignment, permission hierarchy",
+                "testStrategy": "Test role assignment and inheritance"
+              },
+              {
+                "id": 6,
+                "title": "Implement RLS policies for users",
+                "description": "Create user-specific data access policies",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "User can only access their own data",
+                "testStrategy": "Test user data isolation"
+              },
+              {
+                "id": 7,
+                "title": "Implement RLS policies for vendors",
+                "description": "Create vendor-specific data access policies",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Vendor can manage products and orders",
+                "testStrategy": "Test vendor permissions scope"
+              },
+              {
+                "id": 8,
+                "title": "Implement RLS policies for admins",
+                "description": "Create admin-specific data access policies",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Admin can access all data and manage users",
+                "testStrategy": "Test admin full access permissions"
+              },
+              {
+                "id": 9,
+                "title": "Create user profile management",
+                "description": "Allow users to manage their profiles",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "Profile updates, address management",
+                "testStrategy": "Test profile update functionality"
+              },
+              {
+                "id": 10,
+                "title": "Implement session management",
+                "description": "Handle user sessions and logout",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  3
+                ],
+                "details": "Session timeout, secure logout, token refresh",
+                "testStrategy": "Test session security and lifecycle"
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "title": "Initial Data Synchronization (100+ Products)",
+            "description": "Import 100+ products from KicksDB with 2-image limit",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              3
+            ],
+            "details": "Complete initial data import with strict 2-image validation",
+            "testStrategy": "Verify 100+ products with proper data quality and max 2 images",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Execute brand data import",
+                "description": "Import all available brands from KicksDB",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Fetch and import all brand data",
+                "testStrategy": "Verify brand count and data completeness"
+              },
+              {
+                "id": 2,
+                "title": "Execute category data import",
+                "description": "Import all categories from KicksDB",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Fetch and import category hierarchy",
+                "testStrategy": "Verify category structure integrity"
+              },
+              {
+                "id": 3,
+                "title": "Execute product batch import (1-25)",
+                "description": "Import first 25 products with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2
+                ],
+                "details": "Import products 1-25 with full data, enforce 2-image maximum",
+                "testStrategy": "Verify first batch data quality and image limit compliance"
+              },
+              {
+                "id": 4,
+                "title": "Execute product batch import (26-50)",
+                "description": "Import products 26-50 with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  3
+                ],
+                "details": "Continue product import with consistency checks and image limits",
+                "testStrategy": "Verify batch consistency and 2-image limit"
+              },
+              {
+                "id": 5,
+                "title": "Execute product batch import (51-75)",
+                "description": "Import products 51-75 with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  4
+                ],
+                "details": "Continue product import with validation and image limits",
+                "testStrategy": "Verify cumulative data quality and image compliance"
+              },
+              {
+                "id": 6,
+                "title": "Execute product batch import (76-100)",
+                "description": "Import products 76-100 with 2-image limit",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5
+                ],
+                "details": "Complete minimum 100 product requirement with image limits",
+                "testStrategy": "Verify 100+ product milestone and image compliance"
+              },
+              {
+                "id": 7,
+                "title": "Execute additional product import (100+)",
+                "description": "Import additional products beyond minimum",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "Import more products for catalog diversity with 2-image limit",
+                "testStrategy": "Verify extended catalog quality and image limits"
+              },
+              {
+                "id": 8,
+                "title": "Validate strict 2-image limit compliance",
+                "description": "Audit all products have exactly max 2 images",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "details": "Check NO product has more than 2 images, audit enforcement",
+                "testStrategy": "Strict audit: zero products with >2 images"
+              },
+              {
+                "id": 9,
+                "title": "Generate size and stock data",
+                "description": "Create size availability and stock quantities",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "Generate realistic size/stock combinations",
+                "testStrategy": "Verify stock data distribution"
+              },
+              {
+                "id": 10,
+                "title": "Validate data relationships",
+                "description": "Check all foreign key relationships",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  8,
+                  9
+                ],
+                "details": "Verify product-brand-category relationships",
+                "testStrategy": "Test referential integrity"
+              },
+              {
+                "id": 11,
+                "title": "Create data import report",
+                "description": "Generate comprehensive import summary",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  10
+                ],
+                "details": "Product count, success rate, error summary, image compliance report",
+                "testStrategy": "Verify report accuracy and image limit compliance"
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "title": "Business Logic Functions & Triggers",
+            "description": "Implement Supabase functions and triggers",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              2,
+              5
+            ],
+            "details": "Database functions for business operations",
+            "testStrategy": "Test all business logic functions",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create stock management functions",
+                "description": "Functions for stock operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Reserve stock, release stock, check availability",
+                "testStrategy": "Test stock management accuracy"
+              },
+              {
+                "id": 2,
+                "title": "Create order processing functions",
+                "description": "Functions for order lifecycle",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Create order, update status, calculate totals",
+                "testStrategy": "Test order processing workflow"
+              },
+              {
+                "id": 3,
+                "title": "Create cart management functions",
+                "description": "Functions for shopping cart operations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Add to cart, update quantities, clear cart",
+                "testStrategy": "Test cart functionality"
+              },
+              {
+                "id": 4,
+                "title": "Create user profile triggers",
+                "description": "Automatic user profile management",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Profile creation on signup, update timestamps",
+                "testStrategy": "Test automatic profile operations"
+              },
+              {
+                "id": 5,
+                "title": "Create real-time update triggers",
+                "description": "Triggers for monitor event processing",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Price update triggers, stock update triggers, automatic timestamp updates",
+                "testStrategy": "Test real-time trigger performance"
+              },
+              {
+                "id": 6,
+                "title": "Create audit logging functions",
+                "description": "Track important data changes",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Log orders, stock changes, user actions, monitor events",
+                "testStrategy": "Test audit trail completeness"
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "title": "Error Handling & Robustness",
+            "description": "Comprehensive error handling and retry logic",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              3,
+              4,
+              6
+            ],
+            "details": "Resilient data pipeline with recovery mechanisms",
+            "testStrategy": "Test failure scenarios and recovery",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement API connection error handling",
+                "description": "Handle KicksDB API connectivity issues",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Timeout handling, retry logic, circuit breakers",
+                "testStrategy": "Test network failure scenarios"
+              },
+              {
+                "id": 2,
+                "title": "Implement data validation error handling",
+                "description": "Handle invalid data from API",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Schema validation, data cleaning, error logging",
+                "testStrategy": "Test with malformed data"
+              },
+              {
+                "id": 3,
+                "title": "Implement database error handling",
+                "description": "Handle Supabase database errors",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Connection errors, constraint violations, rollbacks",
+                "testStrategy": "Test database failure scenarios"
+              },
+              {
+                "id": 4,
+                "title": "Implement webhook error handling",
+                "description": "Handle monitor webhook failures",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Webhook timeouts, malformed events, signature validation errors",
+                "testStrategy": "Test webhook failure scenarios"
+              },
+              {
+                "id": 5,
+                "title": "Create retry mechanism for failed operations",
+                "description": "Automatic retry with exponential backoff",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "details": "Configurable retry attempts, backoff strategies",
+                "testStrategy": "Test retry behavior and limits"
+              },
+              {
+                "id": 6,
+                "title": "Implement comprehensive logging system",
+                "description": "Detailed logging for debugging and monitoring",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Error logs, performance metrics, sync status, monitor events",
+                "testStrategy": "Verify log completeness and accuracy"
+              },
+              {
+                "id": 7,
+                "title": "Create cache implementation",
+                "description": "Cache frequently accessed data",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "API response caching, database query caching",
+                "testStrategy": "Test cache hit rates and invalidation"
+              },
+              {
+                "id": 8,
+                "title": "Implement health check endpoints",
+                "description": "Monitor system health and status",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "API health, database health, sync status, monitor status",
+                "testStrategy": "Test health check accuracy"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "PHASE 2: Frontend Development & API Integration",
+        "description": "Build Next.js application with complete e-commerce functionality",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "Complete frontend with real-time data integration",
+        "testStrategy": "Test all user flows and real-time functionality",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Next.js 14 Project Setup",
+            "description": "Initialize and configure Next.js 14 project with TypeScript",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Project structure, TypeScript, essential dependencies",
+            "testStrategy": "Verify build process and development setup",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Initialize Next.js 14 project",
+                "description": "Create new Next.js project with TypeScript",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "next@14, typescript, app router configuration",
+                "testStrategy": "Test project initialization and build"
+              },
+              {
+                "id": 2,
+                "title": "Configure TypeScript settings",
+                "description": "Set up TypeScript configuration",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "tsconfig.json, strict mode, path aliases",
+                "testStrategy": "Test TypeScript compilation"
+              },
+              {
+                "id": 3,
+                "title": "Install and configure Tailwind CSS",
+                "description": "Set up Tailwind CSS for styling",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "tailwind, postcss, configuration files",
+                "testStrategy": "Test Tailwind classes compilation"
+              },
+              {
+                "id": 4,
+                "title": "Install Supabase client dependencies",
+                "description": "Add Supabase client libraries",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "@supabase/supabase-js, environment configuration",
+                "testStrategy": "Test Supabase connection"
+              },
+              {
+                "id": 5,
+                "title": "Install React Query (TanStack Query)",
+                "description": "Add state management and caching library",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "@tanstack/react-query, devtools",
+                "testStrategy": "Test query client setup"
+              },
+              {
+                "id": 6,
+                "title": "Install additional dependencies",
+                "description": "Add remaining required packages",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "framer-motion, react-hook-form, lucide-react, react-hot-toast",
+                "testStrategy": "Test all dependencies installation"
+              },
+              {
+                "id": 7,
+                "title": "Create project folder structure",
+                "description": "Organize project directories",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "app/, components/, lib/, types/, hooks/, utils/",
+                "testStrategy": "Verify folder structure organization"
+              },
+              {
+                "id": 8,
+                "title": "Configure environment variables",
+                "description": "Set up environment configuration",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  4
+                ],
+                "details": "Supabase URL, anon key, service role key",
+                "testStrategy": "Test environment variable loading"
+              },
+              {
+                "id": 9,
+                "title": "Create base layout and providers",
+                "description": "Set up app layout and context providers",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5,
+                  7
+                ],
+                "details": "RootLayout, QueryProvider, AuthProvider",
+                "testStrategy": "Test provider hierarchy and context"
+              },
+              {
+                "id": 10,
+                "title": "Configure Next.js settings",
+                "description": "Optimize Next.js configuration",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  3
+                ],
+                "details": "next.config.js, image domains, experimental features",
+                "testStrategy": "Test Next.js configuration"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Supabase Integration & API Services",
+            "description": "Create frontend services for backend integration",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1
+            ],
+            "details": "API layer, type definitions, service methods",
+            "testStrategy": "Test all API service methods",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create Supabase client configuration",
+                "description": "Set up Supabase client for frontend",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Client instance, environment configuration",
+                "testStrategy": "Test client connectivity"
+              },
+              {
+                "id": 2,
+                "title": "Generate TypeScript types from Supabase",
+                "description": "Create type definitions for database",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Supabase CLI, type generation, interface definitions",
+                "testStrategy": "Verify type accuracy and completeness"
+              },
+              {
+                "id": 3,
+                "title": "Create products API service",
+                "description": "Service methods for product operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "getProducts, getProduct, searchProducts, filterProducts",
+                "testStrategy": "Test all product service methods"
+              },
+              {
+                "id": 4,
+                "title": "Create brands API service",
+                "description": "Service methods for brand operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "getBrands, getBrand, getBrandProducts",
+                "testStrategy": "Test brand service methods"
+              },
+              {
+                "id": 5,
+                "title": "Create categories API service",
+                "description": "Service methods for category operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "getCategories, getCategory, getCategoryProducts",
+                "testStrategy": "Test category service methods"
+              },
+              {
+                "id": 6,
+                "title": "Create authentication API service",
+                "description": "Service methods for auth operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "signUp, signIn, signOut, resetPassword, updateProfile",
+                "testStrategy": "Test authentication service methods"
+              },
+              {
+                "id": 7,
+                "title": "Create cart API service",
+                "description": "Service methods for cart operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "addToCart, removeFromCart, updateQuantity, getCart",
+                "testStrategy": "Test cart service methods"
+              },
+              {
+                "id": 8,
+                "title": "Create orders API service",
+                "description": "Service methods for order operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "createOrder, getOrders, getOrder, updateOrderStatus",
+                "testStrategy": "Test order service methods"
+              },
+              {
+                "id": 9,
+                "title": "Create real-time subscription service",
+                "description": "Service for real-time data updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  2
+                ],
+                "details": "Product updates, stock changes, price changes subscriptions",
+                "testStrategy": "Test real-time update reception"
+              },
+              {
+                "id": 10,
+                "title": "Create admin API service",
+                "description": "Service methods for admin operations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2
+                ],
+                "details": "manageUsers, manageProducts, viewAnalytics, monitor controls",
+                "testStrategy": "Test admin service methods"
+              },
+              {
+                "id": 11,
+                "title": "Create error handling utilities",
+                "description": "Centralized error handling for API calls",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Error parsing, toast notifications, retry logic",
+                "testStrategy": "Test error handling scenarios"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "React Query Implementation",
+            "description": "Set up caching and state management with real-time updates",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              2
+            ],
+            "details": "Query hooks, caching strategies, optimistic updates, real-time subscriptions",
+            "testStrategy": "Test cache behavior and real-time performance",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Configure React Query client",
+                "description": "Set up query client with optimal settings",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Cache time, stale time, retry configuration, real-time integration",
+                "testStrategy": "Test query client configuration"
+              },
+              {
+                "id": 2,
+                "title": "Create product query hooks",
+                "description": "React Query hooks for products with real-time updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useProducts, useProduct, useProductSearch with real-time subscriptions",
+                "testStrategy": "Test product query hooks and real-time updates"
+              },
+              {
+                "id": 3,
+                "title": "Create brand query hooks",
+                "description": "React Query hooks for brands",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useBrands, useBrand, useBrandProducts",
+                "testStrategy": "Test brand query hooks"
+              },
+              {
+                "id": 4,
+                "title": "Create category query hooks",
+                "description": "React Query hooks for categories",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useCategories, useCategory, useCategoryProducts",
+                "testStrategy": "Test category query hooks"
+              },
+              {
+                "id": 5,
+                "title": "Create cart query hooks",
+                "description": "React Query hooks for cart operations",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useCart, useAddToCart, useUpdateCart with real-time sync",
+                "testStrategy": "Test cart query hooks and mutations"
+              },
+              {
+                "id": 6,
+                "title": "Create order query hooks",
+                "description": "React Query hooks for orders",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useOrders, useOrder, useCreateOrder",
+                "testStrategy": "Test order query hooks and mutations"
+              },
+              {
+                "id": 7,
+                "title": "Create auth query hooks",
+                "description": "React Query hooks for authentication",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useAuth, useSignIn, useSignUp, useSignOut",
+                "testStrategy": "Test auth query hooks"
+              },
+              {
+                "id": 8,
+                "title": "Create real-time subscription hooks",
+                "description": "Hooks for real-time data subscriptions",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "useRealtimeProducts, useRealtimeStock, useRealtimePrices",
+                "testStrategy": "Test real-time subscription functionality"
+              },
+              {
+                "id": 9,
+                "title": "Implement optimistic updates",
+                "description": "Optimistic UI updates for better UX",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  5,
+                  6
+                ],
+                "details": "Cart updates, order creation, immediate UI feedback",
+                "testStrategy": "Test optimistic update behavior"
+              },
+              {
+                "id": 10,
+                "title": "Configure cache invalidation strategies",
+                "description": "Smart cache invalidation for data consistency",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ],
+                "details": "Query key relationships, invalidation patterns, real-time invalidation",
+                "testStrategy": "Test cache invalidation accuracy"
+              },
+              {
+                "id": 11,
+                "title": "Implement infinite scroll queries",
+                "description": "Infinite queries for product listings",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2
+                ],
+                "details": "useInfiniteQuery for product catalogs",
+                "testStrategy": "Test infinite scroll performance"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Core E-commerce Pages",
+            "description": "Build main application pages with real-time features",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              3
+            ],
+            "details": "Product catalog, detail pages, cart, checkout with real-time updates",
+            "testStrategy": "Test all page functionality and real-time features",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create homepage with real-time featured products",
+                "description": "Build landing page with dynamic featured products",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Hero section, real-time featured products, brand showcase",
+                "testStrategy": "Test homepage loading and real-time updates"
+              },
+              {
+                "id": 2,
+                "title": "Create product catalog page with real-time filters",
+                "description": "Build products listing with dynamic filtering",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Product grid, real-time pagination, sorting, filtering, stock status",
+                "testStrategy": "Test catalog functionality and real-time updates"
+              },
+              {
+                "id": 3,
+                "title": "Create product detail page with real-time pricing",
+                "description": "Build individual product pages with live updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Product info, images (max 2), real-time prices, live stock, size selector",
+                "testStrategy": "Test product detail interactions and real-time updates"
+              },
+              {
+                "id": 4,
+                "title": "Create shopping cart page with real-time sync",
+                "description": "Build cart management with live updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Cart items, quantity updates, real-time total calculation, stock validation",
+                "testStrategy": "Test cart functionality and real-time sync"
+              },
+              {
+                "id": 5,
+                "title": "Create checkout page with real-time validation",
+                "description": "Build order completion with live stock checks",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Shipping info, payment, order summary, real-time stock validation",
+                "testStrategy": "Test checkout process and real-time validation"
+              },
+              {
+                "id": 6,
+                "title": "Create search results page with real-time results",
+                "description": "Build search with dynamic results",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Search input, real-time results, dynamic filters",
+                "testStrategy": "Test search accuracy and real-time performance"
+              },
+              {
+                "id": 7,
+                "title": "Create brand pages with real-time products",
+                "description": "Build brand-specific pages with live product updates",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Brand info, real-time brand products, dynamic filtering",
+                "testStrategy": "Test brand page functionality and updates"
+              },
+              {
+                "id": 8,
+                "title": "Create category pages with real-time filtering",
+                "description": "Build category-specific pages with live updates",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Category hierarchy, real-time category products",
+                "testStrategy": "Test category navigation and real-time updates"
+              },
+              {
+                "id": 9,
+                "title": "Create 404 and error pages",
+                "description": "Build error handling pages",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Custom 404, error boundaries, fallback UI",
+                "testStrategy": "Test error page functionality"
+              },
+              {
+                "id": 10,
+                "title": "Implement page navigation and routing",
+                "description": "Set up Next.js routing between pages",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "details": "App router, dynamic routes, navigation components",
+                "testStrategy": "Test navigation flow"
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "title": "Authentication Implementation",
+            "description": "Build complete authentication system",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              3
+            ],
+            "details": "Login, signup, profile management, route protection",
+            "testStrategy": "Test all authentication flows",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create login page",
+                "description": "Build user login interface",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Email/password form, validation, error handling",
+                "testStrategy": "Test login functionality"
+              },
+              {
+                "id": 2,
+                "title": "Create signup page",
+                "description": "Build user registration interface",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Registration form, email verification flow",
+                "testStrategy": "Test signup process"
+              },
+              {
+                "id": 3,
+                "title": "Create password reset page",
+                "description": "Build password reset interface",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Reset request form, new password form",
+                "testStrategy": "Test password reset flow"
+              },
+              {
+                "id": 4,
+                "title": "Create user profile page",
+                "description": "Build profile management interface",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Profile info, addresses, order history",
+                "testStrategy": "Test profile management"
+              },
+              {
+                "id": 5,
+                "title": "Implement protected routes",
+                "description": "Add route protection for authenticated users",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Middleware, route guards, redirects",
+                "testStrategy": "Test route protection"
+              },
+              {
+                "id": 6,
+                "title": "Create auth context provider",
+                "description": "Global authentication state management",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "User state, auth methods, session handling",
+                "testStrategy": "Test auth context functionality"
+              },
+              {
+                "id": 7,
+                "title": "Implement role-based access",
+                "description": "Different UI based on user roles",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "User/Vendor/Admin specific features",
+                "testStrategy": "Test role-based UI rendering"
+              },
+              {
+                "id": 8,
+                "title": "Create session management",
+                "description": "Handle user sessions and persistence",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "Session refresh, logout handling, persistence",
+                "testStrategy": "Test session management"
+              },
+              {
+                "id": 9,
+                "title": "Implement social authentication (optional)",
+                "description": "Add Google/social login options",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [
+                  1,
+                  2
+                ],
+                "details": "Google OAuth, social login buttons",
+                "testStrategy": "Test social authentication"
+              },
+              {
+                "id": 10,
+                "title": "Create auth loading states",
+                "description": "Loading indicators for auth operations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "details": "Loading spinners, skeleton screens",
+                "testStrategy": "Test loading state behavior"
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "title": "E-commerce Logic Implementation",
+            "description": "Build shopping cart and order management with real-time features",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "Cart operations, checkout process, order management with live updates",
+            "testStrategy": "Test complete e-commerce workflow with real-time features",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement add to cart with real-time stock validation",
+                "description": "Add products to cart with live stock checks",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Size selection, quantity, real-time stock validation",
+                "testStrategy": "Test add to cart with live stock checking"
+              },
+              {
+                "id": 2,
+                "title": "Implement cart persistence with real-time sync",
+                "description": "Save cart across sessions with live sync",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Database storage, user association, guest carts, real-time sync",
+                "testStrategy": "Test cart persistence and sync"
+              },
+              {
+                "id": 3,
+                "title": "Implement cart quantity updates with stock validation",
+                "description": "Update quantities with live stock checks",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Increase/decrease quantities, real-time stock validation",
+                "testStrategy": "Test quantity updates with live validation"
+              },
+              {
+                "id": 4,
+                "title": "Implement cart item removal",
+                "description": "Remove items from cart",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Individual item removal, clear cart",
+                "testStrategy": "Test item removal"
+              },
+              {
+                "id": 5,
+                "title": "Implement real-time cart total calculations",
+                "description": "Calculate totals with live price updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  3
+                ],
+                "details": "Subtotal, tax calculation, shipping costs, real-time price updates",
+                "testStrategy": "Test calculation accuracy with price changes"
+              },
+              {
+                "id": 6,
+                "title": "Implement real-time stock validation",
+                "description": "Validate product availability in real-time",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Live stock checks, size availability, out-of-stock notifications",
+                "testStrategy": "Test real-time stock validation"
+              },
+              {
+                "id": 7,
+                "title": "Implement checkout process with live validation",
+                "description": "Complete order creation with real-time checks",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  5,
+                  6
+                ],
+                "details": "Address collection, order summary, live stock/price validation",
+                "testStrategy": "Test checkout with real-time validation"
+              },
+              {
+                "id": 8,
+                "title": "Implement order creation with stock reservation",
+                "description": "Create orders with immediate stock reservation",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  7
+                ],
+                "details": "Order record creation, stock reservation, real-time updates",
+                "testStrategy": "Test order creation and stock reservation"
+              },
+              {
+                "id": 9,
+                "title": "Implement order status tracking",
+                "description": "Track order progress with real-time updates",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8
+                ],
+                "details": "Status updates, progress indicators, real-time notifications",
+                "testStrategy": "Test order tracking with live updates"
+              },
+              {
+                "id": 10,
+                "title": "Implement order history",
+                "description": "Display user order history",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8
+                ],
+                "details": "Order list, order details, reorder functionality",
+                "testStrategy": "Test order history display"
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "title": "Admin Panel Development",
+            "description": "Build comprehensive admin interface with monitor controls",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              5
+            ],
+            "details": "User management, product management, analytics, monitor controls",
+            "testStrategy": "Test all admin functionality and monitor management",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create admin dashboard with real-time metrics",
+                "description": "Build admin overview with live updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Real-time metrics cards, charts, quick actions, monitor status",
+                "testStrategy": "Test dashboard data display and real-time updates"
+              },
+              {
+                "id": 2,
+                "title": "Create user management interface",
+                "description": "Manage users and roles",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "User list, role assignment, user details",
+                "testStrategy": "Test user management operations"
+              },
+              {
+                "id": 3,
+                "title": "Create product management interface",
+                "description": "Manage products and inventory with real-time updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Product CRUD, real-time stock management, bulk operations",
+                "testStrategy": "Test product management with live updates"
+              },
+              {
+                "id": 4,
+                "title": "Create order management interface",
+                "description": "Manage orders and fulfillment",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Order list, status updates, order details",
+                "testStrategy": "Test order management"
+              },
+              {
+                "id": 5,
+                "title": "Create KicksDB monitor control interface",
+                "description": "Manage monitor system and events",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Monitor status, event logs, manual controls, health checks",
+                "testStrategy": "Test monitor management interface"
+              },
+              {
+                "id": 6,
+                "title": "Create real-time sync dashboard",
+                "description": "Monitor data synchronization status",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Sync status, error logs, performance metrics, manual sync triggers",
+                "testStrategy": "Test sync monitoring and controls"
+              },
+              {
+                "id": 7,
+                "title": "Create brand management interface",
+                "description": "Manage brands and brand data",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Brand CRUD, brand products, brand analytics",
+                "testStrategy": "Test brand management"
+              },
+              {
+                "id": 8,
+                "title": "Create category management interface",
+                "description": "Manage categories and hierarchy",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Category CRUD, hierarchy management",
+                "testStrategy": "Test category management"
+              },
+              {
+                "id": 9,
+                "title": "Create analytics dashboard with real-time data",
+                "description": "Display sales and performance analytics",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Real-time sales charts, performance metrics, reports",
+                "testStrategy": "Test analytics accuracy and real-time updates"
+              },
+              {
+                "id": 10,
+                "title": "Implement admin role protection",
+                "description": "Protect admin routes and features",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Role-based access, admin-only routes",
+                "testStrategy": "Test admin access control"
+              },
+              {
+                "id": 11,
+                "title": "Create admin navigation and layout",
+                "description": "Admin-specific navigation and layout",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Admin sidebar, navigation menu, breadcrumbs",
+                "testStrategy": "Test admin navigation"
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "title": "Real-time Features Integration",
+            "description": "Integrate real-time updates throughout the application",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              6,
+              7
+            ],
+            "details": "Real-time price updates, stock changes, notifications",
+            "testStrategy": "Test all real-time functionality and 60-second SLA",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement real-time price update notifications",
+                "description": "Show price changes to users in real-time",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Price change toasts, visual indicators, cart updates",
+                "testStrategy": "Test price update notifications appear within 60 seconds"
+              },
+              {
+                "id": 2,
+                "title": "Implement real-time stock update indicators",
+                "description": "Show stock changes to users immediately",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Stock level indicators, out-of-stock warnings, availability updates",
+                "testStrategy": "Test stock updates appear within 60 seconds"
+              },
+              {
+                "id": 3,
+                "title": "Implement real-time cart synchronization",
+                "description": "Sync cart changes across browser tabs",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Cross-tab sync, cart updates, stock validation",
+                "testStrategy": "Test cart sync across multiple tabs"
+              },
+              {
+                "id": 4,
+                "title": "Implement real-time product availability alerts",
+                "description": "Alert users when products become available/unavailable",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Availability notifications, wishlist alerts, restock notifications",
+                "testStrategy": "Test availability alerts within 60 seconds"
+              },
+              {
+                "id": 5,
+                "title": "Implement real-time admin notifications",
+                "description": "Notify admins of system events in real-time",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Monitor events, sync status, error alerts",
+                "testStrategy": "Test admin notification delivery"
+              },
+              {
+                "id": 6,
+                "title": "Create real-time performance monitoring",
+                "description": "Monitor real-time feature performance",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "details": "SLA tracking, performance metrics, latency monitoring",
+                "testStrategy": "Verify 60-second SLA compliance"
+              }
+            ]
+          },
+          {
+            "id": 9,
+            "title": "Testing & Integration Validation",
+            "description": "Comprehensive testing of frontend-backend integration",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              6,
+              7,
+              8
+            ],
+            "details": "End-to-end testing, real-time testing, integration testing",
+            "testStrategy": "Validate complete application functionality and real-time features",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Test user registration and login flows",
+                "description": "Validate authentication workflows",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Registration, login, logout, password reset",
+                "testStrategy": "Test all auth scenarios"
+              },
+              {
+                "id": 2,
+                "title": "Test product browsing with real-time updates",
+                "description": "Validate product discovery with live features",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Catalog browsing, search, filtering, real-time price/stock updates",
+                "testStrategy": "Test product discovery flow with real-time updates"
+              },
+              {
+                "id": 3,
+                "title": "Test shopping cart with real-time validation",
+                "description": "Validate cart operations with live updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Add to cart, update quantities, remove items, real-time validation",
+                "testStrategy": "Test cart management with live stock/price updates"
+              },
+              {
+                "id": 4,
+                "title": "Test checkout with real-time validation",
+                "description": "Validate order completion with live checks",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Checkout flow, address entry, order creation, real-time validation",
+                "testStrategy": "Test complete purchase flow with real-time features"
+              },
+              {
+                "id": 5,
+                "title": "Test admin functionality with monitor controls",
+                "description": "Validate admin panel operations and monitoring",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "User management, product management, orders, monitor controls",
+                "testStrategy": "Test admin workflows and monitor management"
+              },
+              {
+                "id": 6,
+                "title": "Test real-time data synchronization",
+                "description": "Validate real-time data updates and 60-second SLA",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Price updates, stock changes, monitor events, SLA compliance",
+                "testStrategy": "Test 60-second SLA for all real-time updates"
+              },
+              {
+                "id": 7,
+                "title": "Test error handling and edge cases",
+                "description": "Validate error scenarios and fallback behavior",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Network errors, invalid data, monitor failures, fallback polling",
+                "testStrategy": "Test error resilience and fallback mechanisms"
+              },
+              {
+                "id": 8,
+                "title": "Test performance and loading",
+                "description": "Validate application performance with real-time features",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Page load times, API response times, real-time update latency",
+                "testStrategy": "Test performance metrics and real-time SLA"
+              },
+              {
+                "id": 9,
+                "title": "Test mobile responsiveness with real-time features",
+                "description": "Validate mobile experience including real-time updates",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Mobile layouts, touch interactions, real-time updates on mobile",
+                "testStrategy": "Test mobile functionality with real-time features"
+              },
+              {
+                "id": 10,
+                "title": "Fix identified bugs and issues",
+                "description": "Resolve testing findings",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Bug fixes, performance improvements, UX enhancements, real-time optimizations",
+                "testStrategy": "Verify fixes and improvements"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "PHASE 3: Visual Polish & UX Design",
+        "description": "Create premium black/white design with smooth animations",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "details": "Design system, animations, responsive design, UX optimization",
+        "testStrategy": "User testing and design validation",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design System Implementation",
+            "description": "Create comprehensive black/white design system",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Colors, typography, spacing, components following SneakX brand",
+            "testStrategy": "Test design consistency across app",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Define black/white color palette",
+                "description": "Create monochromatic color system",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Pure black (#000000), pure white (#FFFFFF), subtle grays (#111111, #1a1a1a, #f8f8f8, #f5f5f5)",
+                "testStrategy": "Test color contrast and accessibility"
+              },
+              {
+                "id": 2,
+                "title": "Configure typography system",
+                "description": "Set up Inter/Poppins font hierarchy",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Inter for main text, Poppins for headings, Roboto Mono for technical elements",
+                "testStrategy": "Test typography readability and hierarchy"
+              },
+              {
+                "id": 3,
+                "title": "Create spacing and layout system",
+                "description": "Define consistent spacing values",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Generous spacing, margin/padding system, grid layout",
+                "testStrategy": "Test layout consistency"
+              },
+              {
+                "id": 4,
+                "title": "Design button component system",
+                "description": "Create minimalist button variants",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3
+                ],
+                "details": "Primary, secondary, outline buttons with subtle shadows",
+                "testStrategy": "Test button interactions and accessibility"
+              },
+              {
+                "id": 5,
+                "title": "Design form component system",
+                "description": "Create clean form input components",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3
+                ],
+                "details": "Input fields, labels, validation states with minimalist design",
+                "testStrategy": "Test form component functionality"
+              },
+              {
+                "id": 6,
+                "title": "Design product card system",
+                "description": "Create product and content cards",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3
+                ],
+                "details": "Product cards with 2-image support, flat design, subtle shadows",
+                "testStrategy": "Test card component variations"
+              },
+              {
+                "id": 7,
+                "title": "Design navigation components",
+                "description": "Create clean navigation elements",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3
+                ],
+                "details": "Header, footer, breadcrumbs with minimalist approach",
+                "testStrategy": "Test navigation functionality"
+              },
+              {
+                "id": 8,
+                "title": "Design modal and overlay components",
+                "description": "Create minimal modal components",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3
+                ],
+                "details": "Modals, tooltips, dropdowns with flat design",
+                "testStrategy": "Test modal interactions"
+              },
+              {
+                "id": 9,
+                "title": "Create icon system",
+                "description": "Implement consistent icon usage",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Lucide icons, consistent sizing, minimal style",
+                "testStrategy": "Test icon consistency"
+              },
+              {
+                "id": 10,
+                "title": "Document design system",
+                "description": "Create design system documentation",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Component guide, usage examples, brand guidelines",
+                "testStrategy": "Verify documentation completeness"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Framer Motion Animations",
+            "description": "Implement smooth animations and transitions",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Page transitions, hover effects, micro-interactions",
+            "testStrategy": "Test animation performance and smoothness",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Configure Framer Motion setup",
+                "description": "Set up Framer Motion with performance optimization",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Motion config, animation settings, performance optimization",
+                "testStrategy": "Test motion configuration"
+              },
+              {
+                "id": 2,
+                "title": "Implement page transition animations",
+                "description": "Add smooth page transitions (300-400ms)",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Fade in/out, slide transitions, smooth route changes",
+                "testStrategy": "Test page transition smoothness"
+              },
+              {
+                "id": 3,
+                "title": "Implement hover animations",
+                "description": "Add subtle hover effects",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Button hovers, card hovers, image scaling effects",
+                "testStrategy": "Test hover responsiveness"
+              },
+              {
+                "id": 4,
+                "title": "Implement scroll animations",
+                "description": "Add scroll-triggered animations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Fade in on scroll, slide-up for product cards",
+                "testStrategy": "Test scroll animation performance"
+              },
+              {
+                "id": 5,
+                "title": "Implement loading animations",
+                "description": "Add elegant loading states",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Loading spinners, skeleton screens, progress bars",
+                "testStrategy": "Test loading animation timing"
+              },
+              {
+                "id": 6,
+                "title": "Implement modal animations",
+                "description": "Add modal and popup animations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Modal slide-in, fade effects, backdrop animations",
+                "testStrategy": "Test modal animation smoothness"
+              },
+              {
+                "id": 7,
+                "title": "Implement cart animations",
+                "description": "Add cart-specific animations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Add to cart animation, quantity updates, item removal",
+                "testStrategy": "Test cart animation feedback"
+              },
+              {
+                "id": 8,
+                "title": "Implement product animations",
+                "description": "Add product interaction animations",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Image gallery transitions (2-image support), size selection feedback",
+                "testStrategy": "Test product animation usability"
+              },
+              {
+                "id": 9,
+                "title": "Implement micro-interactions",
+                "description": "Add subtle micro-interactions",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [
+                  1
+                ],
+                "details": "Button clicks (bounce), form interactions, success animations",
+                "testStrategy": "Test micro-interaction polish"
+              },
+              {
+                "id": 10,
+                "title": "Optimize animation performance",
+                "description": "Ensure smooth performance across devices",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "GPU acceleration, reduced motion preferences",
+                "testStrategy": "Test animation performance on various devices"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Responsive Design Optimization",
+            "description": "Ensure optimal mobile-first experience",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Mobile-first design, breakpoint optimization, touch interactions",
+            "testStrategy": "Test on various screen sizes and devices",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Define mobile-first breakpoints",
+                "description": "Set up responsive breakpoint system",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Mobile (<768px), tablet (768-1024px), desktop (>1024px)",
+                "testStrategy": "Test breakpoint transitions"
+              },
+              {
+                "id": 2,
+                "title": "Optimize mobile navigation",
+                "description": "Create touch-friendly mobile navigation",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Hamburger menu, mobile header, adequate touch targets",
+                "testStrategy": "Test mobile navigation usability"
+              },
+              {
+                "id": 3,
+                "title": "Optimize product catalog for mobile",
+                "description": "Mobile-first product grid layout",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "2 columns mobile, 3-4 desktop, touch-friendly interactions",
+                "testStrategy": "Test mobile catalog browsing"
+              },
+              {
+                "id": 4,
+                "title": "Optimize product detail for mobile",
+                "description": "Mobile product detail experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Mobile image gallery (2-image support), product info layout",
+                "testStrategy": "Test mobile product detail usability"
+              },
+              {
+                "id": 5,
+                "title": "Optimize cart and checkout for mobile",
+                "description": "Mobile cart and checkout experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Mobile-friendly cart items, form inputs, payment flow",
+                "testStrategy": "Test mobile checkout flow"
+              },
+              {
+                "id": 6,
+                "title": "Optimize forms for mobile",
+                "description": "Mobile-friendly form design",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Large input sizing, keyboard optimization, mobile validation",
+                "testStrategy": "Test mobile form interactions"
+              },
+              {
+                "id": 7,
+                "title": "Implement touch-friendly interactions",
+                "description": "Optimize for touch devices",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Touch targets (44px minimum), swipe gestures, tap feedback",
+                "testStrategy": "Test touch interaction responsiveness"
+              },
+              {
+                "id": 8,
+                "title": "Optimize images for responsive design",
+                "description": "Responsive image implementation",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Responsive images, art direction, loading optimization",
+                "testStrategy": "Test image responsiveness and performance"
+              },
+              {
+                "id": 9,
+                "title": "Test on various devices and browsers",
+                "description": "Cross-device and cross-browser testing",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ],
+                "details": "iOS, Android, various screen sizes, different browsers",
+                "testStrategy": "Test comprehensive device compatibility"
+              },
+              {
+                "id": 10,
+                "title": "Optimize performance for mobile",
+                "description": "Mobile performance optimization",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  9
+                ],
+                "details": "Bundle size, loading times, interaction responsiveness",
+                "testStrategy": "Test mobile performance metrics"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "UX Enhancement & Loading States",
+            "description": "Improve user experience with feedback and loading states",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              2
+            ],
+            "details": "Loading indicators, notifications, error states, user feedback",
+            "testStrategy": "Test user feedback and loading experience",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement skeleton loading screens",
+                "description": "Create skeleton loading for content",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Product cards, profile info, lists, forms",
+                "testStrategy": "Test skeleton loading accuracy"
+              },
+              {
+                "id": 2,
+                "title": "Implement elegant loading spinners",
+                "description": "Add minimal loading indicators",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Button loading, form submission, API calls",
+                "testStrategy": "Test loading indicator timing"
+              },
+              {
+                "id": 3,
+                "title": "Implement progress indicators",
+                "description": "Show progress for multi-step processes",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Checkout progress, upload progress, sync progress",
+                "testStrategy": "Test progress accuracy"
+              },
+              {
+                "id": 4,
+                "title": "Implement toast notifications",
+                "description": "Add elegant user feedback notifications",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Success, error, warning, info toasts with minimal design",
+                "testStrategy": "Test notification timing and positioning"
+              },
+              {
+                "id": 5,
+                "title": "Implement error states",
+                "description": "Create clean error handling UI",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "API errors, validation errors, network errors",
+                "testStrategy": "Test error state clarity"
+              },
+              {
+                "id": 6,
+                "title": "Implement empty states",
+                "description": "Create elegant empty state designs",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Empty cart, no search results, no orders",
+                "testStrategy": "Test empty state usefulness"
+              },
+              {
+                "id": 7,
+                "title": "Implement confirmation dialogs",
+                "description": "Add clean confirmation dialogs",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Delete confirmations, logout confirmations",
+                "testStrategy": "Test confirmation effectiveness"
+              },
+              {
+                "id": 8,
+                "title": "Implement success feedback",
+                "description": "Provide clear success indicators",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Order success, profile update, cart additions",
+                "testStrategy": "Test success feedback clarity"
+              },
+              {
+                "id": 9,
+                "title": "Implement contextual help",
+                "description": "Add helpful tooltips and guidance",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Form help, feature explanations, minimal onboarding",
+                "testStrategy": "Test help effectiveness"
+              },
+              {
+                "id": 10,
+                "title": "Optimize interaction feedback",
+                "description": "Ensure all interactions have clear feedback",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Click feedback, hover states, focus states",
+                "testStrategy": "Test interaction responsiveness"
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "title": "UI Component Polish",
+            "description": "Refine and polish all UI components",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              2
+            ],
+            "details": "Component refinement, interactions, accessibility",
+            "testStrategy": "Test component quality and accessibility",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Polish product card components",
+                "description": "Refine product card design and interactions",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Hover effects, 2-image loading, clean info layout",
+                "testStrategy": "Test product card usability"
+              },
+              {
+                "id": 2,
+                "title": "Polish form components",
+                "description": "Refine form inputs and validation",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Clean input states, minimal validation feedback, accessibility",
+                "testStrategy": "Test form component accessibility"
+              },
+              {
+                "id": 3,
+                "title": "Polish button components",
+                "description": "Refine button styles and interactions",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Button states, loading states, accessibility, minimal shadows",
+                "testStrategy": "Test button component interactions"
+              },
+              {
+                "id": 4,
+                "title": "Polish navigation components",
+                "description": "Refine header, footer, and navigation",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Clean navigation states, mobile menu, minimal search bar",
+                "testStrategy": "Test navigation usability"
+              },
+              {
+                "id": 5,
+                "title": "Polish modal components",
+                "description": "Refine modal and popup designs",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Clean modal animations, minimal backdrop, keyboard navigation",
+                "testStrategy": "Test modal accessibility"
+              },
+              {
+                "id": 6,
+                "title": "Polish filter components",
+                "description": "Refine product filtering interface",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Clean filter layout, clear filters, mobile filters",
+                "testStrategy": "Test filter component usability"
+              },
+              {
+                "id": 7,
+                "title": "Polish cart components",
+                "description": "Refine cart and checkout components",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Clean cart item layout, quantity controls, minimal totals display",
+                "testStrategy": "Test cart component functionality"
+              },
+              {
+                "id": 8,
+                "title": "Polish admin components",
+                "description": "Refine admin interface components",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Clean admin tables, forms, dashboards, charts",
+                "testStrategy": "Test admin component usability"
+              },
+              {
+                "id": 9,
+                "title": "Implement accessibility features",
+                "description": "Ensure components meet accessibility standards",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ],
+                "details": "ARIA labels, keyboard navigation, screen readers, color contrast",
+                "testStrategy": "Test accessibility compliance"
+              },
+              {
+                "id": 10,
+                "title": "Final component quality assurance",
+                "description": "Final review and polish of all components",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "details": "Consistency check, interaction polish, bug fixes",
+                "testStrategy": "Test overall component quality"
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "title": "User Testing & Final Adjustments",
+            "description": "Conduct user testing and make final improvements",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "User testing, feedback collection, final adjustments",
+            "testStrategy": "Validate user experience and satisfaction",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Prepare user testing scenarios",
+                "description": "Create user testing plans and scenarios",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "User journeys, task scenarios, success metrics",
+                "testStrategy": "Validate testing scenario completeness"
+              },
+              {
+                "id": 2,
+                "title": "Conduct user registration testing",
+                "description": "Test user onboarding experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Registration flow, first-time user experience",
+                "testStrategy": "Measure registration success rate"
+              },
+              {
+                "id": 3,
+                "title": "Conduct product browsing testing",
+                "description": "Test product discovery experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Catalog navigation, search, filtering usage",
+                "testStrategy": "Measure product discovery effectiveness"
+              },
+              {
+                "id": 4,
+                "title": "Conduct purchase flow testing",
+                "description": "Test complete purchase experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Add to cart, checkout, order completion",
+                "testStrategy": "Measure purchase completion rate"
+              },
+              {
+                "id": 5,
+                "title": "Conduct mobile experience testing",
+                "description": "Test mobile user experience",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Mobile navigation, touch interactions, responsiveness",
+                "testStrategy": "Measure mobile usability satisfaction"
+              },
+              {
+                "id": 6,
+                "title": "Collect and analyze user feedback",
+                "description": "Gather detailed user feedback",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "details": "User interviews, feedback forms, usability metrics",
+                "testStrategy": "Analyze feedback patterns and issues"
+              },
+              {
+                "id": 7,
+                "title": "Prioritize improvement recommendations",
+                "description": "Rank improvements based on impact",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  6
+                ],
+                "details": "Impact assessment, effort estimation, priority ranking",
+                "testStrategy": "Validate prioritization criteria"
+              },
+              {
+                "id": 8,
+                "title": "Implement high-priority improvements",
+                "description": "Apply most important user feedback",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  7
+                ],
+                "details": "UI adjustments, UX improvements, bug fixes",
+                "testStrategy": "Test improvement effectiveness"
+              },
+              {
+                "id": 9,
+                "title": "Conduct follow-up testing",
+                "description": "Validate improvements with users",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  8
+                ],
+                "details": "Re-test critical flows, measure improvements",
+                "testStrategy": "Compare before/after metrics"
+              },
+              {
+                "id": 10,
+                "title": "Finalize design and UX",
+                "description": "Complete final design polish",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  9
+                ],
+                "details": "Final adjustments, consistency check, sign-off",
+                "testStrategy": "Final quality assurance check"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "PHASE 4: Performance & Advanced Features",
+        "description": "Optimize performance and implement advanced e-commerce features",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "details": "Performance optimization, search, SEO, advanced features",
+        "testStrategy": "Performance benchmarking and feature validation",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Image Optimization Implementation",
+            "description": "Optimize all images for performance with 2-image limit compliance",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Next.js Image component, lazy loading, WebP conversion, 2-image enforcement",
+            "testStrategy": "Test image loading performance and 2-image limit compliance",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement Next.js Image component",
+                "description": "Replace img tags with Next.js Image",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Product images (max 2), brand logos, all static images",
+                "testStrategy": "Test image rendering and optimization"
+              },
+              {
+                "id": 2,
+                "title": "Configure image domains and optimization",
+                "description": "Set up image domain configuration",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "KicksDB domains, Supabase storage, optimization settings",
+                "testStrategy": "Test image domain accessibility"
+              },
+              {
+                "id": 3,
+                "title": "Implement lazy loading",
+                "description": "Add lazy loading for all images",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Intersection observer, loading='lazy', priority loading",
+                "testStrategy": "Test lazy loading effectiveness"
+              },
+              {
+                "id": 4,
+                "title": "Implement responsive images",
+                "description": "Add responsive image sizing",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Multiple sizes, art direction, device-specific images",
+                "testStrategy": "Test responsive image behavior"
+              },
+              {
+                "id": 5,
+                "title": "Add image placeholder and error handling",
+                "description": "Handle loading states and errors",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Blur placeholders, error fallbacks, loading indicators",
+                "testStrategy": "Test image error scenarios"
+              },
+              {
+                "id": 6,
+                "title": "Validate 2-image limit in UI",
+                "description": "Ensure UI properly handles max 2 images per product",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Gallery components, image display, carousel with 2-image max",
+                "testStrategy": "Verify UI handles exactly 2 images correctly"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Advanced Search & Filtering System",
+            "description": "Implement advanced product search and filtering",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Full-text search, advanced filters, search suggestions",
+            "testStrategy": "Test search accuracy and performance",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement basic text search",
+                "description": "Add product name and description search",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Full-text search across product fields",
+                "testStrategy": "Test search result accuracy"
+              },
+              {
+                "id": 2,
+                "title": "Implement brand filtering",
+                "description": "Add brand-based product filtering",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Multi-select brand filters, brand search",
+                "testStrategy": "Test brand filter functionality"
+              },
+              {
+                "id": 3,
+                "title": "Implement category filtering",
+                "description": "Add category-based product filtering",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Category hierarchy filtering, subcategory navigation",
+                "testStrategy": "Test category filter accuracy"
+              },
+              {
+                "id": 4,
+                "title": "Implement price range filtering",
+                "description": "Add price-based filtering with real-time updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Price slider, min/max inputs, real-time price updates",
+                "testStrategy": "Test price filter accuracy with real-time changes"
+              },
+              {
+                "id": 5,
+                "title": "Implement size filtering",
+                "description": "Add size-based filtering",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Size selection, availability checking",
+                "testStrategy": "Test size filter functionality"
+              },
+              {
+                "id": 6,
+                "title": "Implement sorting options",
+                "description": "Add product sorting functionality",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Price, name, date, popularity sorting",
+                "testStrategy": "Test sorting accuracy"
+              },
+              {
+                "id": 7,
+                "title": "Implement search suggestions",
+                "description": "Add autocomplete and suggestions",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [
+                  1
+                ],
+                "details": "Product suggestions, brand suggestions, recent searches",
+                "testStrategy": "Test suggestion relevance"
+              },
+              {
+                "id": 8,
+                "title": "Optimize search performance",
+                "description": "Improve search and filter performance",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "details": "Database indexing, query optimization, caching",
+                "testStrategy": "Test search response times"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Comprehensive Caching Strategy",
+            "description": "Implement comprehensive caching for performance",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "API caching, static content caching, browser caching",
+            "testStrategy": "Test cache hit rates and performance improvements",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Configure React Query cache optimization",
+                "description": "Optimize React Query caching settings",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Cache times, stale times, background refetch, real-time invalidation",
+                "testStrategy": "Test cache behavior and refresh patterns"
+              },
+              {
+                "id": 2,
+                "title": "Implement API response caching",
+                "description": "Add server-side API response caching",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Supabase query caching, Redis cache layer",
+                "testStrategy": "Test API response cache effectiveness"
+              },
+              {
+                "id": 3,
+                "title": "Implement static content caching",
+                "description": "Cache static assets and content",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Image caching, CSS/JS caching, CDN configuration",
+                "testStrategy": "Test static content cache performance"
+              },
+              {
+                "id": 4,
+                "title": "Implement browser caching strategies",
+                "description": "Optimize browser caching headers",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Cache-Control headers, ETags, service workers",
+                "testStrategy": "Test browser cache effectiveness"
+              },
+              {
+                "id": 5,
+                "title": "Implement intelligent cache invalidation",
+                "description": "Smart cache invalidation with real-time updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1,
+                  2
+                ],
+                "details": "Real-time data change triggers, manual invalidation, time-based expiry",
+                "testStrategy": "Test cache invalidation accuracy with real-time updates"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "SEO Optimization",
+            "description": "Implement SEO best practices",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [],
+            "details": "Meta tags, structured data, sitemap, performance",
+            "testStrategy": "Test SEO metrics and search visibility",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Implement dynamic meta tags",
+                "description": "Add SEO meta tags to all pages",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Title, description, keywords, Open Graph tags",
+                "testStrategy": "Test meta tag generation accuracy"
+              },
+              {
+                "id": 2,
+                "title": "Implement structured data",
+                "description": "Add schema.org structured data",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Product schema, organization schema, breadcrumb schema",
+                "testStrategy": "Test structured data validation"
+              },
+              {
+                "id": 3,
+                "title": "Generate XML sitemap",
+                "description": "Create and maintain XML sitemap",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Product pages, category pages, static pages",
+                "testStrategy": "Test sitemap generation and submission"
+              },
+              {
+                "id": 4,
+                "title": "Implement robots.txt",
+                "description": "Configure robots.txt for crawling",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Crawl directives, sitemap reference",
+                "testStrategy": "Test robots.txt configuration"
+              },
+              {
+                "id": 5,
+                "title": "Optimize page performance for SEO",
+                "description": "Improve Core Web Vitals scores",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "LCP, FID, CLS optimization, loading performance",
+                "testStrategy": "Test Core Web Vitals metrics"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "PHASE 5: Testing & Documentation",
+        "description": "Comprehensive testing and complete documentation",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "details": "Unit tests, integration tests, documentation, deployment",
+        "testStrategy": "Achieve high test coverage and complete documentation",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Unit Testing Implementation",
+            "description": "Create comprehensive unit tests",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Component tests, utility function tests, service tests",
+            "testStrategy": "Achieve 80%+ test coverage",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Set up testing environment",
+                "description": "Configure Jest and React Testing Library",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Jest config, testing utilities, mock setup",
+                "testStrategy": "Test configuration works correctly"
+              },
+              {
+                "id": 2,
+                "title": "Write component unit tests",
+                "description": "Test all React components",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "UI components, page components, form components",
+                "testStrategy": "Test component rendering and interactions"
+              },
+              {
+                "id": 3,
+                "title": "Write utility function tests",
+                "description": "Test utility and helper functions",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Data transformation, validation, formatting functions",
+                "testStrategy": "Test function logic and edge cases"
+              },
+              {
+                "id": 4,
+                "title": "Write API service tests",
+                "description": "Test API service methods",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Supabase services, data fetching, error handling",
+                "testStrategy": "Test service method behavior"
+              },
+              {
+                "id": 5,
+                "title": "Write hook tests",
+                "description": "Test custom React hooks",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "Query hooks, auth hooks, state management hooks",
+                "testStrategy": "Test hook logic and state updates"
+              },
+              {
+                "id": 6,
+                "title": "Write real-time feature tests",
+                "description": "Test real-time functionality",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Monitor event handling, real-time updates, SLA compliance",
+                "testStrategy": "Test real-time features and 60-second SLA"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Integration Testing",
+            "description": "Test complete user workflows with real-time features",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "End-to-end tests, API integration tests, real-time flow tests",
+            "testStrategy": "Test critical user journeys with real-time features",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Set up end-to-end testing",
+                "description": "Configure Playwright or Cypress",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "E2E testing framework, test environment setup",
+                "testStrategy": "Test E2E setup functionality"
+              },
+              {
+                "id": 2,
+                "title": "Test user registration and authentication",
+                "description": "End-to-end auth flow testing",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Registration, login, logout, password reset",
+                "testStrategy": "Test complete auth workflows"
+              },
+              {
+                "id": 3,
+                "title": "Test product browsing with real-time updates",
+                "description": "End-to-end product discovery with live features",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Catalog browsing, search, filtering, real-time price/stock updates",
+                "testStrategy": "Test product discovery with real-time features"
+              },
+              {
+                "id": 4,
+                "title": "Test shopping cart and checkout with real-time validation",
+                "description": "End-to-end purchase flow with live updates",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Add to cart, cart management, checkout, real-time validation",
+                "testStrategy": "Test complete purchase workflows with real-time features"
+              },
+              {
+                "id": 5,
+                "title": "Test admin functionality with monitor controls",
+                "description": "End-to-end admin workflow testing",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [
+                  1
+                ],
+                "details": "User management, product management, order management, monitor controls",
+                "testStrategy": "Test admin panel workflows and monitor management"
+              },
+              {
+                "id": 6,
+                "title": "Test real-time monitor system end-to-end",
+                "description": "Test complete monitor workflow",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [
+                  1
+                ],
+                "details": "Monitor events, webhook processing, database updates, UI updates",
+                "testStrategy": "Test complete real-time update flow within 60 seconds"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Technical Documentation",
+            "description": "Create comprehensive technical documentation",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [],
+            "details": "API docs, database schema, deployment guide, monitor system docs",
+            "testStrategy": "Verify documentation accuracy and completeness",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Document database schema",
+                "description": "Create complete database documentation",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Table structure, relationships, constraints, indexes, monitor events",
+                "testStrategy": "Verify schema documentation accuracy"
+              },
+              {
+                "id": 2,
+                "title": "Document API endpoints",
+                "description": "Create API reference documentation",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Endpoint descriptions, parameters, responses, examples",
+                "testStrategy": "Test API documentation with examples"
+              },
+              {
+                "id": 3,
+                "title": "Document KicksDB integration",
+                "description": "Document data pipeline and monitor integration",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Data flow, transformation logic, sync process, monitor setup",
+                "testStrategy": "Verify integration documentation accuracy"
+              },
+              {
+                "id": 4,
+                "title": "Document real-time monitor system",
+                "description": "Create comprehensive monitor system documentation",
+                "status": "pending",
+                "priority": "high",
+                "dependencies": [],
+                "details": "Monitor setup, webhook configuration, event handling, SLA requirements",
+                "testStrategy": "Test monitor system documentation completeness"
+              },
+              {
+                "id": 5,
+                "title": "Create deployment guide",
+                "description": "Document deployment and setup process",
+                "status": "pending",
+                "priority": "medium",
+                "dependencies": [],
+                "details": "Environment setup, configuration, deployment steps, monitor setup",
+                "testStrategy": "Test deployment guide with fresh setup"
+              },
+              {
+                "id": 6,
+                "title": "Document development setup",
+                "description": "Create developer onboarding guide",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Local setup, dependencies, development workflow",
+                "testStrategy": "Test setup guide with new developer"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "User Documentation",
+            "description": "Create user and admin guides",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [],
+            "details": "User manual, admin guide, troubleshooting",
+            "testStrategy": "Validate guides with actual users",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Create user manual",
+                "description": "Write comprehensive user guide",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Account management, shopping, orders, support",
+                "testStrategy": "Test user manual with real users"
+              },
+              {
+                "id": 2,
+                "title": "Create admin guide",
+                "description": "Write admin panel documentation",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "User management, product management, analytics, monitor controls",
+                "testStrategy": "Test admin guide with admin users"
+              },
+              {
+                "id": 3,
+                "title": "Create troubleshooting guide",
+                "description": "Document common issues and solutions",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "Common problems, error messages, solutions, monitor issues",
+                "testStrategy": "Verify troubleshooting effectiveness"
+              },
+              {
+                "id": 4,
+                "title": "Create FAQ documentation",
+                "description": "Document frequently asked questions",
+                "status": "pending",
+                "priority": "low",
+                "dependencies": [],
+                "details": "User questions, technical questions, business questions",
+                "testStrategy": "Validate FAQ relevance and accuracy"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "ÉTAPE 1.2: Schéma Supabase Granulaire",
+        "description": "Création détaillée de toutes les tables et relations",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "Toutes les tables nécessaires pour l'e-commerce avec optimisations",
+        "testStrategy": "Tests de performance et intégrité des données",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Table product_images avec optimisations",
+            "description": "Gestion des images limitées à 2 par produit",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "id, product_id, image_url, is_primary, order_index, optimization_settings",
+            "testStrategy": "Test upload et limite de 2 images"
+          },
+          {
+            "id": 2,
+            "title": "Table product_stock avec tracking temps réel",
+            "description": "Stock par taille avec historique des changements",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "id, product_id, size, quantity, available, last_monitor_update, price_history",
+            "testStrategy": "Test synchronisation temps réel du stock"
+          },
+          {
+            "id": 3,
+            "title": "Table orders avec workflow complet",
+            "description": "Gestion complète des commandes e-commerce",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "id, user_id, status, total, shipping_address, billing_address, payment_status",
+            "testStrategy": "Test workflow de commande complet"
+          },
+          {
+            "id": 4,
+            "title": "Table order_items avec relations",
+            "description": "Articles de commande avec détails produit",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              3
+            ],
+            "details": "id, order_id, product_id, size, quantity, unit_price, total_price",
+            "testStrategy": "Test calculs et cohérence des prix"
+          },
+          {
+            "id": 5,
+            "title": "Table users avec profils étendus",
+            "description": "Utilisateurs avec informations complètes",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "id, email, role, profile_data, preferences, created_at, last_login",
+            "testStrategy": "Test authentification et rôles"
+          },
+          {
+            "id": 6,
+            "title": "Table carts pour persistance panier",
+            "description": "Paniers persistants avec synchronisation",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "id, user_id, product_id, size, quantity, added_at, session_id",
+            "testStrategy": "Test persistance entre sessions"
+          },
+          {
+            "id": 7,
+            "title": "Table monitor_events pour tracking",
+            "description": "Événements de monitoring temps réel",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "id, event_type, product_id, old_value, new_value, processed_at, source",
+            "testStrategy": "Test réception et traitement des événements"
+          },
+          {
+            "id": 8,
+            "title": "Indexes et optimisations de performance",
+            "description": "Index stratégiques pour les performances",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "details": "Index sur recherche, filtres, foreign keys, timestamps",
+            "testStrategy": "Test performance des requêtes complexes"
+          },
+          {
+            "id": 9,
+            "title": "RLS (Row Level Security) policies",
+            "description": "Sécurité au niveau des lignes",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              5
+            ],
+            "details": "Policies pour users, admin, vendor selon rôles",
+            "testStrategy": "Test accès selon rôles et permissions"
+          },
+          {
+            "id": 10,
+            "title": "Database functions et triggers",
+            "description": "Fonctions pour logique métier automatisée",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Auto-update timestamps, stock validation, price history",
+            "testStrategy": "Test triggers sur modifications"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "ÉTAPE 1.3: Pipeline de Scraping Avancé",
+        "description": "Pipeline robuste pour synchronisation Kicks.dev",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          1,
+          6
+        ],
+        "details": "Scraping, transformation, validation, synchronisation",
+        "testStrategy": "Test avec données réelles et gestion d'erreurs",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Service de fetch API Kicks.dev",
+            "description": "Service centralisé pour appels API",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Authentification, retry, rate limiting, error handling",
+            "testStrategy": "Test robustesse et gestion d'erreurs"
+          },
+          {
+            "id": 2,
+            "title": "Transformateur de données produits",
+            "description": "Mapping Kicks.dev vers format Supabase",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1
+            ],
+            "details": "Validation, nettoyage, standardisation, limite 2 images",
+            "testStrategy": "Test avec données variées et edge cases"
+          },
+          {
+            "id": 3,
+            "title": "Service de synchronisation batch",
+            "description": "Import initial de 100+ produits",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              2
+            ],
+            "details": "Import par batches, progress tracking, rollback capability",
+            "testStrategy": "Test import de gros volumes"
+          },
+          {
+            "id": 4,
+            "title": "Validation et déduplication",
+            "description": "Éviter les doublons et valider l'intégrité",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              2
+            ],
+            "details": "Unique constraints, data validation, conflict resolution",
+            "testStrategy": "Test déduplication et résolution de conflits"
+          },
+          {
+            "id": 5,
+            "title": "Cache intelligent et optimisations",
+            "description": "Cache pour réduire les appels API",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Redis/memory cache, TTL strategies, cache invalidation",
+            "testStrategy": "Test performance et freshness des données"
+          },
+          {
+            "id": 6,
+            "title": "Scheduler pour synchronisation périodique",
+            "description": "Synchronisation automatique toutes les 6h",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              3
+            ],
+            "details": "Cron jobs, queue system, monitoring des runs",
+            "testStrategy": "Test planification et exécution automatique"
+          },
+          {
+            "id": 7,
+            "title": "Logging et monitoring du pipeline",
+            "description": "Traçabilité complète des opérations",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Structured logging, metrics, alerting, dashboards",
+            "testStrategy": "Test logging et monitoring en conditions réelles"
+          },
+          {
+            "id": 8,
+            "title": "Fallback et mode dégradé",
+            "description": "Fonctionnement en cas d'indisponibilité API",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              5
+            ],
+            "details": "Cached data serving, graceful degradation, user messaging",
+            "testStrategy": "Test résilience lors de pannes API"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "ÉTAPE 1.4: Monitoring Temps Réel Complet",
+        "description": "Système de monitors KicksDB pour mises à jour temps réel",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "details": "Webhooks, queue system, processing temps réel",
+        "testStrategy": "Test latence < 60s pour changements de prix",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configuration des monitors KicksDB",
+            "description": "Setup des monitors pour prix et stock",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Monitor setup API, event types, product selection",
+            "testStrategy": "Test configuration et activation des monitors"
+          },
+          {
+            "id": 2,
+            "title": "API Route webhook receiver",
+            "description": "Endpoint pour recevoir les événements monitor",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1
+            ],
+            "details": "POST /api/kicks/monitor, signature validation, event parsing",
+            "testStrategy": "Test réception et validation des webhooks"
+          },
+          {
+            "id": 3,
+            "title": "Queue system pour événements",
+            "description": "File d'attente pour traitement asynchrone",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              2
+            ],
+            "details": "Bull/BullMQ queue, retry logic, dead letter queue",
+            "testStrategy": "Test throughput et reliability de la queue"
+          },
+          {
+            "id": 4,
+            "title": "Processeur d'événements monitor",
+            "description": "Traitement des changements prix/stock",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              3
+            ],
+            "details": "Event processing, database updates, deduplication",
+            "testStrategy": "Test processing et idempotence"
+          },
+          {
+            "id": 5,
+            "title": "Système de déduplication events",
+            "description": "Éviter le traitement multiple des mêmes événements",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              4
+            ],
+            "details": "Event ID tracking, dedup windows, conflict resolution",
+            "testStrategy": "Test deduplication avec événements en double"
+          },
+          {
+            "id": 6,
+            "title": "Monitoring et métriques temps réel",
+            "description": "Dashboards pour surveiller le système",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              4
+            ],
+            "details": "Latency metrics, success rates, error tracking",
+            "testStrategy": "Test métriques et alerting"
+          },
+          {
+            "id": 7,
+            "title": "Fallback polling system",
+            "description": "Polling de secours si monitors échouent",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "6h polling schedule, detect monitor failures, auto-switch",
+            "testStrategy": "Test basculement automatique vers polling"
+          },
+          {
+            "id": 8,
+            "title": "Circuit breaker et rate limiting",
+            "description": "Protection contre les surcharges",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              2
+            ],
+            "details": "Circuit breaker pattern, rate limiting, backpressure",
+            "testStrategy": "Test comportement sous charge élevée"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "ÉTAPE 2.1: Pages Frontend Core",
+        "description": "Développement de toutes les pages principales",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          6,
+          7,
+          8
+        ],
+        "details": "Toutes les pages avec données réelles et fonctionnalités complètes",
+        "testStrategy": "Tests E2E sur tous les parcours utilisateur",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Page d'accueil (/) avec sections complètes",
+            "description": "Landing page avec hero, nouveautés, marques, populaires",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Hero slider, brand grid, featured products, footer complet",
+            "testStrategy": "Test responsive et performance de chargement"
+          },
+          {
+            "id": 2,
+            "title": "Page catalogue (/products) avec filtres avancés",
+            "description": "Catalogue avec filtres, tri, pagination",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Filtres marque/genre/taille/prix, tri, search, infinite scroll",
+            "testStrategy": "Test filtres, search et performance avec gros catalogues"
+          },
+          {
+            "id": 3,
+            "title": "Page détail produit (/products/[id])",
+            "description": "Fiche produit avec galerie et sélecteur taille",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Galerie 2 images max, info produit, sélecteur taille, add to cart",
+            "testStrategy": "Test interactions et validation des tailles"
+          },
+          {
+            "id": 4,
+            "title": "Page panier (/cart) avec calculs temps réel",
+            "description": "Panier avec modification quantités et totaux",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Liste items, modify quantity, remove, totals, shipping calc",
+            "testStrategy": "Test calculs et persistance panier"
+          },
+          {
+            "id": 5,
+            "title": "Pages checkout (/checkout) multi-étapes",
+            "description": "Processus de commande en 3 étapes",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              4
+            ],
+            "details": "Adresse → Paiement → Confirmation, progress bar",
+            "testStrategy": "Test workflow complet et validation formulaires"
+          },
+          {
+            "id": 6,
+            "title": "Pages authentification (/auth)",
+            "description": "Login, register, forgot password",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Login/register forms, validation, redirect, social auth",
+            "testStrategy": "Test sécurité et flow d'authentification"
+          },
+          {
+            "id": 7,
+            "title": "Page profil utilisateur (/profile)",
+            "description": "Gestion profil, commandes, adresses",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              6
+            ],
+            "details": "Edit profile, order history, saved addresses, preferences",
+            "testStrategy": "Test CRUD profil et historique commandes"
+          },
+          {
+            "id": 8,
+            "title": "Pages admin dashboard (/admin)",
+            "description": "Panel admin avec métriques et gestion",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Dashboard, users, products, orders, stock management",
+            "testStrategy": "Test permissions et fonctionnalités admin"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "ÉTAPE 2.2: Composants UI Complets",
+        "description": "Bibliothèque complète de composants réutilisables",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "details": "Design system complet avec tous les composants nécessaires",
+        "testStrategy": "Storybook et tests unitaires pour chaque composant",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Composants Button avec variants",
+            "description": "Boutons avec tous les états et variants",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Primary, secondary, outline, ghost, loading, disabled states",
+            "testStrategy": "Test tous variants et interactions"
+          },
+          {
+            "id": 2,
+            "title": "Composants Card produit avec animations",
+            "description": "Cartes produits avec hover effects",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Product card, hover animations, quick actions, variants",
+            "testStrategy": "Test responsive et animations fluides"
+          },
+          {
+            "id": 3,
+            "title": "Composants Form avec validation",
+            "description": "Formulaires avec validation temps réel",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Input, select, checkbox, validation, error states",
+            "testStrategy": "Test validation et accessibility"
+          },
+          {
+            "id": 4,
+            "title": "Composants Modal et Dialog",
+            "description": "Modals, confirmations, overlays",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Modal, alert dialog, confirmation, drawer variants",
+            "testStrategy": "Test focus management et keyboard navigation"
+          },
+          {
+            "id": 5,
+            "title": "Composants Loading et Skeleton",
+            "description": "États de chargement élégants",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Skeleton screens, spinners, progress bars, shimmer effects",
+            "testStrategy": "Test transitions et performance"
+          },
+          {
+            "id": 6,
+            "title": "Composants Navigation responsive",
+            "description": "Header, menu mobile, breadcrumbs",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Header fixe, mobile menu, breadcrumbs, search bar",
+            "testStrategy": "Test responsive et navigation mobile"
+          },
+          {
+            "id": 7,
+            "title": "Composants Toast et Notifications",
+            "description": "Système de notifications utilisateur",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Toast messages, notification center, badges",
+            "testStrategy": "Test timing et stack de notifications"
+          },
+          {
+            "id": 8,
+            "title": "Composants Badge et Label",
+            "description": "Badges de statut et labels informatifs",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [],
+            "details": "Status badges, count badges, labels, chips",
+            "testStrategy": "Test variants et cohérence visuelle"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "ÉTAPE 2.3: Services API et State Management",
+        "description": "Architecture complète pour gestion d'état et API",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          9,
+          10
+        ],
+        "details": "React Query, Context API, services typés",
+        "testStrategy": "Tests integration et performance cache",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Services API typés pour produits",
+            "description": "Services TypeScript pour toutes les opérations produits",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Fetch products, search, filters, pagination, error handling",
+            "testStrategy": "Test tous les endpoints et edge cases"
+          },
+          {
+            "id": 2,
+            "title": "Services API pour authentification",
+            "description": "Gestion auth avec Supabase Auth",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Login, register, logout, session management, role-based access",
+            "testStrategy": "Test flows auth et sécurité"
+          },
+          {
+            "id": 3,
+            "title": "Services API pour e-commerce",
+            "description": "Cart, orders, checkout operations",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Cart CRUD, order creation, payment flow, stock validation",
+            "testStrategy": "Test workflow e-commerce complet"
+          },
+          {
+            "id": 4,
+            "title": "Hooks React Query pour cache",
+            "description": "Hooks optimisés avec mise en cache intelligente",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "useProducts, useCart, useAuth, cache invalidation strategies",
+            "testStrategy": "Test performance cache et synchronisation"
+          },
+          {
+            "id": 5,
+            "title": "Context API pour state global",
+            "description": "Gestion d'état global avec Context",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Auth context, cart context, theme context, user preferences",
+            "testStrategy": "Test partage d'état entre composants"
+          },
+          {
+            "id": 6,
+            "title": "Middleware et interceptors",
+            "description": "Gestion centralisée des erreurs et auth",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              2
+            ],
+            "details": "Auth interceptors, error handling, retry logic, loading states",
+            "testStrategy": "Test robustesse et gestion d'erreurs"
+          },
+          {
+            "id": 7,
+            "title": "Real-time subscriptions",
+            "description": "Subscriptions temps réel pour stock et prix",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              4
+            ],
+            "details": "Supabase realtime, stock updates, price changes, notifications",
+            "testStrategy": "Test latence et reliability temps réel"
+          },
+          {
+            "id": 8,
+            "title": "Optimistic updates",
+            "description": "Updates optimistes pour UX fluide",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              4
+            ],
+            "details": "Cart updates, like/favorite, quick actions avec rollback",
+            "testStrategy": "Test UX et rollback en cas d'erreur"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "ÉTAPE 3.1: Design System et Animations",
+        "description": "Design system complet avec animations Framer Motion",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          10,
+          11
+        ],
+        "details": "Palette noir/blanc, animations fluides, micro-interactions",
+        "testStrategy": "Tests performance animations et consistency visuelle",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Tokens de design (couleurs, spacing, typo)",
+            "description": "Système de tokens pour cohérence design",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Couleurs noir/blanc/gris, spacing scale, font scales, shadows",
+            "testStrategy": "Test consistency à travers l'app"
+          },
+          {
+            "id": 2,
+            "title": "Animations de transition entre pages",
+            "description": "Transitions fluides avec Framer Motion",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Page transitions, route animations, fade/slide effects",
+            "testStrategy": "Test fluidité et performance 60fps"
+          },
+          {
+            "id": 3,
+            "title": "Animations de produits (hover, loading)",
+            "description": "Micro-animations pour interactions produits",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Hover effects, image zoom, scale effects, skeleton loading",
+            "testStrategy": "Test responsiveness et performance mobile"
+          },
+          {
+            "id": 4,
+            "title": "Animations de formulaires et inputs",
+            "description": "Feedback visuel pour interactions formulaires",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Input focus, validation feedback, submit animations",
+            "testStrategy": "Test accessibilité et UX"
+          },
+          {
+            "id": 5,
+            "title": "Animations de panier et checkout",
+            "description": "Animations pour workflow e-commerce",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1
+            ],
+            "details": "Add to cart animation, checkout steps, success celebrations",
+            "testStrategy": "Test impact sur conversion"
+          },
+          {
+            "id": 6,
+            "title": "Système de themes et dark mode",
+            "description": "Support thème sombre avec tokens",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              1
+            ],
+            "details": "Theme provider, CSS variables, smooth transitions",
+            "testStrategy": "Test cohérence en mode sombre"
+          },
+          {
+            "id": 7,
+            "title": "Responsive animations",
+            "description": "Animations adaptatives selon device",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Reduced motion preferences, mobile optimizations",
+            "testStrategy": "Test performance sur mobile et tablets"
+          },
+          {
+            "id": 8,
+            "title": "Animation performance monitoring",
+            "description": "Monitoring des performances animations",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "FPS tracking, jank detection, performance budgets",
+            "testStrategy": "Test performance sous différentes charges"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "ÉTAPE 4.1: Testing Complet",
+        "description": "Suite de tests complète pour qualité et robustesse",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          9,
+          10,
+          11
+        ],
+        "details": "Tests unitaires, intégration, E2E, performance",
+        "testStrategy": "Coverage 80%+ et tests automatisés CI/CD",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Tests unitaires composants UI",
+            "description": "Jest + Testing Library pour tous composants",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Test rendering, props, interactions, edge cases",
+            "testStrategy": "Coverage 90%+ des composants UI"
+          },
+          {
+            "id": 2,
+            "title": "Tests unitaires services et hooks",
+            "description": "Tests logique métier et API calls",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "API services, custom hooks, utility functions, mocking",
+            "testStrategy": "Test tous les cas d'usage et erreurs"
+          },
+          {
+            "id": 3,
+            "title": "Tests intégration API",
+            "description": "Tests intégration avec Supabase et Kicks.dev",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Database operations, API calls, auth flows, real data",
+            "testStrategy": "Test avec environnement staging"
+          },
+          {
+            "id": 4,
+            "title": "Tests E2E avec Playwright",
+            "description": "Tests End-to-End des parcours utilisateur",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "User journeys, checkout flow, admin operations, cross-browser",
+            "testStrategy": "Test scenarios critiques business"
+          },
+          {
+            "id": 5,
+            "title": "Tests performance et charge",
+            "description": "Tests performance sous charge",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Load testing, stress testing, memory leaks, bundle analysis",
+            "testStrategy": "Test scalabilité et performance"
+          },
+          {
+            "id": 6,
+            "title": "Tests sécurité et vulnérabilités",
+            "description": "Audit sécurité et tests penetration",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Security audit, OWASP testing, dependency scanning",
+            "testStrategy": "Audit sécurité complet"
+          },
+          {
+            "id": 7,
+            "title": "Tests accessibilité (a11y)",
+            "description": "Tests conformité WCAG et accessibilité",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Screen readers, keyboard navigation, color contrast, ARIA",
+            "testStrategy": "Conformité WCAG 2.1 AA minimum"
+          },
+          {
+            "id": 8,
+            "title": "CI/CD et automation tests",
+            "description": "Pipeline automatisé de tests",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "GitHub Actions, test automation, quality gates",
+            "testStrategy": "Automation complète du pipeline de tests"
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "ÉTAPE 4.2: Performance et SEO",
+        "description": "Optimisations performance et référencement",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          11,
+          12
+        ],
+        "details": "Core Web Vitals, bundle optimization, SEO technique",
+        "testStrategy": "Lighthouse 90+ et indexation Google optimale",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Optimisation images et assets",
+            "description": "Compression et optimisation automatique",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "WebP conversion, lazy loading, responsive images, CDN",
+            "testStrategy": "Test Core Web Vitals LCP"
+          },
+          {
+            "id": 2,
+            "title": "Code splitting et lazy loading",
+            "description": "Optimisation bundle et chargement",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Route-based splitting, component lazy loading, dynamic imports",
+            "testStrategy": "Test bundle size et First Load JS"
+          },
+          {
+            "id": 3,
+            "title": "Cache strategies et optimisations",
+            "description": "Stratégies de cache multi-niveaux",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Browser cache, service worker, API cache, CDN cache",
+            "testStrategy": "Test performance cache et freshness"
+          },
+          {
+            "id": 4,
+            "title": "SEO technique et métadonnées",
+            "description": "Optimisation référencement technique",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Meta tags, structured data, sitemap, robots.txt, Open Graph",
+            "testStrategy": "Test indexation et ranking factors"
+          },
+          {
+            "id": 5,
+            "title": "Analytics et tracking",
+            "description": "Google Analytics et tracking conversions",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "GA4, conversion tracking, e-commerce events, user behavior",
+            "testStrategy": "Test tracking accuracy et privacy compliance"
+          },
+          {
+            "id": 6,
+            "title": "Monitoring performance en production",
+            "description": "Monitoring continu des performances",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Real User Monitoring, error tracking, performance alerts",
+            "testStrategy": "Test alerting et resolution times"
+          },
+          {
+            "id": 7,
+            "title": "PWA features et offline",
+            "description": "Progressive Web App capabilities",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              3
+            ],
+            "details": "Service worker, offline fallbacks, app manifest, install prompt",
+            "testStrategy": "Test fonctionnalités offline"
+          },
+          {
+            "id": 8,
+            "title": "CDN et edge optimization",
+            "description": "Optimisation delivery global",
+            "status": "pending",
+            "priority": "low",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "Edge caching, global CDN, edge functions, geo-optimization",
+            "testStrategy": "Test performance globale"
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "ÉTAPE 4.3: Sécurité et Compliance",
+        "description": "Sécurisation complète de l'application",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          11,
+          13
+        ],
+        "details": "OWASP compliance, data protection, audit sécurité",
+        "testStrategy": "Audit sécurité et tests penetration",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Authentication et authorization robuste",
+            "description": "Sécurisation auth avec Supabase",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "MFA, session management, role-based access, password policies",
+            "testStrategy": "Test attaques auth et privilege escalation"
+          },
+          {
+            "id": 2,
+            "title": "Input validation et sanitization",
+            "description": "Protection contre injections et XSS",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Form validation, SQL injection prevention, XSS protection",
+            "testStrategy": "Test injection attacks et XSS vectors"
+          },
+          {
+            "id": 3,
+            "title": "HTTPS et secure headers",
+            "description": "Configuration sécurisée HTTPS",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "SSL/TLS, security headers, HSTS, CSP policies",
+            "testStrategy": "Test configuration SSL et headers"
+          },
+          {
+            "id": 4,
+            "title": "Data protection et RGPD",
+            "description": "Conformité protection des données",
+            "status": "pending",
+            "priority": "high",
+            "dependencies": [],
+            "details": "Privacy policy, consent management, data anonymization",
+            "testStrategy": "Audit conformité RGPD"
+          },
+          {
+            "id": 5,
+            "title": "Rate limiting et DDOS protection",
+            "description": "Protection contre abus et attaques",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "API rate limiting, DDOS protection, IP blocking",
+            "testStrategy": "Test resilience sous attaque"
+          },
+          {
+            "id": 6,
+            "title": "Audit logs et monitoring sécurité",
+            "description": "Traçabilité et détection d'intrusion",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Security logs, intrusion detection, alert system",
+            "testStrategy": "Test détection et response aux incidents"
+          },
+          {
+            "id": 7,
+            "title": "Dependency scanning et updates",
+            "description": "Gestion sécurisée des dépendances",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Vulnerability scanning, automated updates, security patches",
+            "testStrategy": "Test pipeline de mise à jour sécurisée"
+          },
+          {
+            "id": 8,
+            "title": "Backup et disaster recovery",
+            "description": "Stratégie de sauvegarde et récupération",
+            "status": "pending",
+            "priority": "medium",
+            "dependencies": [],
+            "details": "Database backups, disaster recovery plan, RTO/RPO targets",
+            "testStrategy": "Test procedures de recovery"
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "title": "PHASE 0: KicksDB API Research & Analysis (FOUNDATION)",
+        "description": "Comprehensive analysis of KicksDB/Kicks.dev API",
+        "details": "Find all endpoints, authentication, rate limits, monitor capabilities",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analyze Kicks.dev API documentation",
+            "description": "Research complete API documentation at https://kicks.dev/api-keys to understand all available endpoints",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 16
+          },
+          {
+            "id": 2,
+            "title": "Test API authentication and rate limits",
+            "description": "Test API key authentication, verify rate limits, and understand request/response format",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 16
+          },
+          {
+            "id": 3,
+            "title": "Identify all product endpoints",
+            "description": "Map all sneaker/product endpoints, understand data structure, pagination, and filtering options",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 16
+          },
+          {
+            "id": 4,
+            "title": "Research KicksDB Monitor capabilities",
+            "description": "Investigate monitor/webhook capabilities for real-time price updates and event subscriptions",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 16
+          },
+          {
+            "id": 5,
+            "title": "Document API integration strategy",
+            "description": "Create comprehensive documentation of API structure, data mapping plan for Supabase, and integration approach",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 16
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "version": "2.0.0",
+      "created": "2025-09-22",
+      "updated": "2025-09-22T22:41:25.843Z",
+      "project": "SneaksX - E-commerce Sneaker Platform with Real-time Monitoring",
+      "description": "Modern e-commerce platform for sneakers with KicksDB API integration and real-time price/stock monitoring",
+      "totalTasks": 5,
+      "totalSubtasks": 278,
+      "phases": [
+        {
+          "phase": 1,
+          "title": "Backend & Data Pipeline with Real-time Monitoring",
+          "description": "Foundation with real data and real-time updates",
+          "priority": "CRITICAL",
+          "tasks": [
+            "1"
+          ],
+          "subtaskCount": 75,
+          "features": [
+            "KicksDB API integration",
+            "Real-time monitors",
+            "Webhook system",
+            "≤60s SLA",
+            "2-image limit"
+          ]
+        },
+        {
+          "phase": 2,
+          "title": "Frontend Integration with Real-time Features",
+          "description": "Functional application with live updates",
+          "priority": "HIGH",
+          "tasks": [
+            "2"
+          ],
+          "subtaskCount": 87,
+          "features": [
+            "Real-time price updates",
+            "Live stock validation",
+            "Real-time cart sync",
+            "Monitor dashboards"
+          ]
+        },
+        {
+          "phase": 3,
+          "title": "Visual Polish & UX Design",
+          "description": "Premium black/white design",
+          "priority": "MEDIUM",
+          "tasks": [
+            "3"
+          ],
+          "subtaskCount": 60,
+          "features": [
+            "Minimalist design",
+            "Smooth animations",
+            "Mobile-first",
+            "Accessibility"
+          ]
+        },
+        {
+          "phase": 4,
+          "title": "Performance & Advanced Features",
+          "description": "Optimization and advanced features",
+          "priority": "MEDIUM",
+          "tasks": [
+            "4"
+          ],
+          "subtaskCount": 23,
+          "features": [
+            "Image optimization",
+            "Advanced search",
+            "Caching",
+            "SEO"
+          ]
+        },
+        {
+          "phase": 5,
+          "title": "Testing & Documentation",
+          "description": "Quality assurance and docs",
+          "priority": "MEDIUM",
+          "tasks": [
+            "5"
+          ],
+          "subtaskCount": 22,
+          "features": [
+            "Unit tests",
+            "E2E tests",
+            "Real-time testing",
+            "Complete documentation"
+          ]
+        }
+      ],
+      "apiConfig": {
+        "kicksdb": {
+          "apiKey": "KICKS-97EF-725F-A605-58232DC70EED",
+          "baseUrl": "https://kicks.dev/api",
+          "documentation": "https://kicks.dev/api-keys",
+          "imageLimit": 2,
+          "monitorFeatures": {
+            "priceMonitoring": true,
+            "stockMonitoring": true,
+            "newProductMonitoring": true,
+            "webhookEndpoint": "/api/kicks/monitor",
+            "slaRequirement": "≤60 seconds",
+            "fallbackPolling": "6 hours"
+          }
+        }
+      },
+      "keyFeatures": [
+        "Real-time price and stock monitoring with ≤60s SLA",
+        "Strict 2-image limit per product enforcement",
+        "KicksDB webhook integration with queue system",
+        "Minimalist black/white design system",
+        "Mobile-first responsive design",
+        "Comprehensive admin panel with monitor controls",
+        "Role-based authentication (User/Vendor/Admin)",
+        "Real-time cart synchronization",
+        "Complete e-commerce workflow with live validation"
+      ]
+    }
+  }
+}

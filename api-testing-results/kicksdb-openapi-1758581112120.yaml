@@ -1,0 +1,3896 @@
+components:
+  schemas:
+    AssociatedVariantStruct:
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+      required:
+        - id
+      type: object
+    Brand:
+      additionalProperties: false
+      properties:
+        brand:
+          examples:
+            - Nike
+          type: string
+        count:
+          examples:
+            - 50988
+          format: int64
+          type: integer
+      required:
+        - brand
+        - count
+      type: object
+    Breadcrumb:
+      additionalProperties: false
+      properties:
+        alias:
+          examples:
+            - sneakers
+          type: string
+        level:
+          examples:
+            - 1
+          format: int64
+          type: integer
+        value:
+          examples:
+            - Sneakers
+          type: string
+      required:
+        - value
+        - alias
+        - level
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+            - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: "#/components/schemas/ErrorDetail"
+          type:
+            - array
+            - "null"
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+            - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+            - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+            - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+            - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    GTIN:
+      additionalProperties: false
+      properties:
+        brand:
+          examples:
+            - Nike
+          type: string
+        category:
+          examples:
+            - Shoes
+          type: string
+        color:
+          examples:
+            - White
+          type: string
+        identifier:
+          examples:
+            - "4062059925839"
+          type: string
+        identifier_type:
+          examples:
+            - EAN-13
+          type: string
+        image:
+          description: Image URL
+          type: string
+        link:
+          examples:
+            - https://stockx.com/nike-air-force-1-07
+          type: string
+        name:
+          examples:
+            - Nike Air Force 1 '07
+          type: string
+        price:
+          examples:
+            - 100
+          format: double
+          type: number
+        product_id:
+          examples:
+            - "1234567890"
+          type: string
+        release_date:
+          examples:
+            - "2025-01-01"
+          type: string
+        retail_price:
+          examples:
+            - 100
+          format: double
+          type: number
+        size:
+          examples:
+            - US 9
+          type: string
+        sku:
+          examples:
+            - FV9996
+          type: string
+        slug:
+          examples:
+            - nike-air-force-1-07
+          type: string
+        source:
+          examples:
+            - stockx
+          type: string
+        source_id:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        variant_id:
+          examples:
+            - "1234567890"
+          type: string
+      required:
+        - source
+        - source_id
+        - identifier
+        - identifier_type
+        - name
+        - size
+        - sku
+        - slug
+        - color
+        - brand
+        - image
+        - price
+        - updated_at
+        - category
+        - link
+        - release_date
+        - retail_price
+        - product_id
+        - variant_id
+      type: object
+    GetShopsOutput:
+      additionalProperties: false
+      properties:
+        shop_name:
+          examples:
+            - kickscrew
+          type: string
+        shop_url:
+          examples:
+            - https://kickscrewshop.myshopify.com/
+          type: string
+        total:
+          examples:
+            - 390676
+          format: int64
+          type: integer
+      required:
+        - shop_name
+        - shop_url
+        - total
+      type: object
+    GoatProduct:
+      additionalProperties: false
+      properties:
+        brand:
+          examples:
+            - Nike
+          type: string
+        category:
+          examples:
+            - shoes
+          type: string
+        colorway:
+          examples:
+            - Black/Bright Crimson/Blue Lagoon/White
+          type: string
+        description:
+          type: string
+        id:
+          examples:
+            - 121
+          format: int64
+          type: integer
+        image_url:
+          type: string
+        images:
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        link:
+          type: string
+        model:
+          examples:
+            - Air Max 2015
+          type: string
+        name:
+          examples:
+            - Air Max 2015 'Black Bright Crimson'
+          type: string
+        product_type:
+          examples:
+            - sneakers
+          type: string
+        rank:
+          examples:
+            - 1
+          format: int64
+          type: integer
+        release_date:
+          type: string
+        release_date_year:
+          type: string
+        retail_prices:
+          additionalProperties: {}
+          type: object
+        season:
+          examples:
+            - "2015"
+          type: string
+        sizes:
+          items:
+            additionalProperties: {}
+            type: object
+          type:
+            - array
+            - "null"
+        sku:
+          examples:
+            - 698902 006
+          type: string
+        slug:
+          examples:
+            - nike-air-max-2015-698902-006
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variants:
+          items:
+            $ref: "#/components/schemas/GoatVariant"
+          type:
+            - array
+            - "null"
+        weekly_orders:
+          examples:
+            - 0
+          format: int64
+          type: integer
+      required:
+        - id
+        - sku
+        - slug
+        - name
+        - brand
+        - model
+        - description
+        - colorway
+        - season
+        - category
+        - product_type
+        - image_url
+        - images
+        - release_date
+        - release_date_year
+        - retail_prices
+        - link
+        - sizes
+        - rank
+        - weekly_orders
+        - updated_at
+        - variants
+      type: object
+    GoatProductSale:
+      additionalProperties: false
+      properties:
+        amount:
+          examples:
+            - 200
+          format: double
+          type: number
+        currency:
+          examples:
+            - USD
+          type: string
+        location:
+          examples:
+            - Athens, US
+          type: string
+        product_id:
+          examples:
+            - 121
+          format: int64
+          type: integer
+        purchased_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        size_us:
+          examples:
+            - "12"
+          type: string
+        type:
+          examples:
+            - PURCHASE_TYPE_SALE
+          type: string
+      required:
+        - product_id
+        - type
+        - size_us
+        - currency
+        - amount
+        - location
+        - purchased_at
+      type: object
+    GoatProductSaleAgg:
+      additionalProperties: false
+      properties:
+        avg_amount:
+          examples:
+            - 200
+          format: double
+          type: number
+        date:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        orders:
+          examples:
+            - 1
+          format: int64
+          type: integer
+        product_id:
+          examples:
+            - 121
+          format: int64
+          type: integer
+      required:
+        - product_id
+        - avg_amount
+        - orders
+        - date
+      type: object
+    GoatVariant:
+      additionalProperties: false
+      properties:
+        available:
+          examples:
+            - true
+          type: boolean
+        currency:
+          examples:
+            - USD
+          type: string
+        lowest_ask:
+          examples:
+            - 424
+          format: double
+          type: number
+        product_id:
+          examples:
+            - 121
+          format: int64
+          type: integer
+        size:
+          examples:
+            - "9"
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+      required:
+        - product_id
+        - size
+        - lowest_ask
+        - available
+        - currency
+        - updated_at
+      type: object
+    KickscrewProduct:
+      additionalProperties: false
+      properties:
+        brand:
+          examples:
+            - Air Jordan
+          type: string
+        colorway:
+          type: string
+        description:
+          type: string
+        id:
+          examples:
+            - "6969251397827"
+          type: string
+        images:
+          description: The image URLs of the product.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        link:
+          examples:
+            - https://kickscrew.com/products/air-jordan-10-retro-nyc-310805-012
+          type:
+            - string
+            - "null"
+        product_type:
+          examples:
+            - Sneakers
+          type: string
+        release_date:
+          type: string
+        slug:
+          examples:
+            - air-jordan-10-retro-nyc-310805-012
+          type: string
+        title:
+          examples:
+            - Air Jordan 10 Retro 'NYC' 310805-012
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variants:
+          items:
+            $ref: "#/components/schemas/KickscrewVariant"
+          type:
+            - array
+            - "null"
+      required:
+        - id
+        - title
+        - slug
+        - product_type
+        - brand
+        - description
+        - images
+        - colorway
+        - release_date
+        - link
+        - updated_at
+        - variants
+      type: object
+    KickscrewVariant:
+      additionalProperties: false
+      properties:
+        available:
+          examples:
+            - false
+          type: boolean
+        barcode:
+          examples:
+            - "886915460067"
+          type: string
+        barcode_type:
+          type: string
+        currency:
+          examples:
+            - USD
+          type: string
+        id:
+          examples:
+            - "40837518033091"
+          type: string
+        price:
+          examples:
+            - 496
+          format: double
+          type: number
+        sku:
+          examples:
+            - 310805-012-40
+          type: string
+        title:
+          examples:
+            - MENS / Men's US 4 / Women's US 5.5 / UK 3.5 / EU 36 / JP 23
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+      required:
+        - id
+        - title
+        - price
+        - sku
+        - currency
+        - barcode
+        - barcode_type
+        - available
+        - updated_at
+      type: object
+    Product:
+      additionalProperties: false
+      properties:
+        avg_price:
+          description: Average price of the product
+          examples:
+            - 500
+          format: double
+          type: number
+        brand:
+          examples:
+            - Jordan
+          type: string
+        breadcrumbs:
+          description: List of breadcrumbs
+          items:
+            $ref: "#/components/schemas/Breadcrumb"
+          type:
+            - array
+            - "null"
+        categories:
+          examples:
+            - - sneakers
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        category:
+          examples:
+            - Air Jordan
+          type: string
+        created_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        description:
+          type: string
+        gallery:
+          description: List of images URLs
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        gallery_360:
+          description: List of 360 images URLs
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        gender:
+          examples:
+            - men
+          type: string
+        goat:
+          $ref: "#/components/schemas/ProductStockXGoat"
+          deprecated: true
+          description: "**Deprecated**: Use /v3/unified/products/{slug} instead"
+        id:
+          examples:
+            - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          type: string
+        image:
+          type: string
+        kickscrew:
+          $ref: "#/components/schemas/ProductStockXKickscrew"
+          deprecated: true
+          description: "**Deprecated**: Use /v3/unified/products/{slug} instead"
+        link:
+          examples:
+            - https://stockx.com/products/air-jordan-4-retro-white-cement-2025
+          type:
+            - string
+            - "null"
+        max_price:
+          description: Maximum price of the product
+          examples:
+            - 1000
+          format: double
+          type: number
+        min_price:
+          description: Minimum price of the product
+          examples:
+            - 100
+          format: double
+          type: number
+        model:
+          examples:
+            - Jordan 4 Retro
+          type: string
+        product_type:
+          examples:
+            - sneakers
+          type: string
+        rank:
+          description: Rank of the product by number of sales
+          examples:
+            - 1
+          format: int64
+          type:
+            - integer
+            - "null"
+        secondary_category:
+          examples:
+            - Four
+          type: string
+        short_description:
+          description: A LLM-generated short description of the product
+          type:
+            - string
+            - "null"
+        sku:
+          examples:
+            - FV5029-100
+          type: string
+        slug:
+          examples:
+            - air-jordan-4-retro-white-cement-2025
+          type: string
+        stadium_goods:
+          $ref: "#/components/schemas/ProductStockXStadiumGoods"
+          deprecated: true
+          description: "**Deprecated**: Use /v3/unified/products/{slug} instead"
+        statistics:
+          $ref: "#/components/schemas/StockXMarketStatistics"
+          deprecated: true
+          description: "**Deprecated**: Use /v3/unified/products/{slug} instead"
+        title:
+          examples:
+            - Jordan 4 Retro White Cement (2025)
+          type: string
+        traits:
+          description: List of traits of the product, enabled via display[traits]
+          items:
+            $ref: "#/components/schemas/ProductTrait"
+          type:
+            - array
+            - "null"
+        upcoming:
+          description: Whether the product is upcoming
+          examples:
+            - false
+          type:
+            - boolean
+            - "null"
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variants:
+          description: List of variants of the product, enabled via display[variants]
+          items:
+            $ref: "#/components/schemas/Variant"
+          type:
+            - array
+            - "null"
+        weekly_orders:
+          description: Number of weekly orders
+          examples:
+            - 2210
+          format: int64
+          type:
+            - integer
+            - "null"
+      required:
+        - id
+        - title
+        - brand
+        - model
+        - gender
+        - description
+        - image
+        - sku
+        - slug
+        - category
+        - product_type
+        - secondary_category
+        - categories
+        - breadcrumbs
+        - gallery
+        - gallery_360
+        - updated_at
+        - created_at
+        - link
+        - rank
+        - weekly_orders
+        - min_price
+        - max_price
+        - avg_price
+        - short_description
+        - upcoming
+        - traits
+        - variants
+        - statistics
+        - goat
+        - kickscrew
+        - stadium_goods
+      type: object
+    ProductSale:
+      additionalProperties: false
+      properties:
+        avg_amount:
+          examples:
+            - 334
+          format: double
+          type: number
+        date:
+          examples:
+            - "2025-06-01"
+          format: date-time
+          type: string
+        orders:
+          examples:
+            - 10
+          format: int64
+          type: integer
+        product_id:
+          examples:
+            - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          type: string
+      required:
+        - product_id
+        - avg_amount
+        - orders
+        - date
+      type: object
+    ProductSalesChart:
+      additionalProperties: false
+      properties:
+        amount:
+          examples:
+            - 334
+          format: double
+          type: number
+        currency:
+          examples:
+            - USD
+          type: string
+        date:
+          examples:
+            - "2025-06-01"
+          format: date-time
+          type: string
+        product_id:
+          examples:
+            - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          type: string
+      required:
+        - product_id
+        - date
+        - amount
+        - currency
+      type: object
+    ProductStockXGoat:
+      additionalProperties: false
+      properties:
+        product:
+          $ref: "#/components/schemas/GoatProduct"
+      required:
+        - product
+      type: object
+    ProductStockXKickscrew:
+      additionalProperties: false
+      properties:
+        product:
+          $ref: "#/components/schemas/ShopifyProduct"
+      required:
+        - product
+      type: object
+    ProductStockXStadiumGoods:
+      additionalProperties: false
+      properties:
+        product:
+          $ref: "#/components/schemas/ShopifyProduct"
+      required:
+        - product
+      type: object
+    ProductTrait:
+      additionalProperties: false
+      properties:
+        product_id:
+          type: string
+        trait:
+          type: string
+        value:
+          type: string
+      required:
+        - product_id
+        - trait
+        - value
+      type: object
+    RespGoatProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespGoatProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          $ref: "#/components/schemas/GoatProduct"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespInterface {}Body:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespInterface {}Body.json
+          format: uri
+          readOnly: true
+          type: string
+        data: {}
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespKickscrewProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespKickscrewProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          $ref: "#/components/schemas/KickscrewProduct"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListBrandBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListBrandBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/Brand"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListGTINBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListGTINBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/GTIN"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListGetShopsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListGetShopsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/GetShopsOutput"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListGoatProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListGoatProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/GoatProduct"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListGoatProductSaleAggBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListGoatProductSaleAggBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/GoatProductSaleAgg"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListGoatProductSaleBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListGoatProductSaleBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/GoatProductSale"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListInterface {}Body:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListInterface {}Body.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items: {}
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListKickscrewProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListKickscrewProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/KickscrewProduct"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/Product"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListProductSaleBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListProductSaleBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/ProductSale"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListProductSalesChartBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListProductSalesChartBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/ProductSalesChart"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListShopifyProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListShopifyProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/ShopifyProduct"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListStadiumGoodsProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListStadiumGoodsProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/StadiumGoodsProduct"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListStockXProductSalesEdgeBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListStockXProductSalesEdgeBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/StockXProductSalesEdge"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListUnifiedProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListUnifiedProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/UnifiedProduct"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespListVariantSaleBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespListVariantSaleBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          items:
+            $ref: "#/components/schemas/VariantSale"
+          type:
+            - array
+            - "null"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespMapStringInterface {}Body:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespMapStringInterface {}Body.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          additionalProperties: {}
+          type: object
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          $ref: "#/components/schemas/Product"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespShopifyProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespShopifyProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          $ref: "#/components/schemas/ShopifyProduct"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    RespStadiumGoodsProductBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+            - https://api.kicks.dev/schemas/RespStadiumGoodsProductBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          $ref: "#/components/schemas/StadiumGoodsProduct"
+        meta: {}
+      required:
+        - data
+        - meta
+      type: object
+    ShopifyProduct:
+      additionalProperties: false
+      properties:
+        available:
+          description: Whether the product is available for purchase
+          examples:
+            - true
+          type: boolean
+        brand:
+          examples:
+            - Air Jordan
+          type: string
+        created_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        cursor:
+          description: Cursor used to paginate through the product
+          examples:
+            - 80843094298474900
+          format: int64
+          minimum: 0
+          type: integer
+        description:
+          type: string
+        id:
+          description: A hash of the product, used for internal tracking
+          examples:
+            - 11f365dae34398c
+          type: string
+        images:
+          description: The image URLs of the product
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        link:
+          type: string
+        price_display:
+          description: The default price displayed on Shopify
+          examples:
+            - 226
+          format: double
+          type: number
+        price_max:
+          examples:
+            - 563
+          format: double
+          type: number
+        price_min:
+          examples:
+            - 226
+          format: double
+          type: number
+        product_created_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        product_id:
+          description: The Shopify Product ID
+          examples:
+            - "6969251397827"
+          type: string
+        product_published_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        product_type:
+          examples:
+            - Sneakers
+          type: string
+        shop_name:
+          examples:
+            - kickscrew
+          type: string
+        shop_url:
+          examples:
+            - https://kickscrewshop.myshopify.com/
+          type: string
+        slug:
+          examples:
+            - jordan-10-retro-new-york-city-2016-nyc-310805-012
+          type: string
+        tags:
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        title:
+          examples:
+            - Air Jordan 10 Retro 'NYC' 310805-012
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variants:
+          description: The variants of the product
+          items:
+            $ref: "#/components/schemas/ShopifyProductVariant"
+          type:
+            - array
+            - "null"
+      required:
+        - id
+        - product_id
+        - title
+        - description
+        - brand
+        - product_type
+        - tags
+        - slug
+        - link
+        - price_min
+        - price_max
+        - price_display
+        - available
+        - images
+        - shop_name
+        - shop_url
+        - product_created_at
+        - product_published_at
+        - created_at
+        - updated_at
+        - cursor
+        - variants
+      type: object
+    ShopifyProductVariant:
+      additionalProperties: false
+      properties:
+        available:
+          description: Whether the variant is available for purchase
+          examples:
+            - true
+          type: boolean
+        barcode:
+          type: string
+        currency:
+          examples:
+            - USD
+          type: string
+        id:
+          description: A hash of the variant, used for internal tracking
+          examples:
+            - 6ee450755e61ace7
+          type: string
+        options:
+          additionalProperties:
+            type: string
+          description: The options of the variant
+          type: object
+        parent_id:
+          description: The parent product hash
+          examples:
+            - 11f365dae34398c
+          type: string
+        price:
+          examples:
+            - 496
+          format: double
+          type: number
+        product_id:
+          description: The Shopify Product ID
+          examples:
+            - "6969251397827"
+          type: string
+        sku:
+          examples:
+            - 310805-012-40
+          type: string
+        title:
+          examples:
+            - MENS / Men's US 4 / Women's US 5.5 / UK 3.5 / EU 36 / JP 23
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variant_id:
+          description: The Shopify Variant ID
+          examples:
+            - "40837518033091"
+          type: string
+        weight:
+          examples:
+            - 2000
+          format: int64
+          type: integer
+      required:
+        - id
+        - parent_id
+        - product_id
+        - variant_id
+        - title
+        - price
+        - sku
+        - barcode
+        - weight
+        - currency
+        - available
+        - options
+        - updated_at
+      type: object
+    StadiumGoodsProduct:
+      additionalProperties: false
+      properties:
+        brand:
+          examples:
+            - NIKE
+          type: string
+        description:
+          type: string
+        id:
+          examples:
+            - 8038607618244
+          format: int64
+          type: integer
+        images:
+          description: The image URLs of the product.
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        link:
+          type:
+            - string
+            - "null"
+        product_type:
+          examples:
+            - Shoes
+          type: string
+        sku:
+          examples:
+            - FB9149 101
+          type: string
+        slug:
+          examples:
+            - zoom-vomero-5-white-black-125288
+          type: string
+        title:
+          examples:
+            - Zoom Vomero 5 "White / Black"
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+        variants:
+          items:
+            $ref: "#/components/schemas/StadiumGoodsVariant"
+          type:
+            - array
+            - "null"
+      required:
+        - id
+        - title
+        - slug
+        - brand
+        - product_type
+        - images
+        - sku
+        - description
+        - link
+        - updated_at
+        - variants
+      type: object
+    StadiumGoodsVariant:
+      additionalProperties: false
+      properties:
+        barcode:
+          examples:
+            - "197594590861"
+          type: string
+        barcode_type:
+          examples:
+            - UPC
+          type: string
+        currency:
+          examples:
+            - USD
+          type: string
+        id:
+          examples:
+            - 44145637064900
+          format: int64
+          type: integer
+        price:
+          examples:
+            - 148
+          format: double
+          type: number
+        size:
+          examples:
+            - "11"
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+      required:
+        - id
+        - size
+        - price
+        - currency
+        - barcode
+        - barcode_type
+        - updated_at
+      type: object
+    StockXMarketStatistics:
+      additionalProperties: false
+      properties:
+        annual_average_price:
+          description: The average price of the product in the past year
+          format: double
+          type: number
+        annual_high:
+          description: The highest price observed in the past year for a sale
+          format: double
+          type: number
+        annual_low:
+          description: The lowest price observed in the past year for a sale
+          format: double
+          type: number
+        annual_price_premium:
+          description: The price premium of the product in the past year
+          format: double
+          type: number
+        annual_range_high:
+          description: The high end range the price was sold at over the past year
+          format: double
+          type: number
+        annual_range_low:
+          description: The low end range the price was sold at over the past year
+          format: double
+          type: number
+        annual_sales_count:
+          description: The number of sales in the past year
+          format: int64
+          type: integer
+        annual_total_dollars:
+          description: The total dollar value of the product sold in the past year
+          format: double
+          type: number
+        annual_volatility:
+          description: The volatility of the product in the past year
+          format: double
+          type: number
+        last_90_days_average_price:
+          description: The average price of the product in the past 90 days
+          format: double
+          type: number
+        last_90_days_range_high:
+          description: The high end range the price was sold at over the past 90 days
+          format: double
+          type: number
+        last_90_days_range_low:
+          description: The low end range the price was sold at over the past 90 days
+          format: double
+          type: number
+        last_90_days_sales_count:
+          description: The number of sales in the past 90 days
+          format: int64
+          type: integer
+        market:
+          examples:
+            - US
+          type: string
+        updated_at:
+          examples:
+            - "2025-01-01T00:00:00Z"
+          format: date-time
+          type: string
+      required:
+        - market
+        - annual_high
+        - annual_low
+        - annual_range_high
+        - annual_range_low
+        - annual_sales_count
+        - annual_average_price
+        - annual_volatility
+        - annual_price_premium
+        - annual_total_dollars
+        - last_90_days_range_high
+        - last_90_days_range_low
+        - last_90_days_sales_count
+        - last_90_days_average_price
+        - updated_at
+      type: object
+    StockXProductSalesEdge:
+      additionalProperties: false
+      properties:
+        cursor:
+          type: string
+        node:
+          $ref: "#/components/schemas/StockXProductSalesEdgeNodeStruct"
+      required:
+        - cursor
+        - node
+      type: object
+    StockXProductSalesEdgeNodeStruct:
+      additionalProperties: false
+      properties:
+        amount:
+          format: int64
+          type: integer
+        associatedVariant:
+          $ref: "#/components/schemas/AssociatedVariantStruct"
+        createdAt:
+          type: string
+      required:
+        - amount
+        - associatedVariant
+        - createdAt
+      type: object
+    UnifiedProduct:
+      additionalProperties: false
+      properties:
+        barcodes:
+          description: Product barcodes
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        brand:
+          description: Product brand
+          type: string
+        images:
+          description: Product images
+          items:
+            type: string
+          type:
+            - array
+            - "null"
+        link:
+          description: Product link
+          type: string
+        metadata:
+          additionalProperties: {}
+          description: Product metadata
+          type: object
+        model:
+          description: Product model
+          type: string
+        name:
+          description: Product name
+          type: string
+        prices:
+          additionalProperties:
+            format: double
+            type: number
+          description: Product prices
+          type: object
+        product_type:
+          description: Product type
+          type: string
+        shop_name:
+          description: Shop source
+          type: string
+        sku:
+          description: Product SKU
+          type: string
+        slug:
+          description: Product slug
+          type: string
+        source_product_id:
+          description: Product ID from source shop
+          type: string
+        updated_at:
+          description: Last updated at
+          format: date-time
+          type: string
+      required:
+        - shop_name
+        - slug
+        - source_product_id
+        - name
+        - brand
+        - model
+        - images
+        - sku
+        - link
+        - prices
+        - barcodes
+        - product_type
+        - metadata
+        - updated_at
+      type: object
+    Variant:
+      additionalProperties: false
+      properties:
+        asks:
+          items:
+            $ref: "#/components/schemas/VariantAsk"
+          type:
+            - array
+            - "null"
+        currency:
+          type: string
+        id:
+          type: string
+        identifiers:
+          items:
+            $ref: "#/components/schemas/VariantIdentifier"
+          type:
+            - array
+            - "null"
+        lowest_ask:
+          format: double
+          type:
+            - number
+            - "null"
+        market:
+          type: string
+        position:
+          format: int64
+          type: integer
+        previous_lowest_ask:
+          format: double
+          type:
+            - number
+            - "null"
+        prices:
+          items:
+            $ref: "#/components/schemas/VariantLowestPrice"
+          type:
+            - array
+            - "null"
+        sales_count_15_days:
+          format: int64
+          type:
+            - integer
+            - "null"
+        sales_count_30_days:
+          format: int64
+          type:
+            - integer
+            - "null"
+        sales_count_60_days:
+          format: int64
+          type:
+            - integer
+            - "null"
+        size:
+          type: string
+        size_type:
+          type: string
+        sizes:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type:
+            - array
+            - "null"
+        subtotal:
+          items:
+            $ref: "#/components/schemas/VariantSubtotal"
+          type:
+            - array
+            - "null"
+        total_asks:
+          format: int64
+          type:
+            - integer
+            - "null"
+        updated_at:
+          format: date-time
+          type: string
+      required:
+        - id
+        - size
+        - size_type
+        - sizes
+        - lowest_ask
+        - total_asks
+        - previous_lowest_ask
+        - position
+        - updated_at
+        - currency
+        - market
+        - sales_count_15_days
+        - sales_count_30_days
+        - sales_count_60_days
+      type: object
+    VariantAsk:
+      additionalProperties: false
+      properties:
+        amount:
+          format: double
+          type: number
+        count:
+          format: int64
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        variant_id:
+          type: string
+      required:
+        - variant_id
+        - amount
+        - count
+        - created_at
+      type: object
+    VariantIdentifier:
+      additionalProperties: false
+      properties:
+        identifier:
+          type: string
+        identifier_type:
+          type: string
+      required:
+        - identifier
+        - identifier_type
+      type: object
+    VariantLowestPrice:
+      additionalProperties: false
+      properties:
+        asks:
+          format: int64
+          type:
+            - integer
+            - "null"
+        currency:
+          type: string
+        market:
+          type: string
+        price:
+          format: double
+          type:
+            - number
+            - "null"
+        type:
+          type: string
+      required:
+        - price
+        - asks
+        - type
+        - currency
+        - market
+      type: object
+    VariantSale:
+      additionalProperties: false
+      properties:
+        amount:
+          examples:
+            - 334
+          format: double
+          type: number
+        created_at:
+          examples:
+            - "2025-07-18T11:01:02Z"
+          format: date-time
+          type: string
+        product_id:
+          examples:
+            - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          type: string
+        variant:
+          $ref: "#/components/schemas/VariantSaleVariantStruct"
+        variant_id:
+          examples:
+            - ca457acc-df77-41fd-85de-7a7208dd25db
+          type: string
+      required:
+        - product_id
+        - variant_id
+        - amount
+        - created_at
+        - variant
+      type: object
+    VariantSaleVariantStruct:
+      additionalProperties: false
+      properties:
+        size:
+          examples:
+            - "10.5"
+          type: string
+        size_type:
+          examples:
+            - us m
+          type: string
+      required:
+        - size
+        - size_type
+      type: object
+    VariantSubtotal:
+      additionalProperties: false
+      properties:
+        currency:
+          type: string
+        market:
+          type: string
+        subtotal:
+          format: double
+          type: number
+        type:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+        - subtotal
+        - type
+        - currency
+        - market
+        - updated_at
+      type: object
+  securitySchemes:
+    apiKey:
+      description: API Key, required for all requests. Get yours at https://kicks.dev/pricing
+      in: header
+      name: Authorization
+      type: apiKey
+info:
+  contact:
+    email: support@kicks.dev
+    name: KicksDB
+    url: https://kicks.dev/discord
+  description: |-
+    KicksDB is a platform that allow getting data from multiple e-commerce platform linked
+    to sneakers, apparel and collectibles. Data is collected daily from StockX, GOAT, Flight Club, Kickscrew, Stadium Goods and multiple Shopify stores.
+
+    ## Pricing
+    - Free tier:
+    	- 50,000 requests per month
+    	- Restricted access to StockX and GOAT only, some parameters are not available.
+    - Standard plan:
+    	- 10,000,000 requests per month.
+    	- Full access to every endpoints, including real-time.
+
+    ## API Key
+    An API key is required for all endpoints, sign up at https://kicks.dev/pricing.
+
+    ## Data Sources
+    KicksDB API is split into three types:
+    - **Unified API**: Get products information collected from multiple e-commerce platforms and matched to a single product.
+    - **Standard APIs**: This combine StockX, GOAT, Flight Club, Kicks Crew, Stadium Goods and Shopify, our main APIs.
+    - **Real-Time APIs**: Instead of getting daily updated data, you can get real-time data from StockX and GOAT.
+
+    ## Rate Limiting
+    In addition to the monthly quota, there is a rate limit of 640 requests per minute.
+    Real-Time endpoints are limited to one request per second.
+
+    ## Support
+    Support is available on [Discord](https://kicks.dev/discord).
+  termsOfService: https://kicks.dev/terms
+  title: KicksDB API
+  version: 3.2.0
+openapi: 3.1.0
+paths:
+  /v3/goat/products:
+    get:
+      operationId: get-goat-products
+      parameters:
+        - description: Query to search for products
+          explode: false
+          in: query
+          name: query
+          schema:
+            description: Query to search for products
+            type: string
+        - description: Comma separated list of slugs
+          explode: false
+          in: query
+          name: slugs
+          schema:
+            description: Comma separated list of slugs
+            type: string
+        - description: SKU of the product
+          explode: false
+          in: query
+          name: sku
+          schema:
+            description: SKU of the product
+            type: string
+        - example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            examples:
+              - 1
+            format: int64
+            minimum: 1
+            type: integer
+        - example: 20
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            examples:
+              - 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - example: brand = 'Nike'
+          explode: false
+          in: query
+          name: filters
+          schema:
+            examples:
+              - brand = 'Nike'
+            type: string
+        - description: Whether to display the variants of the product
+          explode: false
+          in: query
+          name: display[variants]
+          schema:
+            description: Whether to display the variants of the product
+            type: boolean
+        - explode: false
+          in: query
+          name: sort
+          schema:
+            default: rank:asc
+            enum:
+              - rank:asc
+              - rank:desc
+              - updated_at:asc
+              - updated_at:desc
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            enum:
+              - USD
+              - EUR
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGoatProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from GOAT
+      tags:
+        - GOAT
+  /v3/goat/products/{id}:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-goat-product
+      parameters:
+        - description: The id or slug of the product.
+          example: nike-air-max-2015-698902-006
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id or slug of the product.
+            examples:
+              - nike-air-max-2015-698902-006
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            enum:
+              - USD
+              - EUR
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespGoatProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from GOAT
+      tags:
+        - GOAT
+  /v3/goat/products/{id}/sales:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-goat-product-sales
+      parameters:
+        - description: The id of the product.
+          example: "121"
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id of the product.
+            examples:
+              - "121"
+            type: string
+        - example: 20
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            examples:
+              - 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            examples:
+              - 1
+            format: int64
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGoatProductSaleBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get sales data for a product from GOAT
+      tags:
+        - GOAT
+  /v3/goat/products/{id}/sales/daily:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-goat-product-sales-daily
+      parameters:
+        - description: The id of the product.
+          example: "121"
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id of the product.
+            examples:
+              - "121"
+            type: string
+        - example: 20
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            examples:
+              - 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            examples:
+              - 1
+            format: int64
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGoatProductSaleAggBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get daily sales data for a product from GOAT
+      tags:
+        - GOAT
+  /v3/gtin:
+    get:
+      deprecated: true
+      description: Deprecated, use `/v3/unified/gtin` instead
+      operationId: get-gtins-deprecated
+      parameters:
+        - example: "4062059925839"
+          explode: false
+          in: query
+          name: identifier
+          schema:
+            examples:
+              - "4062059925839"
+            type: string
+        - example: EAN-13
+          explode: false
+          in: query
+          name: identifier_type
+          schema:
+            examples:
+              - EAN-13
+            type: string
+        - example: FV9996
+          explode: false
+          in: query
+          name: sku
+          schema:
+            examples:
+              - FV9996
+            type: string
+        - explode: false
+          in: query
+          name: query
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            format: int64
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGTINBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get GTINs
+      tags:
+        - GTINs
+  /v3/kickscrew/products:
+    get:
+      deprecated: true
+      description: Deprecated, use `/v3/shopify/products` instead
+      operationId: get-kickscrew-products
+      parameters:
+        - explode: false
+          in: query
+          name: query
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: slug
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: sku
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            format: int64
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: display[variants]
+          schema:
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListKickscrewProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get Kicks Crew products
+      tags:
+        - Kicks Crew
+  /v3/kickscrew/products/{id}:
+    get:
+      deprecated: true
+      description: Deprecated, use `/v3/shopify/products/{id}` instead
+      operationId: get-kickscrew-product
+      parameters:
+        - description: The id or slug of the product.
+          example: jordan-10-retro-new-york-city-2016-nyc-310805-012
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id or slug of the product.
+            examples:
+              - jordan-10-retro-new-york-city-2016-nyc-310805-012
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespKickscrewProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a Kicks Crew product
+      tags:
+        - Kicks Crew
+  /v3/realtime/alias/products/{id}/recent-orders:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-alias-recent-orders-realtime
+      parameters:
+        - example: air-jordan-1-retro-high-og-palomino-dz5485-020
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - air-jordan-1-retro-high-og-palomino-dz5485-020
+            type: string
+        - example: 10
+          explode: false
+          in: query
+          name: size
+          schema:
+            examples:
+              - 10
+            format: double
+            type: number
+        - description: 0 = Global
+          explode: false
+          in: query
+          name: region_id
+          schema:
+            default: "0"
+            description: 0 = Global
+            type: string
+        - description: 1 = Invalid
+          explode: false
+          in: query
+          name: condition
+          schema:
+            default: "1"
+            description: 1 = Invalid
+            type: string
+        - description: 1 = Invalid
+          explode: false
+          in: query
+          name: packaging_condition
+          schema:
+            default: "1"
+            description: 1 = Invalid
+            type: string
+        - explode: false
+          in: query
+          name: consigned
+          schema:
+            default: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get recent orders for a product from Alias in real-time
+      tags:
+        - Alias Real-Time
+  /v3/realtime/goat/products:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-goat-products-realtime
+      parameters:
+        - example: Jordan 1
+          explode: false
+          in: query
+          name: query
+          required: true
+          schema:
+            examples:
+              - Jordan 1
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from Goat in real-time
+      tags:
+        - GOAT Real-Time
+  /v3/realtime/goat/products/{id}:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-goat-product-realtime
+      parameters:
+        - example: air-jordan-1-retro-high-og-palomino-dz5485-020
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - air-jordan-1-retro-high-og-palomino-dz5485-020
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from GOAT in real-time
+      tags:
+        - GOAT Real-Time
+  /v3/realtime/goat/products/{id}/offers:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-goat-product-offers-realtime
+      parameters:
+        - example: air-jordan-1-retro-high-og-palomino-dz5485-020
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - air-jordan-1-retro-high-og-palomino-dz5485-020
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get offers for a product from GOAT in real-time
+      tags:
+        - GOAT Real-Time
+  /v3/realtime/goat/products/{id}/sales:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-goat-product-sales-realtime
+      parameters:
+        - example: air-jordan-1-retro-high-og-palomino-dz5485-020
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - air-jordan-1-retro-high-og-palomino-dz5485-020
+            type: string
+        - description: The pagination token to get the next page of results.
+          explode: false
+          in: query
+          name: offset
+          schema:
+            description: The pagination token to get the next page of results.
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get sales for a product from GOAT in real-time
+      tags:
+        - GOAT Real-Time
+  /v3/realtime/stockx/products:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-products-realtime
+      parameters:
+        - example: Jordan 1
+          explode: false
+          in: query
+          name: query
+          required: true
+          schema:
+            examples:
+              - Jordan 1
+            type: string
+        - example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            examples:
+              - 1
+            format: int64
+            type: integer
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/realtime/stockx/products/{id}:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-product-realtime
+      parameters:
+        - example: 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespMapStringInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/realtime/stockx/products/{id}/asks:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-product-asks-realtime
+      parameters:
+        - example: 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+            type: string
+        - explode: false
+          in: query
+          name: type
+          schema:
+            default: ASK
+            enum:
+              - ASK
+              - BID
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get asks for a product from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/realtime/stockx/products/{id}/related:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-products-related-realtime
+      parameters:
+        - example: 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - 4f52ee96-071a-4d3c-bf94-aad8cb4315b1
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+        - explode: false
+          in: query
+          name: market
+          schema:
+            default: US
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get related products for a product from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/realtime/stockx/products/{id}/sales:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-product-sales-realtime
+      parameters:
+        - example: air-jordan-11-retro-legend-blue-2024
+          in: path
+          name: id
+          required: true
+          schema:
+            examples:
+              - air-jordan-11-retro-legend-blue-2024
+            type: string
+        - description: Enable to get sales for a specific variant, ID must be a variant ID instead of product ID or slug.
+          explode: false
+          in: query
+          name: is_variant
+          schema:
+            default: false
+            description: Enable to get sales for a specific variant, ID must be a variant ID instead of product ID or slug.
+            type: boolean
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            type: string
+        - explode: false
+          in: query
+          name: offset
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: viewer_context
+          schema:
+            default: BUYER
+            enum:
+              - BUYER
+              - SELLER
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListStockXProductSalesEdgeBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get sales for a product from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/realtime/stockx/products/{id}/subtotal:
+    get:
+      description: Access to this endpoint is limited to Enterprise users only.
+      operationId: get-stockx-product-subtotal-realtime
+      parameters:
+        - description: The ID or slug of the product
+          example: nike-air-force-1-low-supreme-box-logo-white
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The ID or slug of the product
+            examples:
+              - nike-air-force-1-low-supreme-box-logo-white
+            type: string
+        - explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            enum:
+              - USD
+              - EUR
+              - CHF
+              - CAD
+              - GBP
+              - JPY
+            type: string
+        - explode: false
+          in: query
+          name: country
+          schema:
+            default: US
+            enum:
+              - US
+              - FR
+              - DE
+              - IT
+              - ES
+              - GB
+              - JP
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespInterface {}Body"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get subtotal for a product from StockX in real-time
+      tags:
+        - StockX Real-Time
+  /v3/shopify/products:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-shopify-products
+      parameters:
+        - example: air jordan 1
+          explode: false
+          in: query
+          name: query
+          schema:
+            examples:
+              - air jordan 1
+            type: string
+        - example: kickscrew
+          explode: false
+          in: query
+          name: shop_name
+          schema:
+            examples:
+              - kickscrew
+            type: string
+        - example: brand = 'Nike'
+          explode: false
+          in: query
+          name: filters
+          schema:
+            examples:
+              - brand = 'Nike'
+            type: string
+        - explode: false
+          in: query
+          name: sort
+          schema:
+            default: updated_at:desc
+            enum:
+              - updated_at:desc
+              - updated_at:asc
+              - published_at:desc
+              - published_at:asc
+              - cursor:desc
+              - cursor:asc
+            type: string
+        - description: Limited to 50 pages, use 'filters' with 'cursor > [LAST_CURSOR]' and sort 'cursor:asc' instead
+          example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            description: Limited to 50 pages, use 'filters' with 'cursor > [LAST_CURSOR]' and sort 'cursor:asc' instead
+            examples:
+              - 1
+            format: int64
+            minimum: 1
+            type: integer
+        - example: 20
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            examples:
+              - 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListShopifyProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from Shopify
+      tags:
+        - Shopify
+  /v3/shopify/products/{id}:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-shopify-product
+      parameters:
+        - description: The hash of the product.
+          example: 11f365dae34398c
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The hash of the product.
+            examples:
+              - 11f365dae34398c
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespShopifyProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from Shopify
+      tags:
+        - Shopify
+  /v3/shopify/shops:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-shopify-shops
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGetShopsOutputBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get all Shopify shops
+      tags:
+        - Shopify
+  /v3/stadiumgoods/products:
+    get:
+      deprecated: true
+      description: Deprecated, use `/v3/shopify/products` instead
+      operationId: get-stadiumgoods-products
+      parameters:
+        - explode: false
+          in: query
+          name: query
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: slug
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: sku
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: display[variants]
+          schema:
+            type: boolean
+        - explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            format: int64
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListStadiumGoodsProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from Stadium Goods
+      tags:
+        - Stadium Goods
+  /v3/stadiumgoods/products/{id}:
+    get:
+      deprecated: true
+      description: Deprecated, use `/v3/shopify/products/{id}` instead
+      operationId: get-stadiumgoods-product
+      parameters:
+        - description: The id or slug of the product.
+          example: zoom-vomero-5-white-black-125288
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id or slug of the product.
+            examples:
+              - zoom-vomero-5-white-black-125288
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespStadiumGoodsProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from Stadium Goods
+      tags:
+        - Stadium Goods
+  /v3/stockx/products:
+    get:
+      description: "Get products from StockX. Use `display[*]` to enable/disable specific relations in the response. **Important: `filters` is not supported with other pre-defined filters.**"
+      operationId: get-stockx-products
+      parameters:
+        - description: Enable traits display, only available for paid users.
+          explode: false
+          in: query
+          name: display[traits]
+          schema:
+            description: Enable traits display, only available for paid users.
+            type: boolean
+        - description: Enable variants display.
+          explode: false
+          in: query
+          name: display[variants]
+          schema:
+            description: Enable variants display.
+            type: boolean
+        - description: Enable hidden variants display.
+          explode: false
+          in: query
+          name: display[hidden_variants]
+          schema:
+            description: Enable hidden variants display.
+            type: boolean
+        - description: Enable identifiers display, only available for paid users.
+          explode: false
+          in: query
+          name: display[identifiers]
+          schema:
+            description: Enable identifiers display, only available for paid users.
+            type: boolean
+        - description: Enable prices display.
+          explode: false
+          in: query
+          name: display[prices]
+          schema:
+            description: Enable prices display.
+            type: boolean
+        - description: Enable statistics display, only available for paid users.
+          explode: false
+          in: query
+          name: display[statistics]
+          schema:
+            description: Enable statistics display, only available for paid users.
+            type: boolean
+        - description: The query to search for.
+          example: air jordan 1
+          explode: false
+          in: query
+          name: query
+          schema:
+            description: The query to search for.
+            examples:
+              - air jordan 1
+            type: string
+        - description: The filters to apply to the search.
+          example: brand = 'Nike'
+          explode: false
+          in: query
+          name: filters
+          schema:
+            description: The filters to apply to the search.
+            examples:
+              - brand = 'Nike'
+            type: string
+        - description: The sort order to use
+          explode: false
+          in: query
+          name: sort
+          schema:
+            default: rank
+            description: The sort order to use
+            enum:
+              - release_date
+              - rank
+            type: string
+        - description: Using rank as cursor is recommended.
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            description: Using rank as cursor is recommended.
+            format: int64
+            minimum: 1
+            type: integer
+        - description: The number of products to return.
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            description: The number of products to return.
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - description: The market to use.
+          explode: false
+          in: query
+          name: market
+          schema:
+            default: US
+            description: The market to use.
+            enum:
+              - US
+              - UK
+              - DE
+              - FR
+              - CH
+              - CA
+              - ES
+              - FI
+              - FI.vat-registered
+              - JP
+            type: string
+        - description: The currency to use.
+          explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            description: The currency to use.
+            enum:
+              - USD
+              - GBP
+              - EUR
+              - CHF
+              - CAD
+              - JPY
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get products from StockX
+      tags:
+        - StockX
+  /v3/stockx/products/{id}:
+    get:
+      description: Get a product from StockX. Use `display[*]` to enable/disable specific relations in the response.
+      operationId: get-stockx-product
+      parameters:
+        - description: Enable traits display, only available for paid users.
+          explode: false
+          in: query
+          name: display[traits]
+          schema:
+            description: Enable traits display, only available for paid users.
+            type: boolean
+        - description: Enable variants display.
+          explode: false
+          in: query
+          name: display[variants]
+          schema:
+            description: Enable variants display.
+            type: boolean
+        - description: Enable hidden variants display.
+          explode: false
+          in: query
+          name: display[hidden_variants]
+          schema:
+            description: Enable hidden variants display.
+            type: boolean
+        - description: Enable identifiers display, only available for paid users.
+          explode: false
+          in: query
+          name: display[identifiers]
+          schema:
+            description: Enable identifiers display, only available for paid users.
+            type: boolean
+        - description: Enable prices display.
+          explode: false
+          in: query
+          name: display[prices]
+          schema:
+            description: Enable prices display.
+            type: boolean
+        - description: Enable statistics display, only available for paid users.
+          explode: false
+          in: query
+          name: display[statistics]
+          schema:
+            description: Enable statistics display, only available for paid users.
+            type: boolean
+        - description: The id or slug of the product.
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id or slug of the product.
+            type: string
+        - description: The market to use.
+          explode: false
+          in: query
+          name: market
+          schema:
+            default: US
+            description: The market to use.
+            enum:
+              - US
+              - UK
+              - DE
+              - FR
+              - CH
+              - CA
+              - ES
+              - FI
+              - FI.vat-registered
+              - JP
+            type: string
+        - description: The currency to use.
+          explode: false
+          in: query
+          name: currency
+          schema:
+            default: USD
+            description: The currency to use.
+            enum:
+              - USD
+              - GBP
+              - EUR
+              - CHF
+              - CAD
+              - JPY
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get a product from StockX
+      tags:
+        - StockX
+  /v3/stockx/products/{id}/chart:
+    get:
+      description: Access to this endpoint is limited to paid users only. Get chart data of the price variations for a product from StockX.
+      operationId: get-stockx-product-chart
+      parameters:
+        - description: The id of the product.
+          example: fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id of the product.
+            examples:
+              - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+            type: string
+        - description: The start date of the chart.
+          example: "2025-06-01"
+          explode: false
+          in: query
+          name: from
+          required: true
+          schema:
+            description: The start date of the chart.
+            examples:
+              - "2025-06-01"
+            format: date
+            type: string
+        - description: The end date of the chart.
+          example: "2025-06-30"
+          explode: false
+          in: query
+          name: to
+          required: true
+          schema:
+            description: The end date of the chart.
+            examples:
+              - "2025-06-30"
+            format: date
+            type: string
+        - description: The number of days to return.
+          example: 365
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 365
+            description: The number of days to return.
+            examples:
+              - 365
+            format: int64
+            maximum: 365
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListProductSalesChartBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get chart data for a product from StockX
+      tags:
+        - StockX
+  /v3/stockx/products/{id}/sales:
+    get:
+      description: Access to this endpoint is limited to paid users only. Get sales history for a product from StockX.
+      operationId: get-stockx-product-sales
+      parameters:
+        - description: The id of the product.
+          example: fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id of the product.
+            examples:
+              - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+            type: string
+        - description: Additional filter to get sales for a specific variant.
+          explode: false
+          in: query
+          name: variant_id
+          schema:
+            description: Additional filter to get sales for a specific variant.
+            type: string
+        - description: The number of sales to return.
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 50
+            description: The number of sales to return.
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+        - description: The page number to return.
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            description: The page number to return.
+            format: int64
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListVariantSaleBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get sales history for a product from StockX
+      tags:
+        - StockX
+  /v3/stockx/products/{id}/sales/daily:
+    get:
+      description: Access to this endpoint is limited to paid users only. Get daily sales data for a product from StockX.
+      operationId: get-stockx-product-sales-daily
+      parameters:
+        - description: The id of the product.
+          example: fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+          in: path
+          name: id
+          required: true
+          schema:
+            description: The id of the product.
+            examples:
+              - fb1a8a7d-5be4-4f0e-a4b5-bf0a735ab7fe
+            type: string
+        - description: The number of days to return.
+          example: 365
+          explode: false
+          in: query
+          name: limit
+          schema:
+            default: 365
+            description: The number of days to return.
+            examples:
+              - 365
+            format: int64
+            maximum: 365
+            minimum: 1
+            type: integer
+        - description: The page number to return.
+          example: 1
+          explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            description: The page number to return.
+            examples:
+              - 1
+            format: int64
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListProductSaleBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get daily sales data for a product from StockX
+      tags:
+        - StockX
+  /v3/unified/gtin:
+    get:
+      description: Access to this endpoint is limited to paid users only.
+      operationId: get-gtins
+      parameters:
+        - example: "4062059925839"
+          explode: false
+          in: query
+          name: identifier
+          schema:
+            examples:
+              - "4062059925839"
+            type: string
+        - example: EAN-13
+          explode: false
+          in: query
+          name: identifier_type
+          schema:
+            examples:
+              - EAN-13
+            type: string
+        - example: FV9996
+          explode: false
+          in: query
+          name: sku
+          schema:
+            examples:
+              - FV9996
+            type: string
+        - explode: false
+          in: query
+          name: query
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            format: int64
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: limit
+          schema:
+            default: 20
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListGTINBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get GTINs
+      tags:
+        - Unified API
+  /v3/unified/products/{slug}:
+    get:
+      description: Access to this endpoint is limited to paid users only. Get a matching products from all shops.
+      operationId: get-products-by-slug
+      parameters:
+        - example: air-jordan-4-retro-white-cement-2025
+          in: path
+          name: slug
+          required: true
+          schema:
+            examples:
+              - air-jordan-4-retro-white-cement-2025
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListUnifiedProductBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get matching products
+      tags:
+        - Unified API
+  /v3/utils/brands:
+    get:
+      description: Get brands and product count from StockX.
+      operationId: get-brands
+      parameters:
+        - explode: false
+          in: query
+          name: page
+          schema:
+            default: 1
+            format: int64
+            minimum: 1
+            type: integer
+        - explode: false
+          in: query
+          name: limit
+          schema:
+            default: 50
+            format: int64
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespListBrandBody"
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+          description: Error
+      security:
+        - apiKey: []
+      summary: Get brands
+      tags:
+        - Utilities
+servers:
+  - url: https://api.kicks.dev
+tags:
+  - description: Unified API for all products, including StockX, GOAT, Flight Club, Kickscrew, Stadium Goods.
+    name: Unified API
+  - description: StockX API
+    name: StockX
+  - description: GOAT API
+    name: GOAT
+  - description: Shopify API
+    name: Shopify
+  - description: Real-time data from StockX
+    name: StockX Real-time
+  - description: Real-time data from GOAT
+    name: GOAT Real-time
+  - description: Real-time data from Alias
+    name: Alias Real-time
+  - description: Miscellaneous utilities
+    name: Utilities
+  - description: Deprecated, use Unified API instead
+    name: GTINs
+  - description: Deprecated, use Shopify instead
+    name: Kickscrew
+  - description: Deprecated, use Shopify instead
+    name: Stadium Goods

@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-09-22T22:43:08.830Z",
+  "apiKey": "KICKS-97EF-725F-A605-58232DC70EED",
+  "baseUrl": "https://api.kicks.dev",
+  "authentication": {
+    "success": false,
+    "statusCode": 403,
+    "headers": {
+      "date": "Mon, 22 Sep 2025 22:43:09 GMT",
+      "content-type": "application/json",
+      "content-length": "77",
+      "connection": "keep-alive",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "vary": "Accept-Encoding",
+      "x-key-type": "Free",
+      "x-quota-current": "0",
+      "cf-cache-status": "DYNAMIC",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=oIUp1VD1FM8UR70MOU6R36ZS8n%2Fsll%2BW58LjKMjwuRmWShOTtP9CAIiENR8O5I9d01v7Y9Mia7DkywEcihiVG64WY3Ras5fpvMgXaYQrjeBWFv6GtkqP\"}]}",
+      "server": "cloudflare",
+      "cf-ray": "983551cd1ea138b8-MRS"
+    },
+    "data": {
+      "status": "error",
+      "message": "This route is not available for this key type."
+    },
+    "rawResponse": "{\"status\":\"error\",\"message\":\"This route is not available for this key type.\"}"
+  },
+  "endpoints": {},
+  "rateLimit": null,
+  "errors": [],
+  "summary": {
+    "authenticationWorking": false,
+    "totalEndpointsTested": 0,
+    "successfulEndpoints": 0,
+    "failedEndpoints": 0,
+    "errorEndpoints": 0,
+    "rateLimitDetected": false,
+    "workingEndpoints": [],
+    "recommendations": [
+      "❌ Authentication failed - verify API key and endpoint URL"
+    ]
+  }
+}

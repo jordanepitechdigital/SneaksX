@@ -1,0 +1,358 @@
+{
+  "timestamp": "2025-09-22T22:43:57.235Z",
+  "keyType": "Free",
+  "freeEndpoints": {
+    "/search?q=nike": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/search?q=jordan": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/search?q=adidas": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/products/search?q=nike&limit=5": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/sneakers/search?q=jordan&limit=5": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/search/products?q=adidas&limit=3": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/product/1": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/sneaker/1": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/products/1": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/sneakers/1": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/brands": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/brands/list": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/brand/nike": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/brand/adidas": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/categories": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/category/sneakers": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "0",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/info": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/status": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/health": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/version": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/limits": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/plan": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/quota": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/docs": {
+      "statusCode": 200,
+      "success": true,
+      "hasData": false,
+      "dataSize": 813,
+      "message": null
+    },
+    "/documentation": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/swagger": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/openapi": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/free/products": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/free/search": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/public/brands": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/public/categories": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/limited/search?q=nike": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/lite/products": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/basic/search": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/api/search?q=nike": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/api/products/search?q=jordan": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/api/v1/search?q=adidas": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/v1/search?q=nike": {
+      "statusCode": 403,
+      "success": false,
+      "keyType": "Free",
+      "quota": "17",
+      "hasData": true,
+      "dataSize": 77,
+      "message": "This route is not available for this key type."
+    },
+    "/v2/search?q=puma": {
+      "statusCode": 401,
+      "success": false,
+      "hasData": true,
+      "dataSize": 41,
+      "message": null
+    }
+  },
+  "successfulCalls": [
+    "/docs"
+  ],
+  "errors": [],
+  "sampleData": {}
+}
