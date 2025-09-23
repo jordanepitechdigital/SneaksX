@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 interface MonitorEvent {
   id: string
@@ -37,7 +37,7 @@ export default function AdminMonitorsPage() {
   const [activeTab, setActiveTab] = useState<'events' | 'products'>('events')
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [showConfigModal, setShowConfigModal] = useState(false)
-  const supabase = createClient()
+  // Using imported supabase client
 
   useEffect(() => {
     loadData()

@@ -1,6 +1,74 @@
 import { supabase } from '@/lib/supabase/client'
 import type { DBProduct } from '@/types/database'
 
+interface CacheEntry<T> {
+  data: T
+  timestamp: number
+  expiry: number
+}
+
+class SimpleCache {
+  private cache = new Map<string, CacheEntry<any>>()
+  private readonly defaultTTL = 5 * 60 * 1000 // 5 minutes
+
+  set<T>(key: string, data: T, ttl = this.defaultTTL): void {
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now(),
+      expiry: Date.now() + ttl
+    })
+  }
+
+  get<T>(key: string): T | null {
+    const entry = this.cache.get(key)
+    if (!entry) return null
+
+    if (Date.now() > entry.expiry) {
+      this.cache.delete(key)
+      return null
+    }
+
+    return entry.data
+  }
+
+  clear(): void {
+    this.cache.clear()
+  }
+
+  generateKey(parts: (string | number | boolean | undefined)[]): string {
+    return parts.filter(p => p !== undefined).join(':')
+  }
+}
+
+export enum ProductErrorCode {
+  FETCH_FAILED = 'FETCH_FAILED',
+  SEARCH_FAILED = 'SEARCH_FAILED',
+  INVALID_FILTERS = 'INVALID_FILTERS',
+  INVALID_PAGINATION = 'INVALID_PAGINATION',
+  INVALID_SORT_OPTIONS = 'INVALID_SORT_OPTIONS',
+  PRODUCT_NOT_FOUND = 'PRODUCT_NOT_FOUND',
+  DATABASE_ERROR = 'DATABASE_ERROR'
+}
+
+export class ProductError extends Error {
+  constructor(
+    public code: ProductErrorCode,
+    message: string,
+    public details?: any
+  ) {
+    super(message)
+    this.name = 'ProductError'
+  }
+}
+
+export type ProductServiceResult<T> = {
+  success: true
+  data: T
+} | {
+  success: false
+  error: ProductError
+}
+
 export interface Product {
   id: string
   name: string
@@ -14,35 +82,247 @@ export interface Product {
   createdAt: string
 }
 
-export class ProductService {
-  static async getProducts(limit = 20): Promise<Product[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        brands (
-          name,
-          slug
-        ),
-        product_stock (
-          size,
-          quantity,
-          reserved_quantity
-        ),
-        product_images (
-          image_url,
-          is_primary
-        )
-      `)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(limit)
+export interface ProductFilters {
+  brand?: string
+  category?: string
+  minPrice?: number
+  maxPrice?: number
+  sizes?: string[]
+  inStock?: boolean
+}
 
-    if (error) {
-      throw new Error(`Failed to fetch products: ${error.message}`)
+export interface ProductSortOptions {
+  field: 'name' | 'price' | 'created_at' | 'brand'
+  direction: 'asc' | 'desc'
+}
+
+export interface PaginationOptions {
+  page: number
+  limit: number
+}
+
+export interface ProductsResponse {
+  products: Product[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
+}
+
+export class ProductService {
+  private static cache = new SimpleCache()
+
+  static clearCache(): void {
+    this.cache.clear()
+  }
+  private static validatePagination(pagination: PaginationOptions): void {
+    if (pagination.page < 1) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_PAGINATION,
+        'Page must be greater than 0',
+        { page: pagination.page }
+      )
     }
 
-    return (data || []).map(this.transformProduct)
+    if (pagination.limit < 1 || pagination.limit > 100) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_PAGINATION,
+        'Limit must be between 1 and 100',
+        { limit: pagination.limit }
+      )
+    }
+  }
+
+  private static validateFilters(filters: ProductFilters): void {
+    if (filters.minPrice !== undefined && filters.minPrice < 0) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_FILTERS,
+        'Minimum price cannot be negative',
+        { minPrice: filters.minPrice }
+      )
+    }
+
+    if (filters.maxPrice !== undefined && filters.maxPrice < 0) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_FILTERS,
+        'Maximum price cannot be negative',
+        { maxPrice: filters.maxPrice }
+      )
+    }
+
+    if (filters.minPrice !== undefined && filters.maxPrice !== undefined && filters.minPrice > filters.maxPrice) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_FILTERS,
+        'Minimum price cannot be greater than maximum price',
+        { minPrice: filters.minPrice, maxPrice: filters.maxPrice }
+      )
+    }
+  }
+
+  private static validateSortOptions(sort: ProductSortOptions): void {
+    const validFields = ['name', 'price', 'created_at', 'brand'] as const
+    const validDirections = ['asc', 'desc'] as const
+
+    if (!validFields.includes(sort.field)) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_SORT_OPTIONS,
+        `Invalid sort field: ${sort.field}`,
+        { field: sort.field, validFields }
+      )
+    }
+
+    if (!validDirections.includes(sort.direction)) {
+      throw new ProductError(
+        ProductErrorCode.INVALID_SORT_OPTIONS,
+        `Invalid sort direction: ${sort.direction}`,
+        { direction: sort.direction, validDirections }
+      )
+    }
+  }
+  static async getProducts(
+    pagination: PaginationOptions = { page: 1, limit: 20 },
+    filters: ProductFilters = {},
+    sort: ProductSortOptions = { field: 'created_at', direction: 'desc' }
+  ): Promise<ProductServiceResult<ProductsResponse>> {
+    try {
+      this.validatePagination(pagination)
+      this.validateFilters(filters)
+      this.validateSortOptions(sort)
+
+      // Generate cache key
+      const cacheKey = this.cache.generateKey([
+        'products',
+        pagination.page,
+        pagination.limit,
+        filters.brand,
+        filters.category,
+        filters.minPrice,
+        filters.maxPrice,
+        filters.inStock,
+        filters.sizes?.sort().join(','),
+        sort.field,
+        sort.direction
+      ])
+
+      // Check cache first
+      const cachedResult = this.cache.get<ProductsResponse>(cacheKey)
+      if (cachedResult) {
+        return { success: true, data: cachedResult }
+      }
+
+      const { page, limit } = pagination
+      const offset = (page - 1) * limit
+
+      let query = supabase
+        .from('products')
+        .select(`
+          *,
+          brands (
+            name,
+            slug
+          ),
+          product_stock (
+            size,
+            quantity,
+            reserved_quantity
+          ),
+          product_images (
+            image_url,
+            is_primary
+          )
+        `, { count: 'exact' })
+        .eq('is_active', true)
+
+      // Apply filters
+      if (filters.brand) {
+        query = query.eq('brands.name', filters.brand)
+      }
+
+      if (filters.category) {
+        query = query.eq('category', filters.category)
+      }
+
+      if (filters.minPrice !== undefined) {
+        query = query.gte('current_price', filters.minPrice)
+      }
+
+      if (filters.maxPrice !== undefined) {
+        query = query.lte('current_price', filters.maxPrice)
+      }
+
+      if (filters.inStock === true) {
+        query = query.gt('product_stock.quantity', 0)
+      }
+
+      if (filters.sizes && filters.sizes.length > 0) {
+        query = query.in('product_stock.size', filters.sizes)
+      }
+
+      // Apply sorting
+      const sortField = sort.field === 'brand' ? 'brands.name' : sort.field
+      query = query.order(sortField, { ascending: sort.direction === 'asc' })
+
+      // Apply pagination
+      query = query.range(offset, offset + limit - 1)
+
+      const { data, error, count } = await query
+
+      if (error) {
+        return {
+          success: false,
+          error: new ProductError(
+            ProductErrorCode.DATABASE_ERROR,
+            `Failed to fetch products: ${error.message}`,
+            { supabaseError: error }
+          )
+        }
+      }
+
+      const products = (data || []).map(this.transformProduct)
+      const total = count || 0
+      const totalPages = Math.ceil(total / limit)
+
+      const result = {
+        products,
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      }
+
+      // Cache the result
+      this.cache.set(cacheKey, result)
+
+      return {
+        success: true,
+        data: result
+      }
+    } catch (error) {
+      if (error instanceof ProductError) {
+        return { success: false, error }
+      }
+
+      return {
+        success: false,
+        error: new ProductError(
+          ProductErrorCode.FETCH_FAILED,
+          `Unexpected error while fetching products: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          { originalError: error }
+        )
+      }
+    }
+  }
+
+  static async getProductsLegacy(limit = 20): Promise<Product[]> {
+    const response = await this.getProducts({ page: 1, limit })
+    if (response.success) {
+      return response.data.products
+    }
+    throw response.error
   }
 
   static async getFeaturedProducts(limit = 8): Promise<Product[]> {
@@ -107,8 +387,16 @@ export class ProductService {
     return (data || []).map(this.transformProduct)
   }
 
-  static async searchProducts(query: string, limit = 20): Promise<Product[]> {
-    const { data, error } = await supabase
+  static async searchProducts(
+    query: string,
+    pagination: PaginationOptions = { page: 1, limit: 20 },
+    filters: ProductFilters = {},
+    sort: ProductSortOptions = { field: 'created_at', direction: 'desc' }
+  ): Promise<ProductsResponse> {
+    const { page, limit } = pagination
+    const offset = (page - 1) * limit
+
+    let searchQuery = supabase
       .from('products')
       .select(`
         *,
@@ -125,17 +413,66 @@ export class ProductService {
           image_url,
           is_primary
         )
-      `)
-      .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+      `, { count: 'exact' })
+      .or(`name.ilike.%${query}%,description.ilike.%${query}%,brands.name.ilike.%${query}%`)
       .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(limit)
+
+    // Apply additional filters
+    if (filters.brand) {
+      searchQuery = searchQuery.eq('brands.name', filters.brand)
+    }
+
+    if (filters.category) {
+      searchQuery = searchQuery.eq('category', filters.category)
+    }
+
+    if (filters.minPrice !== undefined) {
+      searchQuery = searchQuery.gte('current_price', filters.minPrice)
+    }
+
+    if (filters.maxPrice !== undefined) {
+      searchQuery = searchQuery.lte('current_price', filters.maxPrice)
+    }
+
+    if (filters.inStock === true) {
+      searchQuery = searchQuery.gt('product_stock.quantity', 0)
+    }
+
+    if (filters.sizes && filters.sizes.length > 0) {
+      searchQuery = searchQuery.in('product_stock.size', filters.sizes)
+    }
+
+    // Apply sorting
+    const sortField = sort.field === 'brand' ? 'brands.name' : sort.field
+    searchQuery = searchQuery.order(sortField, { ascending: sort.direction === 'asc' })
+
+    // Apply pagination
+    searchQuery = searchQuery.range(offset, offset + limit - 1)
+
+    const { data, error, count } = await searchQuery
 
     if (error) {
       throw new Error(`Failed to search products: ${error.message}`)
     }
 
-    return (data || []).map(this.transformProduct)
+    const products = (data || []).map(this.transformProduct)
+    const total = count || 0
+    const totalPages = Math.ceil(total / limit)
+
+    return {
+      products,
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    }
+  }
+
+  static async searchProductsLegacy(query: string, limit = 20): Promise<Product[]> {
+    const response = await this.searchProducts(query, { page: 1, limit })
+    return response.products
   }
 
   private static transformProduct(dbProduct: any): Product {

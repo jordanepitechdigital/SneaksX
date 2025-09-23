@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import { supabase } from '@/lib/supabase/server'
-import EmailService from '@/services/email/EmailService'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -76,9 +75,7 @@ async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
       return
     }
 
-    // Send order confirmation email
-    await sendOrderConfirmationEmail(orderId)
-
+    // TODO: Send confirmation email
     // TODO: Update inventory/stock
     // TODO: Create order items records
 
@@ -114,13 +111,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     }
 
     // TODO: Release reserved inventory
-    // Send failure notification to admin
-    await EmailService.sendAdminNotification('payment_failed', {
-      orderId,
-      paymentIntentId: paymentIntent.id,
-      amount: paymentIntent.amount / 100,
-      currency: paymentIntent.currency,
-    })
+    // TODO: Send failure notification email
 
     console.log(`Order ${orderId} marked as failed after payment failure`)
   } catch (error) {
@@ -160,80 +151,12 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       return
     }
 
-    // Send order confirmation email
-    await sendOrderConfirmationEmail(orderId)
-
     // TODO: Process shipping address
+    // TODO: Send confirmation email
     // TODO: Update inventory
 
     console.log(`Order ${orderId} updated successfully after checkout`)
   } catch (error) {
     console.error('Error handling checkout session completed:', error)
-  }
-}
-
-async function sendOrderConfirmationEmail(orderId: string) {
-  try {
-    // Fetch order details with related data
-    const { data: order, error } = await supabase
-      .from('orders')
-      .select(`
-        *,
-        users (email, full_name),
-        order_items (
-          *,
-          products (
-            name,
-            brands (name),
-            product_images (image_url, is_primary)
-          )
-        )
-      `)
-      .eq('id', orderId)
-      .single()
-
-    if (error || !order) {
-      console.error('Error fetching order for email:', error)
-      return
-    }
-
-    const user = order.users
-    if (!user?.email) {
-      console.error('No user email found for order:', orderId)
-      return
-    }
-
-    // Transform order items for email
-    const emailItems = order.order_items.map((item: any) => ({
-      name: item.products?.name || 'Unknown Product',
-      brand: item.products?.brands?.name || 'Unknown Brand',
-      size: item.size,
-      quantity: item.quantity,
-      price: parseFloat(item.unit_price),
-      image: item.products?.product_images?.find((img: any) => img.is_primary)?.image_url ||
-             'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center'
-    }))
-
-    // Send order confirmation email
-    const emailSent = await EmailService.sendOrderConfirmation({
-      orderNumber: order.order_number,
-      customerName: user.full_name || 'Valued Customer',
-      customerEmail: user.email,
-      orderDate: order.created_at,
-      items: emailItems,
-      subtotal: parseFloat(order.subtotal),
-      shipping: parseFloat(order.shipping_amount || '0'),
-      tax: parseFloat(order.tax_amount || '0'),
-      total: parseFloat(order.total_amount),
-      estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(), // 7 days from now
-    })
-
-    if (emailSent) {
-      console.log(`Order confirmation email sent for order ${orderId}`)
-    } else {
-      console.error(`Failed to send order confirmation email for order ${orderId}`)
-    }
-  } catch (error) {
-    console.error('Error sending order confirmation email:', error)
   }
 }

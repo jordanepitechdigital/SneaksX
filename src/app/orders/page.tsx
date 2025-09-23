@@ -4,12 +4,26 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { OrderService } from '@/services/orders'
+import { useRealTimeOrders, useOrderStatusMonitor } from '@/hooks/useRealTimeOrders'
 import type { Order } from '@/types/order'
 
 export default function OrdersPage() {
   const { user, loading: authLoading } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Real-time order monitoring
+  const {
+    orderUpdates,
+    isConnected: orderUpdatesConnected,
+    clearOrderUpdates,
+    getStatusMessage
+  } = useRealTimeOrders()
+
+  // Monitor status changes for current orders
+  const { statusData, isConnected: statusConnected } = useOrderStatusMonitor(
+    orders.map(order => order.id)
+  )
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -98,8 +112,67 @@ export default function OrdersPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Order History</h1>
-        <p className="text-gray-600 mt-2">View and track your orders</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Order History</h1>
+            <p className="text-gray-600 mt-2">View and track your orders</p>
+          </div>
+
+          {/* Real-time connection status */}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className={`w-2 h-2 rounded-full ${
+                orderUpdatesConnected ? 'bg-green-500' : 'bg-red-500'
+              }`}></div>
+              <span className="text-sm text-gray-600">
+                {orderUpdatesConnected ? 'Live tracking active' : 'Tracking offline'}
+              </span>
+            </div>
+
+            {orderUpdates.length > 0 && (
+              <button
+                onClick={clearOrderUpdates}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Clear Updates ({orderUpdates.length})
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Order Updates */}
+        {orderUpdates.length > 0 && (
+          <div className="mt-6 space-y-3">
+            <h2 className="text-lg font-medium text-gray-900">Recent Updates</h2>
+            {orderUpdates.slice(0, 3).map((update, index) => (
+              <div
+                key={`${update.orderId}-${update.timestamp}`}
+                className="bg-blue-50 border border-blue-200 rounded-lg p-4 animate-slide-in-right"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-blue-900">
+                      Order #{update.orderId.slice(-8).toUpperCase()}
+                    </p>
+                    <p className="text-sm text-blue-700 mt-1">
+                      {getStatusMessage(update)}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      getStatusColor(update.newStatus)
+                    }`}>
+                      {update.newStatus.charAt(0).toUpperCase() + update.newStatus.slice(1)}
+                    </span>
+                    <span className="text-xs text-blue-600">
+                      {new Date(update.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Order Stats */}
@@ -166,27 +239,54 @@ export default function OrdersPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => (
-            <div key={order.id} className="bg-white border border-gray-200 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Order #{order.id.slice(-8).toUpperCase()}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Placed on {formatDate(order.createdAt)}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(order.status)}`}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                  </span>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold text-gray-900">€{order.total.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">{order.items.length} item{order.items.length > 1 ? 's' : ''}</p>
+          {orders.map((order) => {
+            // Get real-time status if available
+            const realTimeStatus = statusData[order.id] || order.status
+            const hasStatusUpdate = statusData[order.id] && statusData[order.id] !== order.status
+
+            return (
+              <div
+                key={order.id}
+                className={`bg-white border border-gray-200 rounded-lg p-6 transition-all duration-300 ${
+                  hasStatusUpdate ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        Order #{order.id.slice(-8).toUpperCase()}
+                      </h3>
+                      {statusConnected && (
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Placed on {formatDate(order.createdAt)}
+                    </p>
+                    {hasStatusUpdate && (
+                      <p className="text-xs text-blue-600 mt-1 animate-pulse">
+                        Status just updated!
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-end space-y-1">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full transition-all duration-300 ${
+                        getStatusColor(realTimeStatus)
+                      } ${hasStatusUpdate ? 'animate-pulse' : ''}`}>
+                        {realTimeStatus.charAt(0).toUpperCase() + realTimeStatus.slice(1)}
+                      </span>
+                      {hasStatusUpdate && (
+                        <span className="text-xs text-blue-600">Live update</span>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-gray-900">€{order.total.toFixed(2)}</p>
+                      <p className="text-sm text-gray-600">{order.items.length} item{order.items.length > 1 ? 's' : ''}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
               {/* Order Items Preview */}
               <div className="flex flex-wrap gap-2 mb-4">
@@ -241,7 +341,8 @@ export default function OrdersPage() {
                 )}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

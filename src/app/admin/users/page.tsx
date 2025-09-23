@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 interface User {
   id: string
@@ -36,7 +36,7 @@ export default function AdminUsersPage() {
   async function fetchUsers() {
     try {
       setLoading(true)
-      const supabase = createClient()
+      // Using imported supabase client
       const { data, error } = await supabase
         .from('users')
         .select('*')
@@ -54,7 +54,7 @@ export default function AdminUsersPage() {
 
   async function updateUser(userId: string, updates: Partial<User>) {
     try {
-      const supabase = createClient()
+      // Using imported supabase client
       const { error } = await supabase
         .from('users')
         .update({
@@ -76,7 +76,7 @@ export default function AdminUsersPage() {
 
   async function toggleUserStatus(userId: string, currentStatus: boolean) {
     try {
-      const supabase = createClient()
+      // Using imported supabase client
       const { error } = await supabase
         .from('users')
         .update({

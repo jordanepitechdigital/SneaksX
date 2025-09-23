@@ -41,9 +41,9 @@ export default function OrderSuccessPage() {
           setError('Order not found')
         }
       } else if (sessionId) {
-        // Handle Stripe checkout session - show success without specific order details
+        // Handle payment session - show success without specific order details
         setOrder({
-          id: 'stripe-' + sessionId.slice(-8),
+          id: 'payment-' + sessionId.slice(-8),
           userId: user?.id || '',
           items: [],
           subtotal: 0,

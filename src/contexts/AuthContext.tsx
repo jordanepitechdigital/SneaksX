@@ -29,25 +29,61 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial user
-    getCurrentUser().then((user) => {
-      setUser(user)
-      setLoading(false)
+    // Get initial session using the SSR-compatible client
+    const getInitialSession = async () => {
+      try {
+        const { supabase } = await import('@/lib/supabase/client')
+        const { data: { session }, error } = await supabase.auth.getSession()
+
+        if (error) {
+          console.error('Error getting session:', error)
+          setUser(null)
+        } else {
+          setUser(session?.user ?? null)
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getInitialSession()
+
+    // Listen for auth changes using the SSR-compatible client
+    const setupAuthListener = async () => {
+      const { supabase } = await import('@/lib/supabase/client')
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
+
+      return subscription
+    }
+
+    let subscription: any = null
+    setupAuthListener().then(sub => {
+      subscription = sub
     })
 
-    // Listen for auth changes
-    const { data: { subscription } } = onAuthStateChange((user) => {
-      setUser(user)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription?.unsubscribe()
+    }
   }, [])
 
   const handleSignOut = async () => {
-    const { signOut } = await import('@/lib/supabase/auth')
-    await signOut()
-    setUser(null)
+    try {
+      const { supabase } = await import('@/lib/supabase/client')
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Error signing out:', error)
+      }
+      setUser(null)
+    } catch (error) {
+      console.error('Error during sign out:', error)
+      setUser(null)
+    }
   }
 
   const value = {

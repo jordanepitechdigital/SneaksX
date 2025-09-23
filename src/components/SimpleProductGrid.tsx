@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
+import { useProductStockMonitor } from '@/hooks/useRealTimeStock'
 import AddToCartButton from '@/components/AddToCartButton'
 
 interface Product {
@@ -22,6 +23,11 @@ export function SimpleProductGrid() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Monitor real-time stock updates for all products
+  const { stockData, isConnected } = useProductStockMonitor(
+    products.map(p => p.id)
+  )
 
   useEffect(() => {
     async function fetchProducts() {
@@ -153,17 +159,79 @@ export function SimpleProductGrid() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+    <div>
+      {/* Real-time connection indicator */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+          <span className="text-sm text-gray-600">
+            {isConnected ? 'Live stock updates active' : 'Stock updates offline'}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            stockData={stockData[product.id] || {}}
+            isConnected={isConnected}
+          />
+        ))}
+      </div>
     </div>
   )
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({
+  product,
+  stockData,
+  isConnected
+}: {
+  product: Product
+  stockData: Record<string, any>
+  isConnected: boolean
+}) {
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [showSizeError, setShowSizeError] = useState(false)
+  const [stockUpdated, setStockUpdated] = useState(false)
+
+  // Calculate real-time stock information
+  const getRealTimeStock = () => {
+    let totalAvailable = 0
+    const availableSizes = []
+
+    for (const size of product.sizes) {
+      const sizeStock = stockData[size]
+      const available = sizeStock?.availableQuantity ??
+        Math.max(0, (product.stockCount || 0) / product.sizes.length) // Fallback estimate
+
+      if (available > 0) {
+        availableSizes.push(size)
+        totalAvailable += available
+      }
+    }
+
+    return {
+      totalAvailable: Math.floor(totalAvailable),
+      availableSizes,
+      hasRecentUpdate: Object.values(stockData).some((stock: any) =>
+        stock?.timestamp && Date.now() - new Date(stock.timestamp).getTime() < 10000
+      )
+    }
+  }
+
+  const { totalAvailable, availableSizes, hasRecentUpdate } = getRealTimeStock()
+
+  // Show visual feedback for recent updates
+  useEffect(() => {
+    if (hasRecentUpdate) {
+      setStockUpdated(true)
+      const timer = setTimeout(() => setStockUpdated(false), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [hasRecentUpdate])
 
   const handleSizeRequired = () => {
     setShowSizeError(true)
@@ -171,8 +239,10 @@ function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden">
-      <Link href={`/products/${product.id}`} className="block">
+    <div className={`bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${
+      stockUpdated ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+    }`}>
+      <Link href={`/products/${product.id}`} className="block relative">
         <div className="aspect-square bg-gray-100 p-4">
           <img
             src={product.imageUrl}
@@ -190,6 +260,28 @@ function ProductCard({ product }: { product: Product }) {
             }}
           />
         </div>
+
+        {/* Real-time stock indicator badges */}
+        <div className="absolute top-2 right-2 flex flex-col space-y-1">
+          {isConnected && (
+            <div className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center space-x-1">
+              <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
+              <span>LIVE</span>
+            </div>
+          )}
+
+          {totalAvailable <= 5 && totalAvailable > 0 && (
+            <div className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+              LOW STOCK
+            </div>
+          )}
+
+          {stockUpdated && (
+            <div className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
+              UPDATED
+            </div>
+          )}
+        </div>
       </Link>
 
       <div className="p-4">
@@ -203,32 +295,54 @@ function ProductCard({ product }: { product: Product }) {
           <span className="text-lg font-bold text-gray-900">
             €{product.price.toFixed(2)}
           </span>
-          <span className="text-sm text-gray-500">
-            {product.stockCount > 0 ? `${product.stockCount} left` : 'Out of stock'}
-          </span>
+          <div className="flex flex-col items-end">
+            <span className={`text-sm transition-colors duration-300 ${
+              totalAvailable > 0 ? 'text-gray-500' : 'text-red-500'
+            } ${stockUpdated ? 'text-blue-600 font-medium' : ''}`}>
+              {totalAvailable > 0 ? `${totalAvailable} left` : 'Out of stock'}
+            </span>
+            {stockUpdated && (
+              <span className="text-xs text-blue-600 animate-pulse">Just updated</span>
+            )}
+          </div>
         </div>
 
         {product.sizes.length > 0 && (
           <div className="mb-3">
             <p className="text-xs text-gray-500 mb-2">Size:</p>
             <div className="flex flex-wrap gap-1">
-              {product.sizes.slice(0, 6).map((size) => (
-                <button
-                  key={size}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setSelectedSize(selectedSize === size ? '' : size)
-                    setShowSizeError(false)
-                  }}
-                  className={`text-xs px-2 py-1 rounded border transition-colors ${
-                    selectedSize === size
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-gray-100 border-gray-200 hover:bg-gray-200'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
+              {product.sizes.slice(0, 6).map((size) => {
+                const isAvailable = availableSizes.includes(size)
+                const sizeStock = stockData[size]
+                const sizeAvailable = sizeStock?.availableQuantity ?? 0
+
+                return (
+                  <button
+                    key={size}
+                    disabled={!isAvailable}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (isAvailable) {
+                        setSelectedSize(selectedSize === size ? '' : size)
+                        setShowSizeError(false)
+                      }
+                    }}
+                    className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${
+                      selectedSize === size
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : isAvailable
+                        ? 'bg-gray-100 border-gray-200 hover:bg-gray-200'
+                        : 'bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed'
+                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-blue-300' : ''}`}
+                    title={isAvailable ? `${sizeAvailable} available` : 'Out of stock'}
+                  >
+                    {size}
+                    {sizeAvailable <= 3 && sizeAvailable > 0 && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full"></div>
+                    )}
+                  </button>
+                )
+              })}
               {product.sizes.length > 6 && (
                 <Link href={`/products/${product.id}`} className="text-xs text-blue-600 hover:text-blue-800">
                   +{product.sizes.length - 6} more
@@ -246,8 +360,8 @@ function ProductCard({ product }: { product: Product }) {
             id: product.id,
             name: product.name,
             price: product.price,
-            sizes: product.sizes,
-            stockCount: product.stockCount,
+            sizes: availableSizes, // Use real-time available sizes
+            stockCount: totalAvailable, // Use real-time stock count
             brand: product.brand,
             imageUrl: product.imageUrl
           }}

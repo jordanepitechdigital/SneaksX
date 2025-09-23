@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 interface DashboardStats {
   totalProducts: number
@@ -26,7 +26,7 @@ export default function AdminDashboard() {
     topProducts: []
   })
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  // Using imported supabase client
 
   useEffect(() => {
     loadDashboardStats()

@@ -137,8 +137,7 @@ export default function CheckoutPage() {
     setError(null)
 
     try {
-      // For now, we'll use Stripe Checkout (hosted solution)
-      // In a full implementation, you'd use Stripe Elements for custom UI
+      // Use mock payment system (replace with your custom payment implementation)
       const session = await PaymentService.createCheckoutSession({
         line_items: cart.items.map(item => ({
           price_data: {
@@ -158,10 +157,10 @@ export default function CheckoutPage() {
         userId: user.id,
       })
 
-      // Clear cart before redirect (since payment will be processed by Stripe)
+      // Clear cart before redirect (since payment will be processed)
       actions.clearCart()
 
-      // Redirect to Stripe Checkout
+      // Redirect to payment processing
       await PaymentService.redirectToCheckout(session.sessionId)
     } catch (err) {
       setError('Failed to process payment. Please try again.')
@@ -364,7 +363,7 @@ export default function CheckoutPage() {
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <p className="text-sm text-blue-800">
-                      This is a demo checkout. No real payment will be processed.
+                      Mock payment system. Custom payment processing will be implemented later.
                     </p>
                   </div>
                 </div>
@@ -379,8 +378,8 @@ export default function CheckoutPage() {
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <p className="text-sm font-medium text-gray-900">Visa ending in 4242</p>
-                        <p className="text-xs text-gray-600">Expires 12/25</p>
+                        <p className="text-sm font-medium text-gray-900">Mock Payment Method</p>
+                        <p className="text-xs text-gray-600">Custom payment system will be integrated</p>
                       </div>
                     </div>
                     <input
@@ -431,7 +430,7 @@ export default function CheckoutPage() {
               {/* Payment Method */}
               <div className="mb-6">
                 <h3 className="font-medium text-gray-900 mb-2">Payment Method</h3>
-                <p className="text-sm text-gray-600">Visa ending in 4242</p>
+                <p className="text-sm text-gray-600">Mock Payment Method (Custom system will be integrated)</p>
               </div>
 
               {/* Order Items */}

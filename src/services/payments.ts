@@ -1,21 +1,12 @@
-import { loadStripe, Stripe } from '@stripe/stripe-js'
-
-// Initialize Stripe
-let stripePromise: Promise<Stripe | null>
-
-const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
-  }
-  return stripePromise
-}
+// Generic Payment Service (Custom payment implementation will be added later)
+import { OrderService } from '@/services/orders'
 
 export interface PaymentIntent {
   id: string
-  client_secret: string
   amount: number
   currency: string
   status: string
+  metadata?: Record<string, string>
 }
 
 export interface CreatePaymentIntentRequest {
@@ -26,116 +17,124 @@ export interface CreatePaymentIntentRequest {
   metadata?: Record<string, string>
 }
 
-export interface ConfirmPaymentRequest {
+export interface ProcessPaymentRequest {
   paymentIntentId: string
-  paymentMethodId?: string
+  paymentMethod: {
+    type: 'card' | 'bank_transfer' | 'crypto'
+    details?: Record<string, any>
+  }
   return_url: string
 }
 
 export class PaymentService {
-  private static async fetchFromAPI(endpoint: string, options: RequestInit = {}) {
-    const url = `/api${endpoint}`
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    })
-
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Payment API Error: ${error}`)
-    }
-
-    return response.json()
-  }
-
+  // Mock payment processing - replace with your custom payment system
   static async createPaymentIntent(request: CreatePaymentIntentRequest): Promise<PaymentIntent> {
     try {
-      const paymentIntent = await this.fetchFromAPI('/payments/create-intent', {
-        method: 'POST',
-        body: JSON.stringify(request),
-      })
+      // This will be replaced with your custom payment system API
+      const mockPaymentIntent: PaymentIntent = {
+        id: `pi_mock_${request.orderId}`, // Include order ID in payment intent ID for easier tracking
+        amount: Math.round(request.amount * 100), // Convert to cents
+        currency: request.currency || 'eur',
+        status: 'requires_payment_method',
+        metadata: {
+          ...request.metadata,
+          orderId: request.orderId,
+          userId: request.userId
+        },
+      }
 
-      return paymentIntent
+      return mockPaymentIntent
     } catch (error) {
       console.error('Error creating payment intent:', error)
       throw error
     }
   }
 
-  static async confirmPayment(request: ConfirmPaymentRequest): Promise<{ success: boolean; error?: string }> {
+  static async processPayment(request: ProcessPaymentRequest): Promise<{ success: boolean; error?: string; orderId?: string }> {
     try {
-      const stripe = await getStripe()
-      if (!stripe) {
-        throw new Error('Stripe failed to load')
-      }
+      // Mock payment processing - replace with your custom payment system
+      console.log('Processing payment:', request)
 
-      const result = await stripe.confirmCardPayment(request.paymentIntentId)
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      if (result.error) {
+      // Extract order ID from payment intent ID (format: pi_mock_{orderId})
+      const orderId = request.paymentIntentId.startsWith('pi_mock_')
+        ? request.paymentIntentId.replace('pi_mock_', '')
+        : undefined
+
+      // Simulate random payment outcomes for testing
+      const shouldSucceed = Math.random() > 0.1 // 90% success rate
+
+      if (shouldSucceed) {
+        // Complete the order payment and commit stock
+        if (orderId) {
+          const orderCompleted = await OrderService.completeOrderPayment(orderId, request.paymentIntentId)
+          if (!orderCompleted) {
+            throw new Error('Payment succeeded but order completion failed')
+          }
+        }
+
+        return { success: true, orderId }
+      } else {
+        // Fail the order payment and release stock
+        if (orderId) {
+          await OrderService.failOrderPayment(orderId, 'Payment declined by processor')
+        }
+
         return {
           success: false,
-          error: result.error.message
+          error: 'Payment was declined by your bank or card issuer',
+          orderId
         }
       }
-
-      return { success: true }
     } catch (error) {
-      console.error('Error confirming payment:', error)
+      console.error('Error processing payment:', error)
+
+      // Extract order ID for cleanup
+      const orderId = request.paymentIntentId.startsWith('pi_mock_')
+        ? request.paymentIntentId.replace('pi_mock_', '')
+        : undefined
+
+      // Ensure stock is released on payment processing errors
+      if (orderId) {
+        await OrderService.failOrderPayment(orderId, 'Payment processing error')
+      }
+
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Payment confirmation failed'
-      }
-    }
-  }
-
-  static async processCardPayment(
-    clientSecret: string,
-    paymentElement: any,
-    confirmationUrl: string
-  ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const stripe = await getStripe()
-      if (!stripe) {
-        throw new Error('Stripe failed to load')
-      }
-
-      const { error } = await stripe.confirmPayment({
-        elements: paymentElement,
-        confirmParams: {
-          return_url: confirmationUrl,
-        },
-      })
-
-      if (error) {
-        return {
-          success: false,
-          error: error.message
-        }
-      }
-
-      return { success: true }
-    } catch (error) {
-      console.error('Error processing card payment:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Card payment failed'
+        error: error instanceof Error ? error.message : 'Payment processing failed',
+        orderId
       }
     }
   }
 
   static async retrievePaymentIntent(paymentIntentId: string): Promise<PaymentIntent> {
     try {
-      const paymentIntent = await this.fetchFromAPI(`/payments/retrieve-intent?payment_intent_id=${paymentIntentId}`)
-      return paymentIntent
+      // Mock retrieval - replace with your custom payment system
+      const mockPaymentIntent: PaymentIntent = {
+        id: paymentIntentId,
+        amount: 0,
+        currency: 'eur',
+        status: 'succeeded',
+      }
+
+      return mockPaymentIntent
     } catch (error) {
       console.error('Error retrieving payment intent:', error)
       throw error
     }
   }
 
+  static formatPrice(amount: number, currency = 'EUR'): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency.toUpperCase(),
+      minimumFractionDigits: 2,
+    }).format(amount)
+  }
+
+  // Mock checkout session for compatibility
   static async createCheckoutSession(request: {
     line_items: Array<{
       price_data: {
@@ -155,37 +154,29 @@ export class PaymentService {
     userId?: string
   }): Promise<{ sessionId: string; url: string }> {
     try {
-      const session = await this.fetchFromAPI('/payments/create-checkout-session', {
-        method: 'POST',
-        body: JSON.stringify(request),
-      })
+      // Mock checkout session - replace with your custom payment system
+      const mockSession = {
+        sessionId: `cs_mock_${Date.now()}`,
+        url: request.success_url.replace('{CHECKOUT_SESSION_ID}', `cs_mock_${Date.now()}`)
+      }
 
-      return session
+      return mockSession
     } catch (error) {
       console.error('Error creating checkout session:', error)
       throw error
     }
   }
 
-  static formatPrice(amount: number, currency = 'EUR'): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency.toUpperCase(),
-      minimumFractionDigits: 2,
-    }).format(amount / 100)
-  }
-
+  // Mock redirect function
   static async redirectToCheckout(sessionId: string): Promise<void> {
-    const stripe = await getStripe()
-    if (!stripe) {
-      throw new Error('Stripe failed to load')
-    }
+    // This will be replaced with your custom payment system redirect
+    console.log('Redirecting to checkout:', sessionId)
 
-    const { error } = await stripe.redirectToCheckout({ sessionId })
+    // For now, just show a mock success
+    alert('Mock Payment: Order processed successfully! (Replace with your payment system)')
 
-    if (error) {
-      throw new Error(error.message)
-    }
+    // Redirect to success page
+    window.location.href = '/order-success?session_id=' + sessionId
   }
 }
 

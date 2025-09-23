@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 interface AnalyticsData {
   totalRevenue: number
@@ -62,7 +62,7 @@ export default function AdminAnalyticsPage() {
   })
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState('30') // days
-  const supabase = createClient()
+  // Using imported supabase client
 
   useEffect(() => {
     loadAnalytics()

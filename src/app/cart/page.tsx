@@ -6,7 +6,7 @@ import { useCart } from '@/contexts/CartContext'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function CartPage() {
-  const { cart, actions, loading } = useCart()
+  const { cart, actions, loading, stockWarnings, stockConnected, hasStockIssues } = useCart()
   const { user } = useAuth()
   const [updatingItemId, setUpdatingItemId] = useState<string | null>(null)
 
@@ -54,15 +54,58 @@ export default function CartPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-        {cart.items.length > 0 && (
-          <button
-            onClick={handleClearCart}
-            className="text-sm text-red-600 hover:text-red-800"
-          >
-            Clear Cart
-          </button>
-        )}
+        <div className="flex items-center space-x-4">
+          {/* Real-time connection status */}
+          <div className="flex items-center space-x-2">
+            <div className={`w-2 h-2 rounded-full ${stockConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+            <span className="text-sm text-gray-600">
+              {stockConnected ? 'Live updates' : 'Offline'}
+            </span>
+          </div>
+
+          {cart.items.length > 0 && (
+            <button
+              onClick={handleClearCart}
+              className="text-sm text-red-600 hover:text-red-800"
+            >
+              Clear Cart
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Stock Warnings */}
+      {stockWarnings.length > 0 && (
+        <div className="mb-6 space-y-3">
+          {stockWarnings.map((warning) => (
+            <div
+              key={warning.itemId}
+              className={`p-4 rounded-lg border-l-4 ${
+                warning.severity === 'out'
+                  ? 'bg-red-50 border-red-400 text-red-700'
+                  : 'bg-orange-50 border-orange-400 text-orange-700'
+              }`}
+            >
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  {warning.severity === 'out' ? (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium">{warning.message}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {cart.items.length === 0 ? (
         <div className="text-center py-12">
@@ -173,12 +216,21 @@ export default function CartPage() {
               </div>
 
               {user ? (
-                <Link
-                  href="/checkout"
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
-                >
-                  Proceed to Checkout
-                </Link>
+                hasStockIssues ? (
+                  <button
+                    disabled
+                    className="w-full bg-gray-400 text-white py-3 px-4 rounded-lg cursor-not-allowed text-center block"
+                  >
+                    Resolve Stock Issues First
+                  </button>
+                ) : (
+                  <Link
+                    href="/checkout"
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
+                  >
+                    Proceed to Checkout
+                  </Link>
+                )
               ) : (
                 <div className="space-y-3">
                   <Link

@@ -4,6 +4,7 @@ import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
 import Navigation from '@/components/Navigation'
+import { PriceChangeNotification } from '@/components/PriceChangeNotification'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({
               <main>
                 {children}
               </main>
+              <PriceChangeNotification />
             </div>
           </CartProvider>
         </AuthProvider>
