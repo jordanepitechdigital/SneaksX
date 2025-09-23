@@ -48,6 +48,7 @@ export async function middleware(request: NextRequest) {
     '/privacy',
     '/products',
     '/brands',
+    '/cart',
     '/auth/login',
     '/auth/register',
     '/auth/forgot-password',
@@ -62,6 +63,8 @@ export async function middleware(request: NextRequest) {
     '/auth/register',
     '/auth/forgot-password',
     '/auth/reset-password',
+    '/login',
+    '/signup',
   ];
 
   const protectedRoutes = [
@@ -69,8 +72,8 @@ export async function middleware(request: NextRequest) {
     '/profile',
     '/watchlist',
     '/orders',
-    '/cart',
     '/checkout',
+    '/order-success',
     '/settings',
     '/notifications',
   ];
@@ -124,13 +127,13 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (session && isAuthRoute) {
-    const redirectUrl = new URL('/dashboard', request.url);
+    const redirectUrl = new URL('/', request.url);
     return NextResponse.redirect(redirectUrl);
   }
 
   // Handle protected routes
   if (!session && (isProtectedRoute || isVendorRoute || isAdminRoute)) {
-    const redirectUrl = new URL('/auth/login', request.url);
+    const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(redirectUrl);
   }

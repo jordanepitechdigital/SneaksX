@@ -86,30 +86,6 @@ Build a modern, clean e‑commerce web application called **"SneakX"** — a pre
 - **Optimization**: Ignore the 36+ images available by default in the API
 - **Format**: Favor high‑resolution images for the product gallery
 
-### **Monitors KicksDB — Real‑time Updates**
-- **Goal**: Keep **prices** up to date in near real time. **Market availability** from monitors can be displayed for **informational** purposes.
-- **Product decision**: KicksDB Monitors control **PRICES only**. **SneakX stock is internal/simulated** (reservation → commit → release). **No monitor writes** to `product_stock`.
-
-- **Priority actions:**
-  - Enable and configure **KicksDB/Kicks.dev Monitors** (price changes, detection of new products).
-  - Expose a **webhook** `POST /api/kicks/monitor` (Next.js Route Handler) to receive events.
-  - Use a **queue** (retries, backoff) and **idempotency** (dedup by *event_id*).
-  - Add a **feature flag** `FEATURE_MONITOR_UPDATES_STOCK=false` to lock the behavior.
-  - Log all events (success/errors) for audit.
-
-- **Supabase integration:**
-  - Upsert **price fields only** in `products` (e.g., `price`, `price_currency`, `last_price_at`).
-  - **No modifications** to `product_stock` via the webhook.
-  - **SLA**: database updated **≤ 60s** after receiving an event.
-
-- **Acceptance criteria:**
-  - A price change simulated on KicksDB is reflected in the app in **< 60s**.
-  - Logs show: receipt → processing → upsert of `products.price`.
-  - **Zero writes** to `product_stock` by the webhook.
-
-- **Security & robustness:**
-  - Verify webhook **signature/secret**, **rate limiting**, **circuit breaker**.
-  - **Fallback** automatically to **polling (6h)** if monitors are unavailable.
 
 ### **SneakX Internal Stock (simulation)**
 - **Source of truth**: `product_stock` table (stock per **size**).
@@ -265,7 +241,7 @@ const syncStrategy = {
 - **Performance charts**
 - **Latest orders**
 - **Low stock** alerts
-- **Synchronization** with the Kicks.dev API
+- **Periodic synchronization** with Kicks.dev API (6h)
 
 #### **User management (`/admin/users`)** *(Admin only)*
 - **List** of all users
@@ -279,11 +255,11 @@ const syncStrategy = {
 - **Statistics** per vendor
 
 #### **Product management (`/admin/products`)** *(Admin + Vendor)*
-- **Synchronization** with the Kicks.dev API
-- **Automatic import** of new products
+- **Periodic synchronization** with Kicks.dev API (batch import)
+- **Scheduled import** of new products (6h intervals)
 - **Inventory management** by size
-- **Automatic limit** of images (max 2 per product)
-- **Preview** and validation of API data
+- **Image management** (max 2 per product)
+- **Product data validation** and preview
 
 #### **Order management (`/admin/orders`)** *(Admin + Vendor)*
 - **List** of all orders with filters
@@ -295,7 +271,7 @@ const syncStrategy = {
 - **Global view** of stock by product/size
 - **Low‑stock alerts**
 - **Stock adjustments**
-- **Synchronization** with API data
+- **Periodic synchronization** with API data (batch updates)
 - **History** of movements
 
 ### **4. Common Components**
