@@ -292,7 +292,7 @@ export default function AdminProducts() {
                     </button>
                     <button
                       onClick={() => toggleFeatured(product.id, product.is_featured)}
-                      className="text-purple-600 hover:text-purple-900"
+                      className="text-black hover:text-gray-700"
                     >
                       {product.is_featured ? 'Unfeature' : 'Feature'}
                     </button>

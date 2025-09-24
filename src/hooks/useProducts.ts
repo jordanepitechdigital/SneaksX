@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ProductService, type Product } from '@/services/products'
+import {
+  productApiService,
+  type Product as EnhancedProduct,
+  type ProductFilters as EnhancedProductFilters,
+  type ProductSortOptions
+} from '@/services/api/products'
 
 export interface ProductsFilters {
   search?: string
@@ -29,11 +35,48 @@ export const productKeys = {
 
 // Enhanced products list with comprehensive filtering
 export function useProducts(filters: ProductsFilters = {}) {
-  const { limit = 20, ...otherFilters } = filters
+  const { limit = 20, search, brandName, category, minPrice, maxPrice, sortBy = 'createdAt', sortOrder = 'desc', ...otherFilters } = filters
+
+  // Transform legacy filters to new format
+  const enhancedFilters: EnhancedProductFilters = {
+    brand: brandName,
+    category,
+    minPrice,
+    maxPrice,
+    search,
+    ...otherFilters
+  }
+
+  // Transform legacy sort options to new format
+  const sortOptions: ProductSortOptions = {
+    field: sortBy === 'releaseDate' ? 'release_date' : sortBy === 'createdAt' ? 'created_at' : sortBy,
+    direction: sortOrder
+  }
 
   return useQuery({
-    queryKey: productKeys.list({ limit, ...otherFilters }),
-    queryFn: () => ProductService.getProducts(limit),
+    queryKey: productKeys.list({ limit, ...filters }),
+    queryFn: async () => {
+      if (search) {
+        // Use search API if search query provided
+        const response = await productApiService.searchProducts(
+          search,
+          { page: 1, limit },
+          enhancedFilters,
+          sortOptions
+        )
+        if (response.error) throw response.error
+        return response.data!.products
+      } else {
+        // Use regular products API
+        const response = await productApiService.getProducts(
+          { page: 1, limit },
+          enhancedFilters,
+          sortOptions
+        )
+        if (response.error) throw response.error
+        return response.data!.products
+      }
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
     retry: 3,
@@ -45,7 +88,11 @@ export function useProducts(filters: ProductsFilters = {}) {
 export function useProduct(productId?: string) {
   return useQuery({
     queryKey: productKeys.detail(productId!),
-    queryFn: () => ProductService.getProductById?.(productId!) || Promise.reject('Method not available'),
+    queryFn: async () => {
+      const response = await productApiService.getProduct(productId!)
+      if (response.error) throw response.error
+      return response.data!
+    },
     enabled: !!productId,
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
@@ -57,7 +104,11 @@ export function useProduct(productId?: string) {
 export function useFeaturedProducts(limit = 8) {
   return useQuery({
     queryKey: productKeys.featured(limit),
-    queryFn: () => ProductService.getFeaturedProducts(limit),
+    queryFn: async () => {
+      const response = await productApiService.getFeaturedProducts(limit)
+      if (response.error) throw response.error
+      return response.data!
+    },
     staleTime: 15 * 60 * 1000, // 15 minutes (featured products change less frequently)
     gcTime: 60 * 60 * 1000, // 1 hour
     retry: 3,
@@ -80,7 +131,16 @@ export function useProductsByBrand(brandName: string, limit = 20) {
 export function useSearchProducts(query: string, limit = 20) {
   return useQuery({
     queryKey: productKeys.search(query, limit),
-    queryFn: () => ProductService.searchProducts(query, limit),
+    queryFn: async () => {
+      const response = await productApiService.searchProducts(
+        query,
+        { page: 1, limit },
+        {},
+        { field: 'name', direction: 'asc' }
+      )
+      if (response.error) throw response.error
+      return response.data!.products
+    },
     staleTime: 2 * 60 * 1000, // 2 minutes (search results become stale faster)
     gcTime: 5 * 60 * 1000, // 5 minutes
     enabled: !!query && query.length > 2,
@@ -92,7 +152,11 @@ export function useSearchProducts(query: string, limit = 20) {
 export function useBrands() {
   return useQuery({
     queryKey: productKeys.brands(),
-    queryFn: () => ProductService.getBrands?.() || Promise.resolve([]),
+    queryFn: async () => {
+      const response = await productApiService.getBrands()
+      if (response.error) throw response.error
+      return response.data!
+    },
     staleTime: 60 * 60 * 1000, // 1 hour (brands don't change often)
     gcTime: 24 * 60 * 60 * 1000, // 24 hours
     retry: 3,
@@ -103,7 +167,11 @@ export function useBrands() {
 export function useCategories() {
   return useQuery({
     queryKey: productKeys.categories(),
-    queryFn: () => ProductService.getCategories?.() || Promise.resolve([]),
+    queryFn: async () => {
+      const response = await productApiService.getCategories()
+      if (response.error) throw response.error
+      return response.data!
+    },
     staleTime: 60 * 60 * 1000, // 1 hour (categories don't change often)
     gcTime: 24 * 60 * 60 * 1000, // 24 hours
     retry: 3,
@@ -117,7 +185,11 @@ export function usePrefetchProduct() {
   return (productId: string) => {
     queryClient.prefetchQuery({
       queryKey: productKeys.detail(productId),
-      queryFn: () => ProductService.getProductById?.(productId) || Promise.reject('Method not available'),
+      queryFn: async () => {
+        const response = await productApiService.getProduct(productId)
+        if (response.error) throw response.error
+        return response.data!
+      },
       staleTime: 10 * 60 * 1000,
     })
   }

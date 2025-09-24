@@ -30,7 +30,7 @@ const badgeVariants = cva(
         sale:
           "bg-red-500 text-white hover:bg-red-500/80",
         new:
-          "bg-primary-500 text-white hover:bg-primary-500/80",
+          "bg-black text-white hover:bg-gray-800",
         featured:
           "bg-accent-500 text-white hover:bg-accent-500/80",
         premium:

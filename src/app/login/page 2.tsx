@@ -46,7 +46,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md animate-fade-in">
         <h2 className="mt-6 text-center text-4xl font-bold text-gradient">
           Sign in to SneaksX
@@ -55,7 +55,7 @@ export default function LoginPage() {
           Or{' '}
           <Link
             href="/signup"
-            className="font-medium text-black hover:text-gray-700 transition-colors duration-200"
+            className="font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200"
           >
             create a new account
           </Link>
@@ -111,7 +111,7 @@ export default function LoginPage() {
               <div className="text-sm">
                 <Link
                   href="/forgot-password"
-                  className="font-medium text-black hover:text-gray-700 transition-colors duration-200"
+                  className="font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200"
                 >
                   Forgot your password?
                 </Link>

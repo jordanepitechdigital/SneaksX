@@ -23,6 +23,11 @@ export interface AuthUser {
   role: UserRole;
   profile: UserProfile;
   supabaseUser: SupabaseUser;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+    [key: string]: any;
+  };
 }
 
 export interface AuthState {

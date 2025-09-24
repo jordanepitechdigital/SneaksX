@@ -161,7 +161,7 @@ export default function AdminAnalyticsPage() {
         .eq('is_active', true)
 
       const brandStats = brandData?.reduce((acc: any, product) => {
-        const brandName = Array.isArray(product.brands) ? product.brands[0]?.name : product.brands?.name || 'Unknown'
+        const brandName = product.brands?.name || 'Unknown'
         if (!acc[brandName]) {
           acc[brandName] = {
             brand_name: brandName,
@@ -281,7 +281,7 @@ export default function AdminAnalyticsPage() {
       title: 'Active Products',
       value: analytics.totalProducts,
       icon: '📦',
-      color: 'bg-gray-500'
+      color: 'bg-purple-500'
     },
     {
       title: 'Total Users',
@@ -372,8 +372,8 @@ export default function AdminAnalyticsPage() {
               {analytics.topBrands.map((brand, index) => (
                 <div key={brand.brand_name} className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-black font-semibold text-sm">{index + 1}</span>
+                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-purple-600 font-semibold text-sm">{index + 1}</span>
                     </div>
                     <p className="text-sm font-medium text-gray-900">{brand.brand_name}</p>
                   </div>

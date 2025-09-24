@@ -9,3 +9,7 @@ export const supabaseServer = createClient(supabaseUrl, supabaseServiceKey, {
     persistSession: false
   }
 })
+
+// Export aliases for compatibility with existing imports
+export const supabase = supabaseServer
+export { createClient }

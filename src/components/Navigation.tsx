@@ -13,10 +13,10 @@ export default function Navigation() {
   }
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center" style={{ height: 'var(--nav-height)' }}>
-          <Link href="/" className="text-2xl font-bold text-gradient hover:scale-105 transition-transform duration-200">
+        <div className="flex justify-between items-center h-16">
+          <Link href="/" className="text-2xl font-bold text-black hover:text-gray-800 transition-colors duration-200">
             SneaksX
           </Link>
 
@@ -32,15 +32,19 @@ export default function Navigation() {
             </Link>
           </nav>
 
-          <div className="flex items-center space-x-3">
-            {/* Cart Icon */}
-            <Link href="/cart" className="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-200 focus-visible">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6M7 13h6m4 0h2a2 2 0 002 2v2a2 2 0 01-2 2H9a2 2 0 01-2-2v-2a2 2 0 012-2z" />
+          <div className="flex items-center space-x-4">
+            {/* SneakX cart icon - minimalist shopping bag */}
+            <Link
+              href="/cart"
+              className="relative text-gray-600 hover:text-black transition-colors duration-200"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 7h12l-1 10H7L6 7zM6 7L5 4H3"/>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 7V5a2 2 0 0 1 4 0v2"/>
               </svg>
               {cart.totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce-in">
-                  {cart.totalItems > 99 ? '99+' : cart.totalItems}
+                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center min-w-[16px] text-[10px] font-medium">
+                  {cart.totalItems > 9 ? '9+' : cart.totalItems}
                 </span>
               )}
             </Link>
@@ -51,24 +55,24 @@ export default function Navigation() {
               </div>
             ) : user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-slate-700 hidden lg:block">
+                <span className="text-sm text-gray-700 hidden lg:block">
                   Welcome, {user.user_metadata?.full_name || user.email}
                 </span>
                 <Link
                   href="/profile"
-                  className="nav-link text-sm"
+                  className="text-sm text-gray-600 hover:text-black px-3 py-2 rounded-md transition-colors duration-200"
                 >
                   Profile
                 </Link>
                 <Link
                   href="/orders"
-                  className="nav-link text-sm"
+                  className="text-sm text-gray-600 hover:text-black px-3 py-2 rounded-md transition-colors duration-200"
                 >
                   Orders
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-sm text-slate-600 hover:text-slate-800 px-2 py-1 rounded-md transition-colors duration-200"
+                  className="text-sm text-gray-600 hover:text-black px-2 py-1 rounded-md transition-colors duration-200"
                 >
                   Sign out
                 </button>
@@ -77,7 +81,7 @@ export default function Navigation() {
               <div className="flex items-center space-x-3">
                 <Link
                   href="/login"
-                  className="nav-link text-sm"
+                  className="text-sm text-gray-600 hover:text-black px-3 py-2 rounded-md transition-colors duration-200"
                 >
                   Sign in
                 </Link>
@@ -93,7 +97,7 @@ export default function Navigation() {
         </div>
 
         {/* Mobile menu */}
-        <div className="md:hidden border-t border-slate-200 pt-4 pb-3">
+        <div className="md:hidden border-t border-gray-200 pt-4 pb-3">
           <nav className="flex flex-col space-y-1">
             <Link href="/" className="nav-link">
               Home

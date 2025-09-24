@@ -250,7 +250,7 @@ export const GlobalLoadingIndicator = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      <div className="h-1 bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse" />
+      <div className="h-1 bg-black animate-pulse" />
     </div>
   )
 }
@@ -273,7 +273,7 @@ export const LoadingOverlay = ({
     <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${className}`}>
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full mx-4">
         <div className="flex items-center justify-center mb-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
         </div>
 
         {message && (
@@ -285,7 +285,7 @@ export const LoadingOverlay = ({
         {typeof progress === 'number' && (
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-black h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>

@@ -24,7 +24,6 @@ export function SimpleProductGrid() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Monitor real-time stock updates for all products
   const { stockData, isConnected } = useProductStockMonitor(
     products.map(p => p.id)
   )
@@ -32,7 +31,6 @@ export function SimpleProductGrid() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        // Fetch products with brand info and stock
         const { data: productsData, error: productsError } = await supabase
           .from('products')
           .select(`
@@ -58,35 +56,21 @@ export function SimpleProductGrid() {
             .map((entry: any) => entry.size)
             .sort()
 
-          // Get primary image or first available image
           const images = product.product_images || []
           const primaryImage = images.find((img: any) => img.is_primary)
 
-          // If no real image, generate a diverse placeholder based on product data
           let imageUrl = primaryImage?.image_url || images[0]?.image_url
 
           if (!imageUrl) {
-            // Create diverse sneaker images based on product characteristics
-            const brandName = product.brands?.name?.toLowerCase() || 'sneaker'
-            const model = product.model?.toLowerCase() || ''
-            const colorway = product.colorway?.toLowerCase() || ''
-
-            // Map different combinations to different Unsplash sneaker images
             const imageVariants = [
-              'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center', // Classic sneaker
-              'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center', // White sneaker
-              'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center', // Red sneaker
-              'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400&h=400&fit=crop&crop=center', // Black sneaker
-              'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop&crop=center', // Blue sneaker
-              'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center', // Green sneaker
-              'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop&crop=center', // Running shoe
-              'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=400&fit=crop&crop=center', // High-top sneaker
-              'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=center', // Modern sneaker
-              'https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=400&h=400&fit=crop&crop=center', // Athletic shoe
+              'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400&h=400&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=400&fit=crop&crop=center',
             ]
 
-            // Create a simple hash from product ID to ensure consistency
-            const productHash = product.id.split('').reduce((a, b) => {
+            const productHash = product.id.split('').reduce((a: number, b: string) => {
               a = ((a << 5) - a) + b.charCodeAt(0)
               return a & a
             }, 0)
@@ -140,12 +124,7 @@ export function SimpleProductGrid() {
     return (
       <div className="text-center py-8">
         <p className="text-red-600">Error: {error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="btn btn-primary mt-4"
-        >
-          Retry
-        </button>
+        <RetryButton />
       </div>
     )
   }
@@ -160,17 +139,16 @@ export function SimpleProductGrid() {
 
   return (
     <div>
-      {/* Real-time connection indicator */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full animate-bounce-in ${isConnected ? 'bg-success-500' : 'bg-red-500'}`}></div>
-          <span className="text-sm text-slate-600">
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-black' : 'bg-gray-400'}`}></div>
+          <span className="text-sm text-gray-600">
             {isConnected ? 'Live stock updates active' : 'Stock updates offline'}
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="products-grid">
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -184,11 +162,7 @@ export function SimpleProductGrid() {
   )
 }
 
-function ProductCard({
-  product,
-  stockData,
-  isConnected
-}: {
+function ProductCard({ product, stockData, isConnected }: {
   product: Product
   stockData: Record<string, any>
   isConnected: boolean
@@ -197,15 +171,13 @@ function ProductCard({
   const [showSizeError, setShowSizeError] = useState(false)
   const [stockUpdated, setStockUpdated] = useState(false)
 
-  // Calculate real-time stock information
   const getRealTimeStock = () => {
     let totalAvailable = 0
-    const availableSizes = []
+    const availableSizes: string[] = []
 
     for (const size of product.sizes) {
       const sizeStock = stockData[size]
-      const available = sizeStock?.availableQuantity ??
-        Math.max(0, (product.stockCount || 0) / product.sizes.length) // Fallback estimate
+      const available = sizeStock?.availableQuantity ?? Math.max(0, (product.stockCount || 0) / product.sizes.length)
 
       if (available > 0) {
         availableSizes.push(size)
@@ -224,7 +196,6 @@ function ProductCard({
 
   const { totalAvailable, availableSizes, hasRecentUpdate } = getRealTimeStock()
 
-  // Show visual feedback for recent updates
   useEffect(() => {
     if (hasRecentUpdate) {
       setStockUpdated(true)
@@ -238,71 +209,54 @@ function ProductCard({
     setTimeout(() => setShowSizeError(false), 3000)
   }
 
-  return (
-    <div className={`product-card ${
-      stockUpdated ? 'ring-2 ring-primary-500 ring-opacity-50 animate-scale-in' : ''
-    }`}>
-      <Link href={`/products/${product.id}`} className="block relative overflow-hidden">
-        <div className="aspect-square bg-slate-100 p-4">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="product-image w-full h-full object-contain"
-            onError={(e) => {
-              // Use the same fallback logic as above for consistency
-              const imageVariants = [
-                'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center',
-                'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center',
-                'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center',
-              ]
-              const randomIndex = Math.floor(Math.random() * imageVariants.length)
-              e.currentTarget.src = imageVariants[randomIndex]
-            }}
-          />
-        </div>
+  const cardClassName = `product-card ${stockUpdated ? 'ring-2 ring-black ring-opacity-20' : ''}`
 
-        {/* Real-time stock indicator badges */}
+  return (
+    <div className={cardClassName}>
+      <Link href={`/products/${product.id}`} className="block relative overflow-hidden">
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className="product-image"
+        />
+
         <div className="absolute top-2 right-2 flex flex-col space-y-1">
           {isConnected && (
-            <div className="badge badge-success flex items-center space-x-1">
+            <div className="bg-black text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
               <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
               <span>LIVE</span>
             </div>
           )}
 
           {totalAvailable <= 5 && totalAvailable > 0 && (
-            <div className="badge badge-warning">
+            <div className="bg-gray-600 text-white text-xs px-2 py-1 rounded">
               LOW STOCK
             </div>
           )}
 
           {stockUpdated && (
-            <div className="badge badge-info animate-bounce-in">
+            <div className="bg-black text-white text-xs px-2 py-1 rounded">
               UPDATED
             </div>
           )}
         </div>
       </Link>
 
-      <div className="p-4">
+      <div className="product-info">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2 hover:text-primary-600 transition-colors duration-200">
+          <h3 className="product-title hover:text-gray-700 transition-colors duration-200">
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-slate-600 mb-2">{product.brand}</p>
+        <p className="product-brand">{product.brand}</p>
         <div className="flex justify-between items-center mb-3">
-          <span className="price text-lg">
-            €{product.price.toFixed(2)}
-          </span>
+          <span className="product-price">€{product.price.toFixed(2)}</span>
           <div className="flex flex-col items-end">
-            <span className={`text-sm transition-colors duration-300 ${
-              totalAvailable > 0 ? 'text-slate-500' : 'text-red-500'
-            } ${stockUpdated ? 'text-primary-600 font-medium' : ''}`}>
+            <span className={`text-sm transition-colors duration-300 ${totalAvailable > 0 ? 'text-gray-500' : 'text-black'} ${stockUpdated ? 'text-black font-medium' : ''}`}>
               {totalAvailable > 0 ? `${totalAvailable} left` : 'Out of stock'}
             </span>
             {stockUpdated && (
-              <span className="text-xs text-primary-600 animate-bounce-in">Just updated</span>
+              <span className="text-xs text-black">Just updated</span>
             )}
           </div>
         </div>
@@ -327,24 +281,18 @@ function ProductCard({
                         setShowSizeError(false)
                       }
                     }}
-                    className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${
-                      selectedSize === size
-                        ? 'bg-primary-600 text-white border-primary-600'
-                        : isAvailable
-                        ? 'bg-slate-100 border-slate-200 hover:bg-slate-200'
-                        : 'bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed'
-                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-primary-300' : ''}`}
+                    className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${selectedSize === size ? 'bg-black text-white border-black' : isAvailable ? 'bg-slate-100 border-slate-200 hover:bg-slate-200' : 'bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed'}`}
                     title={isAvailable ? `${sizeAvailable} available` : 'Out of stock'}
                   >
                     {size}
                     {sizeAvailable <= 3 && sizeAvailable > 0 && (
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full"></div>
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-black rounded-full"></div>
                     )}
                   </button>
                 )
               })}
               {product.sizes.length > 6 && (
-                <Link href={`/products/${product.id}`} className="text-xs text-primary-600 hover:text-primary-800">
+                <Link href={`/products/${product.id}`} className="text-xs text-black hover:text-gray-700">
                   +{product.sizes.length - 6} more
                 </Link>
               )}
@@ -360,15 +308,32 @@ function ProductCard({
             id: product.id,
             name: product.name,
             price: product.price,
-            sizes: availableSizes, // Use real-time available sizes
-            stockCount: totalAvailable, // Use real-time stock count
+            sizes: availableSizes,
+            stockCount: totalAvailable,
             brand: product.brand,
-            imageUrl: product.imageUrl
+            imageUrl: product.imageUrl,
+            category: product.category,
+            createdAt: product.createdAt
           }}
           selectedSize={selectedSize}
           onSizeRequired={handleSizeRequired}
         />
       </div>
     </div>
+  )
+}
+
+function RetryButton() {
+  const handleRetry = () => {
+    window.location.reload()
+  }
+
+  return (
+    <button
+      onClick={handleRetry}
+      className="btn btn-primary mt-4"
+    >
+      Retry
+    </button>
   )
 }

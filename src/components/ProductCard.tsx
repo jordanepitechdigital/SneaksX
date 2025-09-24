@@ -85,11 +85,9 @@ export function ProductCard({
     setTimeout(() => setShowSizeError(false), 3000)
   }
 
-  // Generate fallback image if needed
+  // Generate consistent fallback image
   const getProductImage = () => {
-    if (product.imageUrl) return product.imageUrl
-
-    // Create diverse sneaker images based on product characteristics
+    // Always use fallback images for consistent display
     const imageVariants = [
       'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center',
       'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center',
@@ -122,16 +120,16 @@ export function ProductCard({
           <img
             src={getProductImage()}
             alt={product.name}
-            className="product-image w-full h-full object-contain"
-            onError={(e) => {
-              const imageVariants = [
-                'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center',
-                'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center',
-                'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center',
-              ]
-              const randomIndex = Math.floor(Math.random() * imageVariants.length)
-              e.currentTarget.src = imageVariants[randomIndex]
+            className="product-image w-full h-full object-contain transition-opacity duration-200"
+            loading="lazy"
+            onLoad={(e) => {
+              e.currentTarget.style.opacity = '1'
             }}
+            onError={(e) => {
+              // Fallback to a reliable sneaker image
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center'
+            }}
+            style={{ opacity: '0' }}
           />
         </div>
 
@@ -186,7 +184,7 @@ export function ProductCard({
 
       <div className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2 hover:text-primary-600 transition-colors duration-200">
+          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2 hover:text-black transition-colors duration-200">
             {product.name}
           </h3>
         </Link>
@@ -198,11 +196,11 @@ export function ProductCard({
           <div className="flex flex-col items-end">
             <span className={`text-sm transition-colors duration-300 ${
               totalAvailable > 0 ? 'text-slate-500' : 'text-red-500'
-            } ${stockUpdated ? 'text-primary-600 font-medium' : ''}`}>
+            } ${stockUpdated ? 'text-black font-medium' : ''}`}>
               {totalAvailable > 0 ? `${totalAvailable} left` : 'Out of stock'}
             </span>
             {stockUpdated && (
-              <span className="text-xs text-primary-600 animate-bounce-in">Just updated</span>
+              <span className="text-xs text-black animate-bounce-in">Just updated</span>
             )}
           </div>
         </div>
@@ -229,11 +227,11 @@ export function ProductCard({
                     }}
                     className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${
                       selectedSize === size
-                        ? 'bg-primary-600 text-white border-primary-600'
+                        ? 'bg-black text-white border-black'
                         : isAvailable
                         ? 'bg-slate-100 border-slate-200 hover:bg-slate-200'
                         : 'bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed'
-                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-primary-300' : ''}`}
+                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-gray-300' : ''}`}
                     title={isAvailable ? `${sizeAvailable} available` : 'Out of stock'}
                   >
                     {size}
@@ -244,7 +242,7 @@ export function ProductCard({
                 )
               })}
               {product.sizes.length > 6 && (
-                <Link href={`/products/${product.id}`} className="text-xs text-primary-600 hover:text-primary-800">
+                <Link href={`/products/${product.id}`} className="text-xs text-black hover:text-gray-700">
                   +{product.sizes.length - 6} more
                 </Link>
               )}

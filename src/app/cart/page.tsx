@@ -83,7 +83,7 @@ export default function CartPage() {
               className={`p-4 rounded-lg border-l-4 ${
                 warning.severity === 'out'
                   ? 'bg-red-50 border-red-400 text-red-700'
-                  : 'bg-orange-50 border-orange-400 text-orange-700'
+                  : 'bg-gray-50 border-gray-400 text-gray-700'
               }`}
             >
               <div className="flex items-center">
@@ -110,7 +110,7 @@ export default function CartPage() {
       {cart.items.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
-            <svg className="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 mx-auto text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6M7 13h6m4 0h2a2 2 0 002 2v2a2 2 0 01-2 2H9a2 2 0 01-2-2v-2a2 2 0 012-2z" />
             </svg>
           </div>
@@ -118,7 +118,7 @@ export default function CartPage() {
           <p className="text-gray-600 mb-8">Start shopping to add items to your cart</p>
           <Link
             href="/products"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Browse Products
           </Link>
@@ -145,7 +145,7 @@ export default function CartPage() {
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/products/${item.product.id}`}
-                    className="font-medium text-gray-900 hover:text-blue-600 block truncate"
+                    className="font-medium text-gray-900 hover:text-black block truncate"
                   >
                     {item.product.name}
                   </Link>
@@ -226,7 +226,7 @@ export default function CartPage() {
                 ) : (
                   <Link
                     href="/checkout"
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
+                    className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors text-center block"
                   >
                     Proceed to Checkout
                   </Link>
@@ -235,12 +235,12 @@ export default function CartPage() {
                 <div className="space-y-3">
                   <Link
                     href="/login?redirect=/checkout"
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center block"
+                    className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors text-center block"
                   >
                     Sign In to Checkout
                   </Link>
                   <p className="text-xs text-gray-500 text-center">
-                    New customer? <Link href="/signup" className="text-blue-600 hover:text-blue-800">Create account</Link>
+                    New customer? <Link href="/signup" className="text-black hover:text-gray-700">Create account</Link>
                   </p>
                 </div>
               )}
@@ -248,7 +248,7 @@ export default function CartPage() {
               <div className="mt-4 text-center">
                 <Link
                   href="/products"
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-black hover:text-gray-700"
                 >
                   ← Continue Shopping
                 </Link>

@@ -125,7 +125,7 @@ export default function AdminDashboard() {
       title: 'Total Users',
       value: stats.totalUsers,
       icon: '👥',
-      color: 'bg-purple-500'
+      color: 'bg-gray-500'
     },
     {
       title: 'Total Revenue',

@@ -21,7 +21,7 @@ function LoadingSpinner() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="flex flex-col items-center space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
         <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     </div>
@@ -36,7 +36,7 @@ function UnauthorizedAccess() {
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center space-y-6 max-w-md mx-auto px-4">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-destructive">403</h1>
+          <h1 className="text-4xl font-bold text-black">403</h1>
           <h2 className="text-2xl font-semibold">Access Denied</h2>
           <p className="text-muted-foreground">
             You don&apos;t have permission to access this page.
@@ -46,13 +46,13 @@ function UnauthorizedAccess() {
         <div className="space-y-2">
           <button
             onClick={() => router.back()}
-            className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            className="w-full px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
           >
             Go Back
           </button>
           <button
             onClick={() => router.push('/')}
-            className="w-full px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+            className="w-full px-4 py-2 border border-gray-300 bg-white hover:bg-gray-100 rounded-md transition-colors"
           >
             Go Home
           </button>

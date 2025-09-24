@@ -11,15 +11,15 @@
 }
 
 html {
-  /* Force light mode to prevent the "disgusting black" */
+  /* PRD Compliant - Clean black/white system */
   color-scheme: light;
   scroll-behavior: smooth;
 }
 
 body {
-  /* Clean, modern background - no more black! */
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
+  /* Strict black/white design system */
+  background-color: var(--color-white);
+  color: var(--color-black);
   font-family: var(--font-sans);
   font-weight: var(--font-normal);
   line-height: var(--leading-normal);
@@ -147,7 +147,7 @@ body {
   animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Button component styles */
+/* Button component styles - BLACK/WHITE ONLY */
 .btn {
   @apply inline-flex items-center justify-center;
   @apply px-4 py-2 rounded-lg;
@@ -158,36 +158,29 @@ body {
 }
 
 .btn-primary {
-  @apply bg-slate-900 text-white;
-  @apply hover:bg-slate-800 active:bg-slate-700;
-  @apply focus:ring-slate-500;
+  @apply bg-black text-white;
+  @apply hover:bg-gray-900 active:bg-gray-800;
+  @apply focus:ring-gray-500;
   @apply shadow-sm hover:shadow-md;
 }
 
 .btn-secondary {
-  @apply bg-white text-slate-700 border border-slate-300;
-  @apply hover:bg-slate-50 active:bg-slate-100;
-  @apply focus:ring-slate-500;
+  @apply bg-white text-black border border-gray-300;
+  @apply hover:bg-gray-50 active:bg-gray-100;
+  @apply focus:ring-gray-500;
   @apply shadow-sm hover:shadow-md;
 }
 
-.btn-accent {
-  @apply bg-red-500 text-white;
-  @apply hover:bg-red-600 active:bg-red-700;
-  @apply focus:ring-red-500;
-  @apply shadow-sm hover:shadow-md;
-}
-
-/* Card component styles */
+/* Card component styles - BLACK/WHITE ONLY */
 .card {
-  @apply bg-white rounded-xl border border-slate-200;
-  @apply shadow-sm hover:shadow-lg;
+  @apply bg-white rounded-lg border border-gray-200;
+  @apply shadow-sm hover:shadow-md;
   @apply transition-all duration-200;
   @apply p-6;
 }
 
 .card-hover {
-  @apply hover:-translate-y-1 hover:scale-[1.02];
+  @apply hover:-translate-y-1;
 }
 
 /* Input component styles */
@@ -221,38 +214,99 @@ body {
   @apply bg-blue-100 text-blue-800;
 }
 
-/* Navigation styles */
+/* Navigation styles - BLACK/WHITE ONLY */
 .nav-link {
   @apply px-3 py-2 rounded-md text-sm font-medium;
-  @apply text-slate-600 hover:text-slate-900;
-  @apply hover:bg-slate-100;
+  @apply text-gray-600 hover:text-black;
+  @apply hover:bg-gray-100;
   @apply transition-colors duration-200;
 }
 
 .nav-link-active {
-  @apply text-slate-900 bg-slate-100;
+  @apply text-black bg-gray-100;
 }
 
-/* Product card styles */
+/* Product Grid Layout - PRD Compliant */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Product card styles - BLACK/WHITE with uniform heights */
 .product-card {
-  @apply bg-white rounded-xl border border-slate-200;
-  @apply hover:shadow-xl hover:-translate-y-1;
-  @apply transition-all duration-300 ease-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Uniform height */
+  @apply bg-white rounded-lg border border-gray-200;
+  @apply hover:shadow-lg;
+  @apply transition-all duration-200;
   @apply overflow-hidden;
   @apply animate-fade-in;
 }
 
 .product-card:hover {
-  @apply transform-gpu;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
 .product-image {
-  @apply w-full h-48 object-cover;
+  aspect-ratio: 1/1; /* Perfect square */
+  width: 100%;
+  object-fit: cover;
+  background: var(--color-gray-50);
   @apply transition-transform duration-300;
 }
 
 .product-card:hover .product-image {
   @apply scale-105;
+}
+
+.product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  color: var(--color-black);
+}
+
+.product-brand {
+  color: var(--color-gray-600);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.product-price {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-black);
+  margin-top: auto;
+}
+
+/* Responsive Grid - PRD Compliant */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 /* Price styles */

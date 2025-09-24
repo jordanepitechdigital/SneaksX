@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-white">
               <Navigation />
               <main>
                 {children}
