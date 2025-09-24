@@ -160,7 +160,7 @@ export default function AdminAnalyticsPage() {
         `)
         .eq('is_active', true)
 
-      const brandStats = brandData?.reduce((acc: any, product) => {
+      const brandStats = brandData?.reduce((acc: any, product: any) => {
         const brandName = Array.isArray(product.brands) ? product.brands[0]?.name : product.brands?.name || 'Unknown'
         if (!acc[brandName]) {
           acc[brandName] = {

@@ -277,6 +277,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             brand: item.products.brands?.name || 'Unknown',
             sizes: [], // Will be populated when needed
             stockCount: 0, // Will be updated by stock validation
+            imageUrl: item.products.image_urls?.[0] || '',
+            category: item.products.category || 'Sneakers',
+            createdAt: item.products.created_at || new Date().toISOString(),
           },
           size: item.size,
           quantity: item.quantity,

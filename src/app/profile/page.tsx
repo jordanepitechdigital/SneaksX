@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { updateProfile } from '@/lib/supabase/auth'
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth()
+  const { user, isLoading: loading } = useAuth()
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
@@ -194,8 +194,8 @@ export default function ProfilePage() {
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
           <div className="text-sm text-gray-600">
             <p><strong>Account ID:</strong> <span className="font-mono text-xs">{user.id}</span></p>
-            <p><strong>Joined:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
-            <p><strong>Last Sign In:</strong> {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString() : 'Never'}</p>
+            <p><strong>Joined:</strong> {user.supabaseUser?.created_at ? new Date(user.supabaseUser.created_at).toLocaleDateString() : 'N/A'}</p>
+            <p><strong>Last Sign In:</strong> {user.supabaseUser?.last_sign_in_at ? new Date(user.supabaseUser.last_sign_in_at).toLocaleDateString() : 'Never'}</p>
           </div>
         </div>
       </div>

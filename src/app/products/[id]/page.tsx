@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
             quantity: Math.max(0, (entry.quantity || 0) - (entry.reserved_quantity || 0)),
             available: (entry.quantity - entry.reserved_quantity) > 0
           }))
-          .sort((a, b) => parseFloat(a.size) - parseFloat(b.size))
+          .sort((a: any, b: any) => parseFloat(a.size) - parseFloat(b.size))
 
         const imageUrl = productData.image_urls?.[0] ||
                         'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=800&fit=crop&crop=center'
@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
           imageUrl,
           description: productData.description,
           category: productData.category || 'Sneakers',
-          sizes: availableSizes.filter(s => s.available).map(s => s.size),
+          sizes: availableSizes.filter((s: any) => s.available).map((s: any) => s.size),
           stockCount: totalStock,
           createdAt: productData.created_at
         }

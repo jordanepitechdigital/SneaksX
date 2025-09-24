@@ -41,7 +41,7 @@ export interface Order {
   tax: number
   total: number
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
-  shippingAddress: ShippingAddress
+  shippingAddress: ShippingAddress | null
   paymentMethod?: PaymentMethod
   trackingNumber?: string
   createdAt: string

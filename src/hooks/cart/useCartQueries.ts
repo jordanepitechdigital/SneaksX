@@ -47,13 +47,18 @@ export function useCartSummary(
   return useQuery({
     queryKey: [...cartQueryKeys.summary(), sessionId],
     queryFn: async () => {
-      const summary = await ecommerceService.getCartSummary(sessionId);
+      if (!sessionId) {
+        throw new Error('Session ID is required to fetch cart');
+      }
+
+      const summary = await ecommerceService.getCart(sessionId);
 
       // Update item count in a separate query
       queryClient.setQueryData(cartQueryKeys.count(), summary.totalItems);
 
       return summary;
     },
+    enabled: !!sessionId, // Only run if sessionId exists
     staleTime: STALE_TIME.INSTANT, // Always fresh for cart
     gcTime: CACHE_TIME.SHORT,
     refetchOnWindowFocus: true, // Sync cart when user returns

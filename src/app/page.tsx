@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { SimpleProductGrid } from '@/components/SimpleProductGrid'
 import { SimpleFeaturedBrands } from '@/components/SimpleFeaturedBrands'
+import { SearchForm } from '@/components/SearchForm'
 
 export default function HomePage() {
   return (
@@ -14,11 +15,15 @@ export default function HomePage() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Discover the latest and greatest sneakers from top brands with real-time inventory updates
           </p>
+
+          {/* Search Bar */}
+          <SearchForm />
+
           <Link
             href="/products"
             className="inline-block bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            Shop Now
+            Browse All Products
           </Link>
         </div>
       </section>

@@ -11,11 +11,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const router = useRouter()
-  const { user, loading } = useAuth()
+  const { user, isLoading } = useAuth()
   const [isAuthorized, setIsAuthorized] = useState(false)
 
   useEffect(() => {
-    if (!loading) {
+    if (!isLoading) {
       // Check if user is authenticated and has admin role
       const userRole = user?.user_metadata?.role || 'user'
       if (!user || userRole !== 'admin') {
@@ -24,9 +24,9 @@ export default function AdminLayout({
         setIsAuthorized(true)
       }
     }
-  }, [user, loading, router])
+  }, [user, isLoading, router])
 
-  if (loading || !isAuthorized) {
+  if (isLoading || !isAuthorized) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

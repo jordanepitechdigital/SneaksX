@@ -4,7 +4,7 @@ import { ShipmentTrackingEmail } from './templates/ShipmentTrackingEmail'
 import { PasswordResetEmail } from './templates/PasswordResetEmail'
 import { render } from '@react-email/render'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export interface EmailOptions {
   to: string | string[]
@@ -67,6 +67,11 @@ export class EmailService {
 
   static async sendOrderConfirmation(data: OrderConfirmationData): Promise<boolean> {
     try {
+      if (!resend) {
+        console.warn('Email service not configured - RESEND_API_KEY missing')
+        return false
+      }
+
       const emailHtml = render(OrderConfirmationEmail(data))
 
       const result = await resend.emails.send({
@@ -202,6 +207,11 @@ export class EmailService {
 
   static async testEmailConnection(): Promise<boolean> {
     try {
+      if (!resend) {
+        console.warn('Email service not configured - RESEND_API_KEY missing')
+        return false
+      }
+
       const testEmail = process.env.TEST_EMAIL || 'test@example.com'
 
       const result = await resend.emails.send({

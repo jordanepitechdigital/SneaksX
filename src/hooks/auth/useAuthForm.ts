@@ -88,7 +88,7 @@ export function useLoginForm() {
     },
   });
 
-  const handleSubmit = useCallback(async (
+  const handleSubmit = useCallback((
     onSubmit: (data: LoginCredentials) => Promise<{ error?: AuthError }>
   ) => {
     return form.handleSubmit(async (data) => {
@@ -148,7 +148,7 @@ export function useRegisterForm() {
     },
   });
 
-  const handleSubmit = useCallback(async (
+  const handleSubmit = useCallback((
     onSubmit: (data: RegisterCredentials) => Promise<{ error?: AuthError }>
   ) => {
     return form.handleSubmit(async (data) => {
@@ -203,7 +203,7 @@ export function useResetPasswordForm() {
     },
   });
 
-  const handleSubmit = useCallback(async (
+  const handleSubmit = useCallback((
     onSubmit: (email: string) => Promise<{ error?: AuthError }>
   ) => {
     return form.handleSubmit(async (data) => {
@@ -269,7 +269,7 @@ export function useChangePasswordForm() {
     },
   });
 
-  const handleSubmit = useCallback(async (
+  const handleSubmit = useCallback((
     onSubmit: (newPassword: string) => Promise<{ error?: AuthError }>
   ) => {
     return form.handleSubmit(async (data) => {

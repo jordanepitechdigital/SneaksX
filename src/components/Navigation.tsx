@@ -5,11 +5,11 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 
 export default function Navigation() {
-  const { user, loading, signOut } = useAuth()
+  const { user, isLoading: loading, logout } = useAuth()
   const { cart } = useCart()
 
   const handleSignOut = async () => {
-    await signOut()
+    await logout()
   }
 
   return (

@@ -64,7 +64,35 @@ export function useSession(
 ) {
   return useQuery({
     queryKey: authQueryKeys.session(),
-    queryFn: () => authService.getSession(),
+    queryFn: async () => {
+      const session = await authService.getSession();
+      if (!session) return null;
+
+      // Convert Session to AuthSession
+      // This is a temporary adapter until authService returns proper AuthSession
+      const authSession: AuthSession = {
+        accessToken: session.access_token,
+        refreshToken: session.refresh_token || '',
+        expiresAt: session.expires_at || 0,
+        user: {
+          id: session.user.id,
+          email: session.user.email || '',
+          role: 'user' as any, // Will need proper role fetching
+          profile: {
+            id: session.user.id,
+            email: session.user.email || '',
+            full_name: session.user.user_metadata?.full_name || '',
+            role: 'user' as any,
+            is_active: true,
+            email_verified: session.user.email_confirmed_at ? true : false,
+            created_at: session.user.created_at || new Date().toISOString(),
+            updated_at: session.user.updated_at || new Date().toISOString(),
+          },
+          supabaseUser: session.user,
+        }
+      };
+      return authSession;
+    },
     staleTime: STALE_TIME.FREQUENT,
     gcTime: CACHE_TIME.LONG,
     refetchInterval: 1000 * 60 * 5, // Check session every 5 minutes
@@ -83,7 +111,15 @@ export function useUserProfile(
 ) {
   return useQuery({
     queryKey: authQueryKeys.profile(userId!),
-    queryFn: () => authService.getUserProfile(userId!),
+    queryFn: async () => {
+      // For now, get current user profile if it matches
+      const currentUser = await authService.getCurrentUser();
+      if (currentUser && currentUser.id === userId) {
+        return currentUser.profile;
+      }
+      // In the future, this should fetch from a profiles API endpoint
+      throw new Error('getUserProfile not implemented for other users');
+    },
     enabled: !!userId,
     staleTime: STALE_TIME.NORMAL,
     gcTime: CACHE_TIME.LONG,
@@ -99,7 +135,36 @@ export function useActiveSessions(
 ) {
   return useQuery({
     queryKey: authQueryKeys.sessions(),
-    queryFn: () => authService.getActiveSessions(),
+    queryFn: async () => {
+      // This would need implementation in authService
+      // For now, return current session as an array
+      const session = await authService.getSession();
+      if (!session) return [];
+
+      // Convert to AuthSession format (same as above)
+      const authSession: AuthSession = {
+        accessToken: session.access_token,
+        refreshToken: session.refresh_token || '',
+        expiresAt: session.expires_at || 0,
+        user: {
+          id: session.user.id,
+          email: session.user.email || '',
+          role: 'user' as any,
+          profile: {
+            id: session.user.id,
+            email: session.user.email || '',
+            full_name: session.user.user_metadata?.full_name || '',
+            role: 'user' as any,
+            is_active: true,
+            email_verified: session.user.email_confirmed_at ? true : false,
+            created_at: session.user.created_at || new Date().toISOString(),
+            updated_at: session.user.updated_at || new Date().toISOString(),
+          },
+          supabaseUser: session.user,
+        }
+      };
+      return [authSession];
+    },
     staleTime: STALE_TIME.FREQUENT,
     gcTime: CACHE_TIME.MEDIUM,
     ...options,
@@ -119,7 +184,7 @@ export function usePermissions(
     queryKey: [...authQueryKeys.permissions(), permissions],
     queryFn: async () => {
       if (!user || !permissions) return false;
-      return authService.hasPermissions(permissions);
+      return authService.hasPermission(permissions);
     },
     enabled: !!user && !!permissions?.length,
     staleTime: STALE_TIME.MODERATE,
@@ -140,7 +205,7 @@ export function useLogin(
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (credentials) => authService.signIn(credentials),
+    mutationFn: (credentials) => authService.login(credentials),
     onSuccess: (user) => {
       // Set user in cache
       queryClient.setQueryData(authQueryKeys.user(), user);
@@ -177,7 +242,7 @@ export function useRegister(
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (credentials) => authService.signUp(credentials),
+    mutationFn: (credentials) => authService.register(credentials),
     onSuccess: (user) => {
       // Set user in cache
       queryClient.setQueryData(authQueryKeys.user(), user);
@@ -207,7 +272,7 @@ export function useLogout(
   const router = useRouter();
 
   return useMutation({
-    mutationFn: () => authService.signOut(),
+    mutationFn: () => authService.logout(),
     onSuccess: () => {
       // Clear all auth-related caches
       queryClient.removeQueries({ queryKey: authQueryKeys.all });
@@ -233,12 +298,10 @@ export function useLogout(
 /**
  * Update profile mutation
  */
-export function useUpdateProfile(
-  options?: UseMutationOptions<UserProfile, Error, UpdateProfileData>
-) {
+export function useUpdateProfile() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<UserProfile, Error, UpdateProfileData, { previousUser: AuthUser | undefined }>({
     mutationFn: (data) => authService.updateProfile(data),
     onMutate: async (data) => {
       // Cancel outgoing queries
@@ -255,6 +318,7 @@ export function useUpdateProfile(
         });
       }
 
+      // Return context
       return { previousUser };
     },
     onError: (error, variables, context) => {
@@ -266,12 +330,11 @@ export function useUpdateProfile(
     },
     onSuccess: (profile) => {
       // Update cache with server response
-      queryClient.setQueryData(authQueryKeys.profile(profile.userId), profile);
+      queryClient.setQueryData(authQueryKeys.profile(profile.id), profile);
       queryClient.invalidateQueries({ queryKey: authQueryKeys.user() });
 
       toast.success('Profile updated successfully');
     },
-    ...options,
   });
 }
 
@@ -300,7 +363,7 @@ export function useRequestPasswordReset(
   options?: UseMutationOptions<void, Error, ResetPasswordRequest>
 ) {
   return useMutation({
-    mutationFn: (data) => authService.requestPasswordReset(data),
+    mutationFn: (data) => authService.resetPasswordRequest(data),
     onSuccess: () => {
       toast.success('Password reset email sent. Check your inbox.');
     },
@@ -320,7 +383,7 @@ export function useConfirmPasswordReset(
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data) => authService.confirmPasswordReset(data),
+    mutationFn: (data) => authService.resetPasswordConfirm(data),
     onSuccess: () => {
       toast.success('Password reset successfully. You can now login.');
       router.push('/login');
@@ -334,25 +397,26 @@ export function useConfirmPasswordReset(
 
 /**
  * Revoke session mutation
+ * TODO: Implement revokeSession method in AuthService when needed
  */
-export function useRevokeSession(
-  options?: UseMutationOptions<void, Error, string>
-) {
-  const queryClient = useQueryClient();
+// export function useRevokeSession(
+//   options?: UseMutationOptions<void, Error, string>
+// ) {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (sessionId) => authService.revokeSession(sessionId),
-    onSuccess: () => {
-      // Refresh active sessions
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.sessions() });
-      toast.success('Session revoked successfully');
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to revoke session');
-    },
-    ...options,
-  });
-}
+//   return useMutation({
+//     mutationFn: (sessionId) => authService.revokeSession(sessionId),
+//     onSuccess: () => {
+//       // Refresh active sessions
+//       queryClient.invalidateQueries({ queryKey: authQueryKeys.sessions() });
+//       toast.success('Session revoked successfully');
+//     },
+//     onError: (error) => {
+//       toast.error(error.message || 'Failed to revoke session');
+//     },
+//     ...options,
+//   });
+// }
 
 /**
  * Delete account mutation

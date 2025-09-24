@@ -3,7 +3,7 @@
  * Provides seamless error handling integration with React Query
  */
 
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useQueryClient, QueryCache, MutationCache } from '@tanstack/react-query'
 import { ErrorBoundary as ReactQueryErrorBoundary } from 'react-error-boundary'
 import { AppError, ErrorType, ErrorSeverity, ErrorReporter } from '@/services/api/error-types'

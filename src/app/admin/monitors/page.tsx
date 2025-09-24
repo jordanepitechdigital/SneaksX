@@ -76,7 +76,7 @@ export default function AdminMonitorsPage() {
       if (productsError) throw productsError
 
       setMonitorEvents(events || [])
-      setMonitoredProducts(products || [])
+      setMonitoredProducts(products as any || [])
     } catch (error) {
       console.error('Error loading monitor data:', error)
     } finally {

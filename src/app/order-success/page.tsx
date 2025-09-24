@@ -52,7 +52,7 @@ export default function OrderSuccessPage() {
           total: 0,
           status: 'processing',
           shippingAddress: null,
-          paymentMethod: { type: 'card', cardLast4: '****' },
+          paymentMethod: { id: 'temp', type: 'card', last4: '****' },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         })
@@ -68,7 +68,7 @@ export default function OrderSuccessPage() {
           total: 0,
           status: 'processing',
           shippingAddress: null,
-          paymentMethod: { type: 'card', cardLast4: '****' },
+          paymentMethod: { id: 'temp', type: 'card', last4: '****' },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         })

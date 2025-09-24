@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { supabaseServer } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 const KICKS_API_KEY = 'KICKS-97EF-725F-A605-58232DC70EED'
@@ -14,7 +14,7 @@ interface KicksProduct {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = supabaseServer
 
     // Check if user is admin
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -181,7 +181,7 @@ async function createPlaceholderImages(supabase: any, product: any) {
 // GET endpoint to check sync status
 export async function GET(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = supabaseServer
 
     // Get image statistics
     const { data: stats } = await supabase.rpc('get_image_sync_stats', {})

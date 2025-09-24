@@ -8,7 +8,7 @@ import { useRealTimeOrders, useOrderStatusMonitor } from '@/hooks/useRealTimeOrd
 import type { Order } from '@/types/order'
 
 export default function OrdersPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -35,16 +35,20 @@ export default function OrdersPage() {
   })
 
   useEffect(() => {
-    if (!authLoading && user) {
-      const userOrders = OrderService.getUserOrders(user.id)
-      const orderStats = OrderService.getOrderStats(user.id)
+    const fetchOrders = async () => {
+      if (!authLoading && user) {
+        const userOrders = await OrderService.getUserOrders(user.id)
+        const orderStats = await OrderService.getOrderStats(user.id)
 
-      setOrders(userOrders)
-      setStats(orderStats)
-      setLoading(false)
-    } else if (!authLoading && !user) {
-      setLoading(false)
+        setOrders(userOrders)
+        setStats(orderStats)
+        setLoading(false)
+      } else if (!authLoading && !user) {
+        setLoading(false)
+      }
     }
+
+    fetchOrders()
   }, [user, authLoading])
 
   const getStatusColor = (status: Order['status']) => {
@@ -160,7 +164,7 @@ export default function OrdersPage() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      getStatusColor(update.newStatus)
+                      getStatusColor(update.newStatus as Order['status'])
                     }`}>
                       {update.newStatus.charAt(0).toUpperCase() + update.newStatus.slice(1)}
                     </span>
@@ -309,15 +313,17 @@ export default function OrdersPage() {
               </div>
 
               {/* Shipping Address */}
-              <div className="text-sm text-gray-600 mb-4">
-                <p className="font-medium">Shipping to:</p>
-                <p>
-                  {order.shippingAddress.firstName} {order.shippingAddress.lastName}
-                </p>
-                <p>
-                  {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}
-                </p>
-              </div>
+              {order.shippingAddress && (
+                <div className="text-sm text-gray-600 mb-4">
+                  <p className="font-medium">Shipping to:</p>
+                  <p>
+                    {order.shippingAddress.firstName} {order.shippingAddress.lastName}
+                  </p>
+                  <p>
+                    {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}
+                  </p>
+                </div>
+              )}
 
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-gray-200">

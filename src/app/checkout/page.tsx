@@ -92,6 +92,12 @@ export default function CheckoutPage() {
     setLoading(true)
 
     try {
+      // Ensure user is authenticated
+      if (!user) {
+        router.push('/login?redirect=/checkout')
+        return
+      }
+
       // Create order first (with pending status)
       const checkoutData: CheckoutData = {
         shippingAddress,
@@ -103,7 +109,7 @@ export default function CheckoutPage() {
         total,
       }
 
-      const order = await OrderService.createOrder(user.id, checkoutData)
+      const { order } = await OrderService.createOrder(user.id, checkoutData)
 
       // Create payment intent
       const intent = await PaymentService.createPaymentIntent({
@@ -130,6 +136,11 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     if (!paymentIntent) {
       setError('Payment not initialized. Please try again.')
+      return
+    }
+
+    if (!user) {
+      setError('Please log in to complete your order.')
       return
     }
 

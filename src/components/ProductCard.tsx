@@ -261,7 +261,9 @@ export function ProductCard({
             sizes: availableSizes, // Use real-time available sizes
             stockCount: totalAvailable, // Use real-time stock count
             brand: product.brand,
-            imageUrl: getProductImage()
+            imageUrl: getProductImage(),
+            category: product.category || 'Sneakers',
+            createdAt: product.createdAt || new Date().toISOString()
           }}
           selectedSize={selectedSize}
           onSizeRequired={handleSizeRequired}
