@@ -60,11 +60,14 @@ export default function AddToCartButton({
         onClick={handleAddToCart}
         disabled={buttonDisabled}
         className={`
-          w-full px-4 py-2 rounded-md text-sm font-medium transition-colors
+          btn w-full text-sm font-medium
           ${buttonDisabled
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+            : !selectedSize
+            ? 'btn-secondary'
+            : 'btn-primary'
           }
+          ${isAdding ? 'animate-pulse' : ''}
           ${className}
         `}
       >
@@ -79,9 +82,9 @@ export default function AddToCartButton({
       </button>
 
       {message && (
-        <div className={`text-xs p-2 rounded ${
+        <div className={`text-xs p-2 rounded animate-bounce-in ${
           message.includes('Added')
-            ? 'bg-green-50 text-green-700 border border-green-200'
+            ? 'bg-success-50 text-success-700 border border-success-200'
             : 'bg-red-50 text-red-700 border border-red-200'
         }`}>
           {message}

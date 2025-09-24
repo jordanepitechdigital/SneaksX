@@ -114,15 +114,15 @@ export function ProductCard({
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${
-      stockUpdated ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+    <div className={`product-card ${
+      stockUpdated ? 'ring-2 ring-blue-500 ring-opacity-50 animate-scale-in' : ''
     } ${className}`}>
-      <Link href={`/products/${product.id}`} className="block relative">
-        <div className="aspect-square bg-gray-100 p-4">
+      <Link href={`/products/${product.id}`} className="block relative overflow-hidden">
+        <div className="aspect-square bg-slate-100 p-4">
           <img
             src={getProductImage()}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="product-image w-full h-full object-contain"
             onError={(e) => {
               const imageVariants = [
                 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center',
@@ -186,30 +186,30 @@ export function ProductCard({
 
       <div className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-blue-600">
+          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2 hover:text-primary-600 transition-colors duration-200">
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-gray-600 mb-2">{product.brand}</p>
+        <p className="text-sm text-slate-600 mb-2">{product.brand}</p>
         <div className="flex justify-between items-center mb-3">
-          <span className="text-lg font-bold text-gray-900">
+          <span className="price text-lg">
             €{product.price.toFixed(2)}
           </span>
           <div className="flex flex-col items-end">
             <span className={`text-sm transition-colors duration-300 ${
-              totalAvailable > 0 ? 'text-gray-500' : 'text-red-500'
-            } ${stockUpdated ? 'text-blue-600 font-medium' : ''}`}>
+              totalAvailable > 0 ? 'text-slate-500' : 'text-red-500'
+            } ${stockUpdated ? 'text-primary-600 font-medium' : ''}`}>
               {totalAvailable > 0 ? `${totalAvailable} left` : 'Out of stock'}
             </span>
             {stockUpdated && (
-              <span className="text-xs text-blue-600 animate-pulse">Just updated</span>
+              <span className="text-xs text-primary-600 animate-bounce-in">Just updated</span>
             )}
           </div>
         </div>
 
         {product.sizes.length > 0 && (
           <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-2">Size:</p>
+            <p className="text-xs text-slate-500 mb-2">Size:</p>
             <div className="flex flex-wrap gap-1">
               {product.sizes.slice(0, 6).map((size) => {
                 const isAvailable = availableSizes.includes(size)
@@ -229,11 +229,11 @@ export function ProductCard({
                     }}
                     className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${
                       selectedSize === size
-                        ? 'bg-blue-600 text-white border-blue-600'
+                        ? 'bg-primary-600 text-white border-primary-600'
                         : isAvailable
-                        ? 'bg-gray-100 border-gray-200 hover:bg-gray-200'
-                        : 'bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed'
-                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-blue-300' : ''}`}
+                        ? 'bg-slate-100 border-slate-200 hover:bg-slate-200'
+                        : 'bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed'
+                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-primary-300' : ''}`}
                     title={isAvailable ? `${sizeAvailable} available` : 'Out of stock'}
                   >
                     {size}
@@ -244,7 +244,7 @@ export function ProductCard({
                 )
               })}
               {product.sizes.length > 6 && (
-                <Link href={`/products/${product.id}`} className="text-xs text-blue-600 hover:text-blue-800">
+                <Link href={`/products/${product.id}`} className="text-xs text-primary-600 hover:text-primary-800">
                   +{product.sizes.length - 6} more
                 </Link>
               )}

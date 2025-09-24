@@ -125,11 +125,11 @@ export function SimpleProductGrid() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-            <div className="bg-gray-300 h-48 rounded-lg mb-4"></div>
-            <div className="bg-gray-300 h-4 rounded mb-2"></div>
-            <div className="bg-gray-300 h-4 rounded w-2/3 mb-2"></div>
-            <div className="bg-gray-300 h-6 rounded w-1/3"></div>
+          <div key={i} className="card loading">
+            <div className="loading-skeleton h-48 rounded-lg mb-4"></div>
+            <div className="loading-skeleton h-4 rounded mb-2"></div>
+            <div className="loading-skeleton h-4 rounded w-2/3 mb-2"></div>
+            <div className="loading-skeleton h-6 rounded w-1/3"></div>
           </div>
         ))}
       </div>
@@ -142,7 +142,7 @@ export function SimpleProductGrid() {
         <p className="text-red-600">Error: {error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="btn btn-primary mt-4"
         >
           Retry
         </button>
@@ -153,7 +153,7 @@ export function SimpleProductGrid() {
   if (products.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600">No products found</p>
+        <p className="text-slate-600">No products found</p>
       </div>
     )
   }
@@ -161,10 +161,10 @@ export function SimpleProductGrid() {
   return (
     <div>
       {/* Real-time connection indicator */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-          <span className="text-sm text-gray-600">
+          <div className={`w-2 h-2 rounded-full animate-bounce-in ${isConnected ? 'bg-success-500' : 'bg-red-500'}`}></div>
+          <span className="text-sm text-slate-600">
             {isConnected ? 'Live stock updates active' : 'Stock updates offline'}
           </span>
         </div>
@@ -239,15 +239,15 @@ function ProductCard({
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${
-      stockUpdated ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+    <div className={`product-card ${
+      stockUpdated ? 'ring-2 ring-primary-500 ring-opacity-50 animate-scale-in' : ''
     }`}>
-      <Link href={`/products/${product.id}`} className="block relative">
-        <div className="aspect-square bg-gray-100 p-4">
+      <Link href={`/products/${product.id}`} className="block relative overflow-hidden">
+        <div className="aspect-square bg-slate-100 p-4">
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="product-image w-full h-full object-contain"
             onError={(e) => {
               // Use the same fallback logic as above for consistency
               const imageVariants = [
@@ -264,20 +264,20 @@ function ProductCard({
         {/* Real-time stock indicator badges */}
         <div className="absolute top-2 right-2 flex flex-col space-y-1">
           {isConnected && (
-            <div className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center space-x-1">
+            <div className="badge badge-success flex items-center space-x-1">
               <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
               <span>LIVE</span>
             </div>
           )}
 
           {totalAvailable <= 5 && totalAvailable > 0 && (
-            <div className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+            <div className="badge badge-warning">
               LOW STOCK
             </div>
           )}
 
           {stockUpdated && (
-            <div className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
+            <div className="badge badge-info animate-bounce-in">
               UPDATED
             </div>
           )}
@@ -286,30 +286,30 @@ function ProductCard({
 
       <div className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-blue-600">
+          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2 hover:text-primary-600 transition-colors duration-200">
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-gray-600 mb-2">{product.brand}</p>
+        <p className="text-sm text-slate-600 mb-2">{product.brand}</p>
         <div className="flex justify-between items-center mb-3">
-          <span className="text-lg font-bold text-gray-900">
+          <span className="price text-lg">
             €{product.price.toFixed(2)}
           </span>
           <div className="flex flex-col items-end">
             <span className={`text-sm transition-colors duration-300 ${
-              totalAvailable > 0 ? 'text-gray-500' : 'text-red-500'
-            } ${stockUpdated ? 'text-blue-600 font-medium' : ''}`}>
+              totalAvailable > 0 ? 'text-slate-500' : 'text-red-500'
+            } ${stockUpdated ? 'text-primary-600 font-medium' : ''}`}>
               {totalAvailable > 0 ? `${totalAvailable} left` : 'Out of stock'}
             </span>
             {stockUpdated && (
-              <span className="text-xs text-blue-600 animate-pulse">Just updated</span>
+              <span className="text-xs text-primary-600 animate-bounce-in">Just updated</span>
             )}
           </div>
         </div>
 
         {product.sizes.length > 0 && (
           <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-2">Size:</p>
+            <p className="text-xs text-slate-500 mb-2">Size:</p>
             <div className="flex flex-wrap gap-1">
               {product.sizes.slice(0, 6).map((size) => {
                 const isAvailable = availableSizes.includes(size)
@@ -329,11 +329,11 @@ function ProductCard({
                     }}
                     className={`text-xs px-2 py-1 rounded border transition-all duration-200 relative ${
                       selectedSize === size
-                        ? 'bg-blue-600 text-white border-blue-600'
+                        ? 'bg-primary-600 text-white border-primary-600'
                         : isAvailable
-                        ? 'bg-gray-100 border-gray-200 hover:bg-gray-200'
-                        : 'bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed'
-                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-blue-300' : ''}`}
+                        ? 'bg-slate-100 border-slate-200 hover:bg-slate-200'
+                        : 'bg-slate-50 border-slate-100 text-slate-400 cursor-not-allowed'
+                    } ${sizeStock?.timestamp && Date.now() - new Date(sizeStock.timestamp).getTime() < 10000 ? 'ring-1 ring-primary-300' : ''}`}
                     title={isAvailable ? `${sizeAvailable} available` : 'Out of stock'}
                   >
                     {size}
@@ -344,7 +344,7 @@ function ProductCard({
                 )
               })}
               {product.sizes.length > 6 && (
-                <Link href={`/products/${product.id}`} className="text-xs text-blue-600 hover:text-blue-800">
+                <Link href={`/products/${product.id}`} className="text-xs text-primary-600 hover:text-primary-800">
                   +{product.sizes.length - 6} more
                 </Link>
               )}

@@ -56,13 +56,13 @@ export function SimpleFeaturedBrands() {
 
   if (loading) {
     return (
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Brands</h2>
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Featured Brands</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-lg p-6 shadow-sm animate-pulse">
-              <div className="bg-gray-300 h-12 rounded mb-3"></div>
-              <div className="bg-gray-300 h-4 rounded"></div>
+            <div key={i} className="card loading">
+              <div className="loading-skeleton h-12 rounded mb-3"></div>
+              <div className="loading-skeleton h-4 rounded"></div>
             </div>
           ))}
         </div>
@@ -71,20 +71,22 @@ export function SimpleFeaturedBrands() {
   }
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Brands</h2>
+    <div className="mb-12">
+      <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Featured Brands</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {brands.map((brand) => (
-          <div key={brand.id} className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow text-center">
+        {brands.map((brand, index) => (
+          <div key={brand.id} className="card card-hover text-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
             <div className="h-12 flex items-center justify-center mb-3">
-              <span className="text-lg font-bold text-gray-700">
-                {brand.displayName.charAt(0)}
-              </span>
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
+                <span className="text-lg font-bold text-white">
+                  {brand.displayName.charAt(0)}
+                </span>
+              </div>
             </div>
-            <h3 className="font-semibold text-gray-900 text-sm mb-1">
+            <h3 className="font-semibold text-slate-900 text-sm mb-1">
               {brand.displayName}
             </h3>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500">
               {brand.productCount} product{brand.productCount !== 1 ? 's' : ''}
             </p>
           </div>

@@ -4174,7 +4174,7 @@
         "id": 11,
         "title": "ÉTAPE 2.3: Services API et State Management",
         "description": "Architecture complète pour gestion d'état et API",
-        "status": "in-progress",
+        "status": "done",
         "priority": "high",
         "dependencies": [
           9,
@@ -4197,7 +4197,7 @@
             "id": 2,
             "title": "Services API pour authentification",
             "description": "Gestion auth avec Supabase Auth",
-            "status": "pending",
+            "status": "done",
             "priority": "high",
             "dependencies": [],
             "details": "Login, register, logout, session management, role-based access",
@@ -4207,7 +4207,7 @@
             "id": 3,
             "title": "Services API pour e-commerce",
             "description": "Cart, orders, checkout operations",
-            "status": "pending",
+            "status": "done",
             "priority": "high",
             "dependencies": [],
             "details": "Cart CRUD, order creation, payment flow, stock validation",
@@ -4217,7 +4217,7 @@
             "id": 4,
             "title": "Hooks React Query pour cache",
             "description": "Hooks optimisés avec mise en cache intelligente",
-            "status": "pending",
+            "status": "done",
             "priority": "high",
             "dependencies": [
               1,
@@ -4231,7 +4231,7 @@
             "id": 5,
             "title": "Context API pour state global",
             "description": "Gestion d'état global avec Context",
-            "status": "pending",
+            "status": "done",
             "priority": "medium",
             "dependencies": [],
             "details": "Auth context, cart context, theme context, user preferences",
@@ -4241,7 +4241,7 @@
             "id": 6,
             "title": "Middleware et interceptors",
             "description": "Gestion centralisée des erreurs et auth",
-            "status": "pending",
+            "status": "done",
             "priority": "medium",
             "dependencies": [
               2
@@ -4253,7 +4253,7 @@
             "id": 7,
             "title": "Real-time subscriptions",
             "description": "Subscriptions temps réel pour stock et prix",
-            "status": "pending",
+            "status": "done",
             "priority": "medium",
             "dependencies": [
               4
@@ -4265,7 +4265,7 @@
             "id": 8,
             "title": "Optimistic updates",
             "description": "Updates optimistes pour UX fluide",
-            "status": "pending",
+            "status": "done",
             "priority": "low",
             "dependencies": [
               4
@@ -4279,7 +4279,7 @@
         "id": 12,
         "title": "ÉTAPE 3.1: Design System et Animations",
         "description": "Design system complet avec animations Framer Motion",
-        "status": "pending",
+        "status": "in-progress",
         "priority": "medium",
         "dependencies": [
           10,
@@ -4746,7 +4746,7 @@
     "metadata": {
       "version": "2.0.0",
       "created": "2025-09-22",
-      "updated": "2025-09-23T22:51:50.824Z",
+      "updated": "2025-09-24T08:33:28.039Z",
       "project": "SneaksX - E-commerce Sneaker Platform with Real-time Monitoring",
       "description": "Modern e-commerce platform for sneakers with KicksDB API integration and real-time price/stock monitoring",
       "totalTasks": 5,

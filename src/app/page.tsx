@@ -3,20 +3,22 @@ import { SimpleFeaturedBrands } from '@/components/SimpleFeaturedBrands'
 
 export default function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="mb-12 text-center animate-fade-in">
+        <h1 className="text-5xl font-bold text-gradient mb-6 animate-slide-in-up">
           Premium Sneakers Collection
         </h1>
-        <p className="text-lg text-gray-600">
-          Discover the latest and greatest sneakers from top brands
+        <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          Discover the latest and greatest sneakers from top brands with real-time inventory updates
         </p>
       </div>
 
-      <SimpleFeaturedBrands />
+      <div className="animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
+        <SimpleFeaturedBrands />
+      </div>
 
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <div className="mt-16 animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
+        <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
           Latest Products
         </h2>
         <SimpleProductGrid />
